@@ -34,7 +34,7 @@ class Layer:
             raise ValueError(f"Generator with name \"{generator_name}\" does not exist")
         generator_type = self.layer_query["generator_type"]
         if generator_type != GeneratorType.BLENDING.value and generator_type != GeneratorType.ALGORITHM.value:
-            raise ValueError(f"Generator type \"{generator_type}\" is not supported")
+            raise ValueError(f"Generator type \"{generator_type}\" is not supported! Supported generator types: {GeneratorType.BLENDING.value}, {GeneratorType.ALGORITHM.value}")
 
     def generate(self,
                  width: int,

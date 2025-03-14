@@ -1,11 +1,10 @@
-from abc import abstractmethod
-from typing import List, Any, Dict
-
 from PIL.Image import Image
-
-from image_generator.generator import Generator, GeneratorType
+from abc import abstractmethod
 from image_generator.layer import Layer
-from image_generator.parameter import Parameter
+from typing import List, Any, Dict, Optional
+from image_generator.generator import Generator, GeneratorType
+from image_generator.parameter import Parameter, check_parameters_unique_names, check_values, filter_values, \
+    fill_default_values
 
 
 class Blending(Generator):
@@ -14,22 +13,19 @@ class Blending(Generator):
                  name: str,
                  visible_name: str,
                  parameters: List[Parameter],
-                 blending_parameters: List[Parameter],
-                 min_layers_count: int,
-                 max_layers_count: int):
+                 blending_parameters: List[Parameter]):
         super().__init__(GeneratorType.BLENDING, name, visible_name, parameters)
-        self.min_layers_count = min_layers_count
-        self.max_layers_count = max_layers_count
         self.blending_parameters = blending_parameters
-        self.check()
+        check_parameters_unique_names(self.blending_parameters)
 
     @abstractmethod
-    def image(self,
-              width: int,
-              height: int,
-              seed: int = None,
-              layers: List[Layer] = None,
-              **kwargs):
+    def blending(self,
+                 width: int,
+                 height: int,
+                 layers: List[Layer] = None,
+                 seed: int = None,
+                 area: Optional[List[List[bool]]] = None,
+                 **kwargs) -> Image:
         pass
 
     def generate(self,
@@ -37,13 +33,19 @@ class Blending(Generator):
                  height: int,
                  values: Dict[str, Any] = None,
                  layers: List[Layer] = None) -> Image:
-        pass
+        if not values:
+            values = {}
+        check_values(self.parameters, values)
+        filtered_values = filter_values(self.parameters, values, allow_list=["seed", "area"])
+        filled_values = fill_default_values(self.parameters, filtered_values)
+        for layer in layers:
+            check_values(self.blending_parameters, layer.blending_values)
+            layer.blending_values = filter_values(self.blending_parameters, layer.blending_values)
+            layer.blending_values = fill_default_values(self.blending_parameters, layer.blending_values)
+        return self.blending(width, height, layers, **filled_values)
 
-    def check(self):
-        pass
-
-    def create_parameters_dict(self):
-        pass
-
-    def create_algorithms_blending_parameters_dict(self):
-        pass
+    def to_dict(self) -> dict:
+        blending_dict = super().to_dict()
+        blending_dict["blending_parameters"] = [blending_parameter.to_dict() for blending_parameter in
+                                                self.blending_parameters]
+        return blending_dict

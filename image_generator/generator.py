@@ -2,11 +2,11 @@ import enum
 from typing import List
 from PIL.Image import Image
 from abc import abstractmethod
-from image_generator.parameter import Parameter
+from image_generator.parameter import Parameter, check_parameters_unique_names
 
 
 class GeneratorType(enum.Enum):
-    BLENDING = "blending",
+    BLENDING = "blending"
     ALGORITHM = "algorithm"
 
 
@@ -21,6 +21,7 @@ class Generator:
         self.name = name
         self.visible_name = visible_name
         self.parameters = parameters
+        check_parameters_unique_names(self.parameters)
 
     @abstractmethod
     def generate(self,

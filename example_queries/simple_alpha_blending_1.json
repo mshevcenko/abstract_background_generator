@@ -1,0 +1,42 @@
+{
+    "width": 1024,
+    "height": 768,
+    "layer_query": {
+        "name": "alpha_blending",
+        "generator_type": "blending",
+        "layers": [
+            {
+                "name": "lorenz_attractor",
+                "generator_type": "algorithm",
+                "values": {
+                    "scale": [1.0, 1.0],
+                    "offset_x": [0.0, 0.0],
+                    "offset_y": [0.0, 0.0]
+                },
+                "blending_values": {
+                    "opacity": 1.0
+                }
+            },
+            {
+                "name": "plain_algorithm",
+                "generator_type": "algorithm",
+                "values": {
+                    "colors": ["EAD196"]
+                },
+                "blending_values": {
+                    "opacity": 0.5
+                }
+            },
+            {
+                "name": "plain_algorithm",
+                "generator_type": "algorithm",
+                "values": {
+                    "colors": ["034C53"]
+                },
+                "blending_values": {
+                    "opacity": 0.5
+                }
+            }
+        ]
+    }
+}

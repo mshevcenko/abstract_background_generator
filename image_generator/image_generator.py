@@ -1,9 +1,7 @@
 from typing import List, Dict
-
 from PIL.Image import Image
-
-from image_generator.generator import Generator
 from image_generator.layer import Layer
+from image_generator.generator import Generator
 
 
 def check_query(query: Dict) -> None:

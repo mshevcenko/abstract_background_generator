@@ -172,8 +172,8 @@ class AttractorAlgorithm(Algorithm):
                   width: int,
                   height: int,
                   seed: Optional[int] = None,
-                  colors: List[str] = ["#ff0000", "#00ff00"],
                   area: Optional[List[List[bool]]] = None,
+                  colors: List[str] = ["#ff0000", "#00ff00"],
                   scale: List[float] = [1.0, 2.0],
                   size: List[float] = [0.5, 2.0],
                   blur_radius: List[float] = [0.0, 4.0],
@@ -245,7 +245,7 @@ class AttractorAlgorithm(Algorithm):
 
         if blur_radius > 0:
             blurred_image = image.filter(ImageFilter.GaussianBlur(radius=blur_radius))
-            final_image = Image.new("RGBA", (width, height), (255, 255, 255, 255))
+            final_image = Image.new("RGBA", (width, height), (255, 255, 255, 0))
             final_image.paste(blurred_image, (0, 0), blurred_image)
             final_image.paste(image, (0, 0), image)
             image = final_image
