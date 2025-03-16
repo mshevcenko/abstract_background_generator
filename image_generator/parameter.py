@@ -1,10 +1,12 @@
-import enum
-from typing import Any, Dict, Optional, List
+from enum import Enum
+from pydantic import BaseModel
+from typing import Any, Dict, Optional, List, Union, Tuple
+from typing_extensions import TypedDict
 
 
-class DataType(enum.Enum):
-    INTEGER_TUPLE = "integer_tuple"  # python list of two integer numbers
-    FLOAT_TUPLE = "float_tuple"      # python list of two float numbers
+class DataType(str, Enum):
+    INTEGER_TUPLE = "integer_tuple"  # python tuple of two integer numbers
+    FLOAT_TUPLE = "float_tuple"      # python tuple of two float numbers
     INTEGER = "integer"              # python integer
     FLOAT = "float"                  # python float
     COLORS = "colors"                # python list of colors in hex format
@@ -12,13 +14,31 @@ class DataType(enum.Enum):
     BOOL = "bool"                    # python bool
 
 
-class VisibleType(enum.Enum):
+class VisibleType(str, Enum):
     FIELD = "field"
     SLIDER = "slider"
     RANGE_SLIDER = "range_slider"
     CHECKBOX = "checkbox"
     COLORS = "colors"
     SELECTOR = "selector"
+
+
+class EnumValueDict(TypedDict):
+    value: Union[int, float, str, List[str], Tuple[int, int], Tuple[float, float], bool]
+    visible_value: str
+
+
+class ParameterModel(BaseModel):
+    name: str
+    visible_name: str
+    data_type: DataType
+    visible_type: VisibleType
+    default: Union[int, float, str, List[str], Tuple[int, int], Tuple[float, float], bool]
+    min_value: Union[int, float, None] = None
+    max_value: Union[int, float, None] = None
+    possible_values: Optional[List[EnumValueDict]] = None
+    min_count: Optional[int] = None
+    max_count: Optional[int] = None
 
 
 class Parameter:
@@ -28,12 +48,10 @@ class Parameter:
                  visible_name: str,
                  data_type: DataType,
                  visible_type: VisibleType,
-                 default: Optional[Any],
-                 min_value: Optional[Any] = None,
-                 max_value: Optional[Any] = None,
-                 possible_values: Optional[List[Any]] = None,
-                 min_length: Optional[int] = None,
-                 max_length: Optional[int] = None,
+                 default: Union[int, float, str, List[str], Tuple[int, int], Tuple[float, float], bool],
+                 min_value: Union[int, float, None] = None,
+                 max_value: Union[int, float, None] = None,
+                 possible_values: Optional[List[EnumValueDict]] = None,
                  min_count: Optional[int] = None,
                  max_count: Optional[int] = None):
         self.name = name
@@ -44,30 +62,31 @@ class Parameter:
         self.max_value = max_value
         self.default = default
         self.possible_values = possible_values
-        self.min_length = min_length
-        self.max_length = max_length
         self.min_count = min_count
         self.max_count = max_count
         self.check()
+        self.model = ParameterModel(
+            name=self.name,
+            visible_name=self.visible_name,
+            visible_type=self.visible_type,
+            data_type=self.data_type,
+            min_value=self.min_value,
+            max_value=self.max_value,
+            default=default,
+            possible_values=possible_values,
+            min_count=min_count,
+            max_count=max_count,
+        )
 
     def check(self) -> None:
         pass
 
     def check_value(self,
-                    value: Any) -> None:
+                    value: Union[int, float, str, List[str], Tuple[int, int], Tuple[float, float], bool]) -> None:
         pass
 
-    def get_random_value(self) -> Any:
+    def random_value(self) -> Union[int, float, str, List[str], Tuple[int, int], Tuple[float, float], bool]:
         pass
-
-    def to_dict(self) -> Dict[str, Any]:
-        parameter_dict = {}
-        for key, value in self.__dict__.items():
-            if key == "data_type" or key == "visible_type":
-                parameter_dict[key] = value.value
-            elif value:
-                parameter_dict[key] = value
-        return parameter_dict
 
 
 def check_values(parameters: List[Parameter],

@@ -2,9 +2,13 @@ from PIL.Image import Image
 from abc import abstractmethod
 from image_generator.layer import Layer
 from typing import List, Any, Dict, Optional
-from image_generator.generator import Generator, GeneratorType
+from image_generator.generator import Generator, GeneratorType, GeneratorModel
 from image_generator.parameter import Parameter, check_parameters_unique_names, check_values, filter_values, \
-    fill_default_values
+    fill_default_values, ParameterModel
+
+
+class BlendingModel(GeneratorModel):
+    blending_parameters: List[ParameterModel]
 
 
 class Blending(Generator):
@@ -17,6 +21,10 @@ class Blending(Generator):
         super().__init__(GeneratorType.BLENDING, name, visible_name, parameters)
         self.blending_parameters = blending_parameters
         check_parameters_unique_names(self.blending_parameters)
+        self.model = BlendingModel(
+            **self.model.dict(),
+            blending_parameters=[blending_parameter.model for blending_parameter in self.blending_parameters]
+        )
 
     @abstractmethod
     def blending(self,
@@ -43,9 +51,3 @@ class Blending(Generator):
             layer.blending_values = filter_values(self.blending_parameters, layer.blending_values)
             layer.blending_values = fill_default_values(self.blending_parameters, layer.blending_values)
         return self.blending(width, height, layers, **filled_values)
-
-    def to_dict(self) -> dict:
-        blending_dict = super().to_dict()
-        blending_dict["blending_parameters"] = [blending_parameter.to_dict() for blending_parameter in
-                                                self.blending_parameters]
-        return blending_dict

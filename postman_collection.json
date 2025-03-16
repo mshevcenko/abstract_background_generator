@@ -1,0 +1,176 @@
+{
+	"info": {
+		"_postman_id": "56b65342-5217-4027-a71f-d86c67efe916",
+		"name": "AbstractBackgroundGenerator",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "30748232"
+	},
+	"item": [
+		{
+			"name": "ImageGeneratorModel",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseurl}}/api/image-generator/model",
+					"host": [
+						"{{baseurl}}"
+					],
+					"path": [
+						"api",
+						"image-generator",
+						"model"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GenerateQueryFull1",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"width\": 1024,\r\n    \"height\": 768,\r\n    \"layer_query\": {\r\n        \"name\": \"alpha_blending\",\r\n        \"generator_type\": \"blending\",\r\n        \"layers\": [\r\n            {\r\n                \"name\": \"lorenz_attractor\",\r\n                \"generator_type\": \"algorithm\",\r\n                \"values\": {\r\n                    \"scale\": [1.0, 1.0],\r\n                    \"offset_x\": [0.0, 0.0],\r\n                    \"offset_y\": [0.0, 0.0]\r\n                },\r\n                \"blending_values\": {\r\n                    \"opacity\": 1.0\r\n                }\r\n            },\r\n            {\r\n                \"name\": \"plain_algorithm\",\r\n                \"generator_type\": \"algorithm\",\r\n                \"values\": {\r\n                    \"colors\": [\"EAD196\"]\r\n                },\r\n                \"blending_values\": {\r\n                    \"opacity\": 0.5\r\n                }\r\n            },\r\n            {\r\n                \"name\": \"plain_algorithm\",\r\n                \"generator_type\": \"algorithm\",\r\n                \"values\": {\r\n                    \"colors\": [\"034C53\"]\r\n                },\r\n                \"blending_values\": {\r\n                    \"opacity\": 0.5\r\n                }\r\n            }\r\n        ]\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseurl}}/api/image-generator/query/full?include_metadata=false",
+					"host": [
+						"{{baseurl}}"
+					],
+					"path": [
+						"api",
+						"image-generator",
+						"query",
+						"full"
+					],
+					"query": [
+						{
+							"key": "include_metadata",
+							"value": "false"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GenerateQueryFull2",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"width\": 1024,\r\n    \"height\": 768,\r\n    \"layer_query\": {\r\n        \"name\": \"alpha_blending\",\r\n        \"generator_type\": \"blending\",\r\n        \"layers\": [\r\n            {\r\n                \"name\": \"lorenz_attractor\",\r\n                \"generator_type\": \"algorithm\",\r\n                \"values\": {\r\n                    \"scale\": [1.0, 1.0],\r\n                    \"offset_x\": [0.0, 0.0],\r\n                    \"offset_y\": [0.0, 0.0]\r\n                },\r\n                \"blending_values\": {\r\n                    \"opacity\": 1.0\r\n                }\r\n            },\r\n            {\r\n                \"name\": \"plain_algorithm\",\r\n                \"generator_type\": \"algorithm\",\r\n                \"values\": {\r\n                    \"colors\": [\"EAD196\"]\r\n                },\r\n                \"blending_values\": {\r\n                    \"opacity\": 0.5\r\n                }\r\n            },\r\n            {\r\n                \"name\": \"plain_algorithm\",\r\n                \"generator_type\": \"algorithm\",\r\n                \"values\": {\r\n                    \"colors\": [\"034C53\"]\r\n                },\r\n                \"blending_values\": {\r\n                    \"opacity\": 0.5\r\n                }\r\n            }\r\n        ]\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseurl}}/api/image-generator/query/full?include_metadata=true",
+					"host": [
+						"{{baseurl}}"
+					],
+					"path": [
+						"api",
+						"image-generator",
+						"query",
+						"full"
+					],
+					"query": [
+						{
+							"key": "include_metadata",
+							"value": "true"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GenerateQueryFull3",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"width\": 1024,\r\n    \"height\": 768,\r\n    \"full_metadata\": true,\r\n    \"layer_query\": {\r\n        \"name\": \"alpha_blending\",\r\n        \"generator_type\": \"blending\",\r\n        \"layers\": [\r\n            {\r\n                \"name\": \"lorenz_attractor\",\r\n                \"generator_type\": \"algorithm\",\r\n                \"values\": {\r\n                    \"scale\": [1.0, 1.0],\r\n                    \"offset_x\": [0.0, 0.0],\r\n                    \"offset_y\": [0.0, 0.0]\r\n                },\r\n                \"blending_values\": {\r\n                    \"opacity\": 1.0\r\n                }\r\n            },\r\n            {\r\n                \"name\": \"plain_algorithm\",\r\n                \"generator_type\": \"algorithm\",\r\n                \"values\": {\r\n                    \"colors\": [\"EAD196\"]\r\n                },\r\n                \"blending_values\": {\r\n                    \"opacity\": 0.5\r\n                }\r\n            },\r\n            {\r\n                \"name\": \"plain_algorithm\",\r\n                \"generator_type\": \"algorithm\",\r\n                \"values\": {\r\n                    \"colors\": [\"034C53\"]\r\n                },\r\n                \"blending_values\": {\r\n                    \"opacity\": 0.5\r\n                }\r\n            }\r\n        ]\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseurl}}/api/image-generator/query/full?include_metadata=true",
+					"host": [
+						"{{baseurl}}"
+					],
+					"path": [
+						"api",
+						"image-generator",
+						"query",
+						"full"
+					],
+					"query": [
+						{
+							"key": "include_metadata",
+							"value": "true"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GenerateQueryFull4",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"width\": 1024,\r\n    \"height\": 768,\r\n    \"full_metadata\": false,\r\n    \"layer_query\": {\r\n        \"name\": \"alpha_blending\",\r\n        \"generator_type\": \"blending\",\r\n        \"layers\": [\r\n            {\r\n                \"name\": \"lorenz_attractor\",\r\n                \"generator_type\": \"algorithm\",\r\n                \"values\": {\r\n                    \"scale\": [1.0, 1.0],\r\n                    \"offset_x\": [0.0, 0.0],\r\n                    \"offset_y\": [0.0, 0.0]\r\n                },\r\n                \"blending_values\": {\r\n                    \"opacity\": 1.0\r\n                }\r\n            },\r\n            {\r\n                \"name\": \"plain_algorithm\",\r\n                \"generator_type\": \"algorithm\",\r\n                \"values\": {\r\n                    \"colors\": [\"EAD196\"]\r\n                },\r\n                \"blending_values\": {\r\n                    \"opacity\": 0.5\r\n                }\r\n            },\r\n            {\r\n                \"name\": \"plain_algorithm\",\r\n                \"generator_type\": \"algorithm\",\r\n                \"values\": {\r\n                    \"colors\": [\"034C53\"]\r\n                },\r\n                \"blending_values\": {\r\n                    \"opacity\": 0.5\r\n                }\r\n            }\r\n        ]\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseurl}}/api/image-generator/query/full?include_metadata=true",
+					"host": [
+						"{{baseurl}}"
+					],
+					"path": [
+						"api",
+						"image-generator",
+						"query",
+						"full"
+					],
+					"query": [
+						{
+							"key": "include_metadata",
+							"value": "true"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "baseurl",
+			"value": "",
+			"type": "default"
+		}
+	]
+}
