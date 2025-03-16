@@ -33,7 +33,7 @@ class AlphaBlending(Blending):
                  **kwargs) -> Image:
         combined_image = PIL.Image.new("RGBA", (width, height), (255, 255, 255, 0))
         for layer in reversed(layers):
-            layer_image = layer.generate(width, height)
+            layer_image = layer.generate(width, height, area=area)
             if layer_image.mode != "RGBA":
                 layer_image = layer_image.convert("RGBA")
             desired_alpha = int(layer.blending_values["opacity"] * 255)

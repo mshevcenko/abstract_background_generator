@@ -9,6 +9,7 @@ from typing import Optional, List, Tuple
 from image_generator.algorithm import Algorithm
 from image_generator.algorithms.attractors.attractor import Attractor
 from image_generator.parameter import Parameter, DataType, VisibleType
+from image_generator.utils import hex_to_rgb_normalized, apply_transparency_mask
 
 
 def rotation_matrix(rx, ry, rz):
@@ -73,16 +74,7 @@ def auto_scale_and_center(xs, zs, width, height, scale=1.0, offset_x=0.0, offset
     return xs_scaled, zs_scaled
 
 
-def hex_to_rgb_normalized(hex_color: str) -> Tuple[float, float, float]:
-    hex_color = hex_color.lstrip('#')
-    if len(hex_color) != 6:
-        raise ValueError("Hex color must be 6 digits long")
-    r = int(hex_color[0:2], 16) / 255.0
-    g = int(hex_color[2:4], 16) / 255.0
-    b = int(hex_color[4:6], 16) / 255.0
-    return r, g, b
-
-
+# noinspection PyTypeChecker
 class AttractorAlgorithm(Algorithm):
     def __init__(self,
                  name: str,
@@ -100,28 +92,28 @@ class AttractorAlgorithm(Algorithm):
                       visible_name="Scale",
                       data_type=DataType.FLOAT_TUPLE,
                       visible_type=VisibleType.RANGE_SLIDER,
-                      default=[1.0, 2.0],
+                      default=(1.0, 2.0),
                       min_value=0.5,
                       max_value=10.0),
             Parameter(name="size",
                       visible_name="Size",
                       data_type=DataType.FLOAT_TUPLE,
                       visible_type=VisibleType.RANGE_SLIDER,
-                      default=[1.0, 2.0],
+                      default=(1.0, 2.0),
                       min_value=0.5,
                       max_value=10.0),
             Parameter(name="blur_radius",
                       visible_name="Blur radius",
                       data_type=DataType.FLOAT_TUPLE,
                       visible_type=VisibleType.RANGE_SLIDER,
-                      default=[0.0, 4.0],
+                      default=(0.0, 4.0),
                       min_value=0.0,
                       max_value=10.0),
             Parameter(name="num_points",
                       visible_name="Points",
                       data_type=DataType.INTEGER_TUPLE,
                       visible_type=VisibleType.RANGE_SLIDER,
-                      default=[10000, 100000],
+                      default=(10000, 100000),
                       min_value=1000,
                       max_value=200000),
             Parameter(name="draw_lines",
@@ -133,35 +125,35 @@ class AttractorAlgorithm(Algorithm):
                       visible_name="Offset x",
                       data_type=DataType.FLOAT_TUPLE,
                       visible_type=VisibleType.RANGE_SLIDER,
-                      default=[-1.0, 1.0],
+                      default=(-1.0, 1.0),
                       min_value=-1.0,
                       max_value=1.0),
             Parameter(name="offset_y",
                       visible_name="Offset y",
                       data_type=DataType.FLOAT_TUPLE,
                       visible_type=VisibleType.RANGE_SLIDER,
-                      default=[-1.0, 1.0],
+                      default=(-1.0, 1.0),
                       min_value=-1.0,
                       max_value=1.0),
             Parameter(name="rotation_x",
                       visible_name="Rotation x",
                       data_type=DataType.FLOAT_TUPLE,
                       visible_type=VisibleType.RANGE_SLIDER,
-                      default=[0.0, 6.29],
+                      default=(0.0, 6.29),
                       min_value=0.0,
                       max_value=6.29),
             Parameter(name="rotation_y",
                       visible_name="Rotation y",
                       data_type=DataType.FLOAT_TUPLE,
                       visible_type=VisibleType.RANGE_SLIDER,
-                      default=[0.0, 6.29],
+                      default=(0.0, 6.29),
                       min_value=0.0,
                       max_value=6.29),
             Parameter(name="rotation_z",
                       visible_name="Rotation z",
                       data_type=DataType.FLOAT_TUPLE,
                       visible_type=VisibleType.RANGE_SLIDER,
-                      default=[0.0, 6.29],
+                      default=(0.0, 6.29),
                       min_value=0.0,
                       max_value=6.29)
         ]
@@ -174,16 +166,17 @@ class AttractorAlgorithm(Algorithm):
                   seed: Optional[int] = None,
                   area: Optional[List[List[bool]]] = None,
                   colors: List[str] = ["#ff0000", "#00ff00"],
-                  scale: List[float] = [1.0, 2.0],
-                  size: List[float] = [0.5, 2.0],
-                  blur_radius: List[float] = [0.0, 4.0],
-                  num_points: List[int] = [10000, 100000],
+                  scale: Tuple[float, float] = (1.0, 2.0),
+                  size: Tuple[float, float] = (0.5, 2.0),
+                  blur_radius: Tuple[float, float] = (0.0, 4.0),
+                  num_points: Tuple[int, int] = (10000, 100000),
                   draw_lines: bool = True,
-                  offset_x: List[int] = [-1.0, 1.0],
-                  offset_y: List[int] = [-1.0, 1.0],
-                  rotation_x: List[int] = [0.0, 6.29],
-                  rotation_y: List[int] = [0.0, 6.29],
-                  rotation_z: List[int] = [0.0, 6.29]) -> Image:
+                  offset_x: Tuple[float, float] = (-1.0, 1.0),
+                  offset_y: Tuple[float, float] = (-1.0, 1.0),
+                  rotation_x: Tuple[float, float] = (0.0, 6.29),
+                  rotation_y: Tuple[float, float] = (0.0, 6.29),
+                  rotation_z: Tuple[float, float] = (0.0, 6.29)) -> Image:
+        random.seed(seed)
         scale = random.uniform(*scale)
         min_size = size[0]
         max_size = size[1]
@@ -195,7 +188,7 @@ class AttractorAlgorithm(Algorithm):
         rotation_y = random.uniform(*rotation_y)
         rotation_z = random.uniform(*rotation_z)
         normalized_colors = [hex_to_rgb_normalized(color) for color in colors]
-        points = self.attractor.generate_points(num_points=num_points)
+        points = self.attractor.generate_points(num_points=num_points, seed=seed)
         plane_origin = points[0]
         R = rotation_matrix(rotation_x, rotation_y, rotation_z)
         transformed = (points - plane_origin) @ R.T
@@ -242,12 +235,12 @@ class AttractorAlgorithm(Algorithm):
         surface.write_to_png(buffer)
         buffer.seek(0)
         image = Image.open(buffer).convert("RGBA")
-
         if blur_radius > 0:
             blurred_image = image.filter(ImageFilter.GaussianBlur(radius=blur_radius))
             final_image = Image.new("RGBA", (width, height), (255, 255, 255, 0))
             final_image.paste(blurred_image, (0, 0), blurred_image)
             final_image.paste(image, (0, 0), image)
             image = final_image
-
+        if area:
+            image = apply_transparency_mask(image, area)
         return image
