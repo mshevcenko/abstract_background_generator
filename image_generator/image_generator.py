@@ -4,12 +4,13 @@ from pydantic import BaseModel
 from image_generator.algorithm import AlgorithmModel
 from image_generator.blending import BlendingModel
 from image_generator.layer import Layer, LayerQuery
-from image_generator.generator import Generator
+from image_generator.generator import Generator, GeneratorType
 from image_generator.seed_generator import SeedGenerator
 
 
 class ImageGeneratorModel(BaseModel):
-    generators: List[Union[BlendingModel, AlgorithmModel]]
+    blendings: List[BlendingModel]
+    algorithms: List[AlgorithmModel]
 
 
 class QueryFull(BaseModel):
@@ -59,7 +60,8 @@ class ImageGenerator:
         self.generators_dict = {}
         self.create_generators_dict()
         self.model = ImageGeneratorModel(
-            generators=[generator.model for generator in self.generators]
+            blendings=[blending.model for blending in self.generators if blending.generator_type == GeneratorType.BLENDING],
+            algorithms=[algorithm.model for algorithm in self.generators if algorithm.generator_type == GeneratorType.ALGORITHM],
         )
 
     def generate_image_query_full(self,
