@@ -52,3 +52,10 @@ def hex_to_rgba_normalized(hex_color: str) -> Tuple[float, float, float, float]:
     b /= 255.0
     a /= 255.0
     return r, g, b, a
+
+def interpolate_colors(color1, color2, t):
+    return (
+        int(color1[0] * (1 - t) + color2[0] * t),
+        int(color1[1] * (1 - t) + color2[1] * t),
+        int(color1[2] * (1 - t) + color2[2] * t)
+    )
