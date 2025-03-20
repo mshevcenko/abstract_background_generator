@@ -243,6 +243,6 @@ class WFCAlgorithm(Algorithm):
 
 
 if __name__ == '__main__':
-    wfc_alg = WFCAlgorithm("WFC", "Wave Function Collapse")
+    wfc_alg = WFCAlgorithm("wfc", "Wave Function Collapse")
     img = wfc_alg.algorithm(1920, 1080, None, None, ["#000000FF", "#ffffff22", "#0000ffFF", "#00ff00FF"], (1, 2), "RedMaze")
     img.show()
