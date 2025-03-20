@@ -105,3 +105,11 @@ def crop_image_by_size(image: Image.Image, width: int, height: int, left: int=0,
 
 def convert_list_of_rgb_to_rgba(rgb_colors: List[Tuple[int, int, int]]) -> List[Tuple[int, int, int, int]]:
     return [(r, g, b, 255) for r, g, b in rgb_colors]
+
+
+def interpolate_colors(color1, color2, t):
+    return (
+        int(color1[0] * (1 - t) + color2[0] * t),
+        int(color1[1] * (1 - t) + color2[1] * t),
+        int(color1[2] * (1 - t) + color2[2] * t)
+    )
