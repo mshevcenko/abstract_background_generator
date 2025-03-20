@@ -17,4 +17,11 @@ gradient_algorithm = GradientAlgorithm("gradient_algorithm", "Gradient Algorithm
 voronoi_algorithm = VoronoiAlgorithm("voronoi_algorithm", "Voronoi Algorithm")
 hex_pattern_algorithm = HexPatternAlgorithm("hex_pattern_algorithm", "Hex Pattern Algorithm")
 wave_function_collapse_algorithm = WFCAlgorithm("wfc", "Wave Function Collapse")
-image_generator = ImageGenerator(generators=[lorenz_algorithm, plain_algorithm, alpha_blending, smooth_wave_algorithm, gradient_algorithm, voronoi_algorithm, hex_pattern_algorithm, wave_function_collapse_algorithm])
+image_generator = ImageGenerator(generators=[lorenz_algorithm,
+                                             plain_algorithm,
+                                             alpha_blending,
+                                             smooth_wave_algorithm,
+                                             gradient_algorithm,
+                                             voronoi_algorithm,
+                                             hex_pattern_algorithm,
+                                             wave_function_collapse_algorithm])

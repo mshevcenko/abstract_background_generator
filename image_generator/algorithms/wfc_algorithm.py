@@ -197,13 +197,11 @@ class WFCAlgorithm(Algorithm):
                       visible_name="Pattern",
                       data_type=DataType.ENUM_LIST,
                       visible_type=VisibleType.SELECTOR,
-                      default=["RedMaze"],
+                      default="RedMaze",
                       possible_values=[
                           {"value": "RedMaze", "visible_value": "Red Maze"},
                           {"value": "Spirals", "visible_value": "Spirals"},
-                      ],
-                      min_count=1,
-                      max_count=1),
+                      ]),
         ]
         super().__init__(name, visible_name, parameters)
 
