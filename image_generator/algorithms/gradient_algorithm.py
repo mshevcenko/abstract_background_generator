@@ -15,7 +15,9 @@ class GradientAlgorithm(Algorithm):
             visible_name="Colors",
             data_type=DataType.COLORS,
             visible_type=VisibleType.COLORS,
-            default=["#123456", "#654321"]
+            default=["#123456", "#654321"],
+            min_count=2,
+            max_count=2,
         )
     ]
 

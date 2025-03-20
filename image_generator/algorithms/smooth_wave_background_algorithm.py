@@ -15,7 +15,9 @@ class SmoothWaveBackgroundAlgorithm(Algorithm):
             visible_name="Colors",
             data_type=DataType.COLORS,
             visible_type=VisibleType.COLORS,
-            default=["#FF0000", "#FFFFFF"]
+            default=["#FF0000", "#FFFFFF"],
+            min_count=2,
+            max_count=2,
         ),
         Parameter(
             name="n_layers",
