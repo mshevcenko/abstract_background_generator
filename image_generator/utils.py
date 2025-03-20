@@ -113,3 +113,24 @@ def interpolate_colors(color1, color2, t):
         int(color1[1] * (1 - t) + color2[1] * t),
         int(color1[2] * (1 - t) + color2[2] * t)
     )
+def apply_color_palette(noise_map, colors, color_variation=0.2):
+
+    colors_array = np.array(colors, dtype=np.float32)
+    n_colors = colors_array.shape[0]
+
+    height, width = noise_map.shape
+
+    scaled = noise_map * (n_colors - 1)
+    index = np.floor(scaled).astype(int)
+    index = np.clip(index, 0, n_colors - 2)
+    interp_factor = scaled - index
+
+    color1 = colors_array[index]
+    color2 = colors_array[index + 1]
+
+    interpolated_color = color1 * (1 - interp_factor[..., None]) + color2 * interp_factor[..., None]
+
+    variation = np.random.uniform(-color_variation, color_variation, size=(height, width, 3))
+    final_color = np.clip(interpolated_color + variation * 255, 0, 255)
+
+    return final_color.astype(np.uint8)
