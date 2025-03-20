@@ -6,7 +6,8 @@ import math
 from typing import Optional, List
 from image_generator.algorithm import Algorithm
 from image_generator.parameter import Parameter, DataType, VisibleType
-from image_generator.utils import apply_transparency_mask, hex_to_rgb_normalized
+from image_generator.utils import apply_transparency_mask, hex_to_rgb_normalized, hex_to_rgb
+
 
 class FlowFieldGenerator(Algorithm):
     def __init__(self,
@@ -23,49 +24,49 @@ class FlowFieldGenerator(Algorithm):
             Parameter(name="scale",
                       visible_name="Scale",
                       data_type=DataType.FLOAT,
-                      visible_type=VisibleType.RANGE_SLIDER,
+                      visible_type=VisibleType.SLIDER,
                       default=1.0,
                       min_value=0.5,
                       max_value=100.0),
             Parameter(name="blur_radius",
                       visible_name="Blur radius",
                       data_type=DataType.FLOAT,
-                      visible_type=VisibleType.RANGE_SLIDER,
+                      visible_type=VisibleType.SLIDER,
                       default=1.0,
                       min_value=0.0,
                       max_value=10.0),
             Parameter(name="octaves",
                       visible_name="Octaves",
                       data_type=DataType.INTEGER,
-                      visible_type=VisibleType.RANGE_SLIDER,
+                      visible_type=VisibleType.SLIDER,
                       default=6,
                       min_value=2,
                       max_value=32),
             Parameter(name="line_count",
                       visible_name="line_count",
                       data_type=DataType.INTEGER,
-                      visible_type=VisibleType.RANGE_SLIDER,
+                      visible_type=VisibleType.SLIDER,
                       default=1000,
                       min_value=1,
                       max_value=10000),
             Parameter(name="line_length",
                       visible_name="Line_length",
                       data_type=DataType.INTEGER,
-                      visible_type=VisibleType.RANGE_SLIDER,
+                      visible_type=VisibleType.SLIDER,
                       default=100,
                       min_value=1,
                       max_value=10000),
             Parameter(name="line_width",
                       visible_name="line_width",
                       data_type=DataType.INTEGER,
-                      visible_type=VisibleType.RANGE_SLIDER,
+                      visible_type=VisibleType.SLIDER,
                       default=1,
-                      min_value=0.1,
+                      min_value=1,
                       max_value=100),
         ]
         super().__init__(name, visible_name, parameters)
 
-    def generate_flow_field_background(self,
+    def algorithm(self,
                   width: int,
                   height: int,
                   seed: Optional[int] = None,
@@ -77,10 +78,10 @@ class FlowFieldGenerator(Algorithm):
                   line_count: int = 1000,
                   line_length:int =100,
                   line_width: int =1,
-                  )-> Image:
+                  )-> Image.Image:
         random.seed(seed)
-        normalized_colors = [hex_to_rgb_normalized(color) for color in colors]
-        flow_field_image = self._generate_flow_field(width, height, normalized_colors, scale, octaves,
+        colors = [hex_to_rgb(color) for color in colors]
+        flow_field_image = self._generate_flow_field(width, height, colors, scale, octaves,
                                                    line_count, line_length, line_width)
 
         img = Image.fromarray(flow_field_image)

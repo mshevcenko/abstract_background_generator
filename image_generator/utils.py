@@ -53,7 +53,7 @@ def hex_to_rgba_normalized(hex_color: str) -> Tuple[float, float, float, float]:
     a /= 255.0
     return r, g, b, a
 
-def apply_color_palette(self, noise_map, colors, color_variation=0.2):
+def apply_color_palette(noise_map, colors, color_variation=0.2):
       
     colors_array = np.array(colors, dtype=np.float32)
     n_colors = colors_array.shape[0]
