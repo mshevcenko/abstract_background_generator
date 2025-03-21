@@ -15,7 +15,7 @@ from PIL.Image import Resampling
 from image_generator.algorithm import Algorithm
 from image_generator.parameter import Parameter, DataType, VisibleType
 from image_generator.utils import apply_transparency_mask, crop_image_by_size, convert_list_of_rgb_to_rgba, \
-    convert_hex_list_to_rgba, combine_lists_to_tuples, apply_color_changes_rgba
+    convert_hex_list_to_rgba, combine_lists_to_tuples, apply_color_changes_rgba, convert_hex_list_to_rgb
 
 
 def read_xml_file(file_path: str) -> List[Dict[str, Any]]:
@@ -142,14 +142,40 @@ def run_overlapping(node: Dict[str, Any], width: int, height: int, seed: int, li
     options.heuristic = to_heuristic(heuristic)
     options.ground = ground
 
+
     wfc = wfc_cpp.OverlappingWFC(options, numpy_pattern_img)
 
-    is_done = wfc.run(seed, limit)
+    is_done = wfc.run_overlapping_wfc(seed, limit)
+    #is_done = wfc.run(seed, limit)
     print(is_done)
 
-    array2d_vect =(wfc.get_output())
+    array2d_vect = wfc.get_output()
     img_numpy = (array2d_vect.to_numpy())
     return (is_done, img_numpy)
+
+
+def to_numpy_uint(value: int, bit_size: int = 32):
+    if bit_size == 32:
+        return np.uint32(max(0, min(value, 2**32 - 1)))
+    elif bit_size == 64:
+        return np.uint64(max(0, min(value, 2**64 - 1)))
+    else:
+        raise ValueError("bit_size must be either 32 or 64.")
+
+
+def to_numpy_int(value: int, bit_size: int = 32):
+    if bit_size == 32:
+        int_min, int_max = -2 ** 31, 2 ** 31 - 1
+        clamped_value = max(int_min, min(value, int_max))
+        return np.int32(clamped_value)
+
+    elif bit_size == 64:
+        int_min, int_max = -2 ** 63, 2 ** 63 - 1
+        clamped_value = max(int_min, min(value, int_max))
+        return np.int64(clamped_value)
+
+    else:
+        raise ValueError("bit_size must be either 32 or 64.")
 
 
 def run_wfc(pattern_name: str,
@@ -238,7 +264,7 @@ class WFCAlgorithm(Algorithm):
         xml_nodes = read_xml_file(xml_file_path)
         node = find_node_by_name(xml_nodes, pattern)
         pattern_colors = convert_list_of_rgb_to_rgba(get_colors_from_node(node))
-        to_change_colors = convert_hex_list_to_rgba(colors)
+        to_change_colors = convert_list_of_rgb_to_rgba(convert_hex_list_to_rgb(colors))
         color_change_rules = combine_lists_to_tuples(pattern_colors, to_change_colors)
 
         image = apply_color_changes_rgba(image, None, color_change_rules)
