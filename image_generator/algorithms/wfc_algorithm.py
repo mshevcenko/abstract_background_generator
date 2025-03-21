@@ -1,6 +1,7 @@
+import os
 import random
 
-import wfc_cpp_dll.wfc_cpp as wfc_cpp #it writes that it cannot find wfc_cpp but it work
+import wfc_cpp as wfc_cpp
 
 import xml.etree.ElementTree as ET
 from typing import Union, Optional
@@ -120,7 +121,8 @@ def run_overlapping(node: Dict[str, Any], width: int, height: int, seed: int, li
 
     print(f"< {name}")
 
-    image_path = f"patterns/{name}.png"
+    current_folder = os.path.dirname(os.path.abspath(__file__))
+    image_path = os.path.join(current_folder, f"patterns/{name}.png")
     pattern_img = read_image(image_path)
 
     if pattern_img is None:
@@ -155,7 +157,9 @@ def run_wfc(pattern_name: str,
             width_f: int, height_f: int,
             seed: int, gen_attempt_limit: int
             ) -> Image.Image:
-    xml_nodes = read_xml_file("patterns.xml")
+    current_folder = os.path.dirname(os.path.abspath(__file__))
+    xml_file_path = os.path.join(current_folder, "patterns.xml")
+    xml_nodes = read_xml_file(xml_file_path)
     node = find_node_by_name(xml_nodes, pattern_name)
 
     random.seed(seed)
@@ -197,7 +201,7 @@ class WFCAlgorithm(Algorithm):
                       visible_name="Pattern",
                       data_type=DataType.ENUM_LIST,
                       visible_type=VisibleType.SELECTOR,
-                      default=["RedMaze"],
+                      default="RedMaze",
                       possible_values=[
                           {"value": "RedMaze", "visible_value": "Red Maze"},
                           {"value": "Spirals", "visible_value": "Spirals"},
@@ -229,7 +233,9 @@ class WFCAlgorithm(Algorithm):
 
         image = crop_image_by_size(image, width, height)
 
-        xml_nodes = read_xml_file("patterns.xml")
+        current_folder = os.path.dirname(os.path.abspath(__file__))
+        xml_file_path = os.path.join(current_folder, "patterns.xml")
+        xml_nodes = read_xml_file(xml_file_path)
         node = find_node_by_name(xml_nodes, pattern)
         pattern_colors = convert_list_of_rgb_to_rgba(get_colors_from_node(node))
         to_change_colors = convert_hex_list_to_rgba(colors)
