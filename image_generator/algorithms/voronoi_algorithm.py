@@ -16,7 +16,9 @@ class VoronoiAlgorithm(Algorithm):
             visible_name="Colors",
             data_type=DataType.COLORS,
             visible_type=VisibleType.COLORS,
-            default=["#FF5733", "#33FF57"]
+            default=["#FF5733", "#33FF57"],
+            min_count=2,
+            max_count=2,
         ),
         Parameter(
             name="n_points",

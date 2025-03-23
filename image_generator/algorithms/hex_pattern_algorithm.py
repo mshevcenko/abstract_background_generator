@@ -15,7 +15,9 @@ class HexPatternAlgorithm(Algorithm):
             visible_name="Colors",
             data_type=DataType.COLORS,
             visible_type=VisibleType.COLORS,
-            default=["#FFA500", "#00FF00"]
+            default=["#FFA500", "#00FF00"],
+            min_count=2,
+            max_count=2,
         ),
         Parameter(
             name="hex_size",
