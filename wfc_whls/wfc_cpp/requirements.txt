@@ -1,0 +1,5 @@
+# Build dependencies for C++ extensions
+setuptools>=42
+wheel>=0.36
+cython>=0.29.21
+numpy>=1.20.0

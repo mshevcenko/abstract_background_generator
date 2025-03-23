@@ -1,6 +1,8 @@
 import os
 import random
 
+# Installation of wfc is manual and need Cmake on device before install
+# pip install .\wfc_whls\wfc_cpp\
 import wfc_cpp as wfc_cpp
 
 import xml.etree.ElementTree as ET
@@ -154,30 +156,6 @@ def run_overlapping(node: Dict[str, Any], width: int, height: int, seed: int, li
     return (is_done, img_numpy)
 
 
-def to_numpy_uint(value: int, bit_size: int = 32):
-    if bit_size == 32:
-        return np.uint32(max(0, min(value, 2**32 - 1)))
-    elif bit_size == 64:
-        return np.uint64(max(0, min(value, 2**64 - 1)))
-    else:
-        raise ValueError("bit_size must be either 32 or 64.")
-
-
-def to_numpy_int(value: int, bit_size: int = 32):
-    if bit_size == 32:
-        int_min, int_max = -2 ** 31, 2 ** 31 - 1
-        clamped_value = max(int_min, min(value, int_max))
-        return np.int32(clamped_value)
-
-    elif bit_size == 64:
-        int_min, int_max = -2 ** 63, 2 ** 63 - 1
-        clamped_value = max(int_min, min(value, int_max))
-        return np.int64(clamped_value)
-
-    else:
-        raise ValueError("bit_size must be either 32 or 64.")
-
-
 def run_wfc(pattern_name: str,
             width_g: int, height_g: int,
             width_f: int, height_f: int,
@@ -214,7 +192,7 @@ class WFCAlgorithm(Algorithm):
                       data_type=DataType.COLORS,
                       visible_type=VisibleType.COLORS,
                       default=[],
-                      min_count=1,
+                      min_count=0,
                       max_count=10),
             Parameter(name="scale",
                       visible_name="Additional scaling",
@@ -229,11 +207,10 @@ class WFCAlgorithm(Algorithm):
                       visible_type=VisibleType.SELECTOR,
                       default="RedMaze",
                       possible_values=[
-                          {"value": "RedMaze", "visible_value": "Red Maze"},
-                          {"value": "Spirals", "visible_value": "Spirals"},
+                          {"value": "RedMaze", "visible_value": "Red Maze (3 colors)"},
+                          {"value": "Spirals", "visible_value": "Spirals (2 colors)"},
                       ],
-                      min_count=1,
-                      max_count=1),
+                      ),
         ]
         super().__init__(name, visible_name, parameters)
 
@@ -243,7 +220,7 @@ class WFCAlgorithm(Algorithm):
                   seed: Optional[int] = None,
                   area: Optional[List[List[bool]]] = None,
                   colors=None,
-                  scale: Tuple[float, float] = (1.0, 1.0),
+                  scale: Tuple[float, float] = (1.0, 2.0),
                   pattern: str = "RedMaze"
                   ) -> Image:
 
