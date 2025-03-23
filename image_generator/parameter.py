@@ -80,13 +80,13 @@ class Parameter:
 
     def __check(self) -> None:
         if not isinstance(self.name, str):
-            raise ValueError(f"Parameter name is not str: \"{self.name}\"")
+            raise ValueError(f"Parameter name(\"{self.name}\") is not str")
         if not isinstance(self.visible_name, str):
-            raise ValueError(f"Parameter visible name is not str: \"{self.visible_name}\"")
+            raise ValueError(f"Parameter visible_name(\"{self.visible_name}\") is not str")
         if not isinstance(self.data_type, DataType):
-            raise ValueError(f"Parameter data_type is not DataType: \"{self.data_type}\"")
+            raise ValueError(f"Parameter data_type(\"{self.data_type}\") is not DataType")
         if not isinstance(self.visible_type, VisibleType):
-            raise ValueError(f"Parameter visible_type is not VisibleType: \"{self.visible_type}\"")
+            raise ValueError(f"Parameter visible_type(\"{self.visible_type}\") is not VisibleType")
         self.__check_data_type_visible_type()
         self.__check_min_value_max_value()
         self.__check_min_count_max_count()
