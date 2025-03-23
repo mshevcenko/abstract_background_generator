@@ -8,6 +8,13 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /app
 COPY requirements.txt .
 RUN pip install --upgrade pip && pip install --no-cache-dir -r requirements.txt
+
+
+ARG WFC_VERSION=wfc_cpp-0.1.0-cp39-cp39-linux_x86_64.whl
+COPY wfc_whls/$WFC_VERSION /app/wheelhouse/
+RUN pip install /app/wheelhouse/$WFC_VERSION
+RUN rm /app/wheelhouse/$WFC_VERSION
+
 COPY . .
 EXPOSE 8000
 ENV PYTHONDONTWRITEBYTECODE=1
