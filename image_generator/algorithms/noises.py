@@ -64,7 +64,7 @@ class ProceduralBackgroundGenerator(Algorithm):
                       visible_type=VisibleType.SLIDER,
                       default=2.0,
                       min_value=0.5,
-                      max_value=6),
+                      max_value=6.0),
             Parameter(name="island_type",
                       visible_name="Island Type",
                       data_type=DataType.BOOL,
