@@ -1,7 +1,9 @@
 import numpy as np
+import random
+import math
 from PIL import Image, ImageDraw
 from random import randint, uniform
-from typing import Optional, List, Dict, Any
+from typing import Optional, List, Tuple
 
 from image_generator.algorithm import Algorithm
 from image_generator.parameter import Parameter, DataType, VisibleType
@@ -24,34 +26,34 @@ class SmoothWaveBackgroundAlgorithm(Algorithm):
             visible_name="Number of layers",
             data_type=DataType.INTEGER,
             visible_type=VisibleType.SLIDER,
-            default=7,
-            min_value=1,
-            max_value=10
+            default=10,
+            min_value=5,
+            max_value=20
         ),
         Parameter(
             name="monochrome",
             visible_name="Monochrome mode",
             data_type=DataType.BOOL,
             visible_type=VisibleType.CHECKBOX,
-            default=True
+            default=False
         )
     ]
 
-    def __init__(self,
-                 name: str,
-                 visible_name: str):
+    def __init__(self, name: str, visible_name: str):
         super().__init__(name, visible_name, self.PARAMETERS)
 
-    def generate_wave_points(self, width: int, base_y: float, step: float, n_points: int = 250):
-        x = np.linspace(0, width, n_points)
-        y = np.full_like(x, base_y, dtype=float)
-        harmonics = randint(3, 5)
+    def generate_wave_points(self, width: int, base_y: float, amplitude: float, n_points: int = 250) -> List[Tuple[float, float]]:
+        xs = np.linspace(0, width, n_points)
+        ys = np.full_like(xs, base_y, dtype=float)
+        harmonics = randint(1, 3)
         for _ in range(harmonics):
-            freq = uniform(1, 4)
-            phase = uniform(0, 2 * np.pi)
-            amp = uniform(step * 0.25, step * 0.6)
-            y += np.sin((x / width) * np.pi * freq + phase) * amp
-        return list(zip(x, y))
+            freq = uniform(1, 3)
+            phase = uniform(0, 2 * math.pi)
+            amp = uniform(amplitude * 0.5, amplitude)
+            ys += np.sin(2 * math.pi * freq * xs / width + phase) * amp
+        ys[0] = base_y
+        ys[-1] = base_y
+        return list(zip(xs, ys))
 
     def algorithm(self,
                   width: int,
@@ -59,40 +61,80 @@ class SmoothWaveBackgroundAlgorithm(Algorithm):
                   seed: Optional[int] = None,
                   area: Optional[List[List[bool]]] = None,
                   colors: Optional[List[str]] = None,
-                  **kwargs) -> Image:
+                  n_layers: int = 7,
+                  monochrome: bool = False) -> Image:
         if seed is not None:
-            np.random.seed(seed)
-        n_layers = kwargs.get("n_layers", 7)
-        monochrome = kwargs.get("monochrome", True)
+            random.seed(seed)
 
-        if colors is not None and len(colors) >= 1:
+        if colors is not None and len(colors) >= 2:
             base_color = hex_to_rgb(colors[0])
+            secondary_color = hex_to_rgb(colors[1])
+        elif colors is not None and len(colors) == 1:
+            base_color = hex_to_rgb(colors[0])
+            secondary_color = base_color
         else:
             base_color = (randint(50, 150), randint(50, 150), randint(50, 150))
-        secondary_color = (255, 255, 255)
+            secondary_color = (255, 255, 255)
 
         img = Image.new("RGB", (width, height), (255, 255, 255))
         draw = ImageDraw.Draw(img)
-        step = height // n_layers
-        gradient = Image.new("RGB", (width, height), (255, 255, 255))
-        gradient_draw = ImageDraw.Draw(gradient)
 
-        for i in range(n_layers):
-            layer_color = base_color if monochrome else (hex_to_rgb(colors[i % len(colors)])
-                                                         if colors and len(colors) > 0 else base_color)
-            y_offset = i * step + randint(-step // 5, step // 5)
-            points = self.generate_wave_points(width, y_offset, step)
-            points_full = points + [(width, height), (0, height)]
+        n_layers = max(n_layers, 2)
+        layer_ys = np.linspace(0, height, n_layers)
+        amplitude = (height / (n_layers - 1)) * 0.2
 
-            shadow_offset = int(step * 0.08)
-            shadow_color = tuple(max(0, c - 30) for c in layer_color)
-            shadow_points = [(x, y + shadow_offset) for x, y in points]
-            shadow_points_full = shadow_points + [(width, height), (0, height)]
-            draw.polygon(shadow_points_full, fill=shadow_color)
-            draw.polygon(points_full, fill=layer_color)
+        wave_curves = []
+        for i, y in enumerate(layer_ys):
+            if i == 0 or i == n_layers - 1:
+                base_y = y
+            else:
+                offset = uniform(-amplitude/2, amplitude/2)
+                base_y = y + offset
+            wave = self.generate_wave_points(width, base_y, amplitude)
+            wave_curves.append(wave)
 
-            grad_color = interpolate_colors(layer_color, secondary_color, 0.3)
-            gradient_draw.polygon(points_full, fill=grad_color)
+        def draw_polygon(polygon, fill_color, outline_color=None):
+            pts = [(int(round(x)), int(round(y))) for x, y in polygon]
+            draw.polygon(pts, fill=fill_color, outline=outline_color)
 
-        blended = Image.blend(img, gradient, alpha=0.3)
-        return blended
+        if monochrome:
+            def get_monochrome_color(t: float) -> Tuple[int, int, int]:
+                factor = 1.0 - 0.2 * t
+                r = max(0, min(255, int(base_color[0] * factor)))
+                g = max(0, min(255, int(base_color[1] * factor)))
+                b = max(0, min(255, int(base_color[2] * factor)))
+                return (r, g, b)
+
+        top_wave = wave_curves[0]
+        top_polygon = [(0, 0)] + top_wave + [(width, 0)]
+        t = 0.0
+        if monochrome:
+            fill_color = get_monochrome_color(t)
+        else:
+            rgb = interpolate_colors(base_color, secondary_color, t)
+            fill_color = rgb
+        draw_polygon(top_polygon, fill_color)
+
+        for i in range(n_layers - 1):
+            upper_wave = wave_curves[i]
+            lower_wave = wave_curves[i + 1]
+            polygon = upper_wave + list(reversed(lower_wave))
+            t = i / (n_layers - 1)
+            if monochrome:
+                fill_color = get_monochrome_color(t)
+            else:
+                rgb = interpolate_colors(base_color, secondary_color, t)
+                fill_color = rgb
+            draw_polygon(polygon, fill_color)
+
+        bottom_wave = wave_curves[-1]
+        bottom_polygon = bottom_wave + [(width, height), (0, height)]
+        t = 1.0
+        if monochrome:
+            fill_color = get_monochrome_color(t)
+        else:
+            rgb = interpolate_colors(base_color, secondary_color, t)
+            fill_color = rgb
+        draw_polygon(bottom_polygon, fill_color)
+
+        return img
