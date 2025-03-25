@@ -73,11 +73,9 @@ class ImageGenerator:
         full_metadata = query.full_metadata
         layer = Layer(layer_query, self.generators_dict)
         if not seed:
-            seed = 1
-        # if not seed:
-        #    seed = self.seed_generator.generate_seed()
-        # layers_seed_generator = SeedGenerator(seed=seed)
-        # layer.generate_seed(layers_seed_generator)
+           seed = self.seed_generator.generate_seed()
+        layers_seed_generator = SeedGenerator(seed=seed)
+        layer.generate_seed(layers_seed_generator)
         image = layer.generate(width, height)
         if full_metadata is None or full_metadata:
             metadata = ImageMetadataFull(

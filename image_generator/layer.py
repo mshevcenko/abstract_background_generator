@@ -64,8 +64,11 @@ class Layer:
 
     def generate_seed(self,
                       seed_generator: SeedGenerator,
+                      overwrite: bool = False,
                       recursive: bool = True) -> None:
-        self.values["seed"] = seed_generator.generate_seed()
+        seed = seed_generator.generate_seed()
+        if overwrite or "seed" not in self.values:
+            self.values["seed"] = seed
         if recursive:
             for layer in self.layers:
                 layer.generate_seed(seed_generator)
