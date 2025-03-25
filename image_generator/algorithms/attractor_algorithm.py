@@ -201,7 +201,6 @@ class AttractorAlgorithm(Algorithm):
         if d_max - d_min < 1e-5:
             d_max = d_min + 1e-5
         norm_depths = (depths - d_min) / (d_max - d_min)
-        print(norm_depths)
         xs = transformed[:, 0]
         zs = transformed[:, 2]
         xs, zs = auto_scale_and_center(xs, zs, width, height, scale, offset_x=offset_x, offset_y=offset_y)
