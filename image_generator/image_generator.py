@@ -18,7 +18,6 @@ class QueryFull(BaseModel):
     width: int
     height: int
     seed: Optional[int] = None
-    full_metadata: Optional[bool] = True
 
 
 class QueryShort(BaseModel):
@@ -65,31 +64,23 @@ class ImageGenerator:
         )
 
     def generate_image_query_full(self,
-                                  query: QueryFull) -> Tuple[Image, Union[ImageMetadataFull, ImageMetadataShort]]:
+                                  query: QueryFull) -> Tuple[Image, ImageMetadataFull]:
         width = query.width
         height = query.height
         layer_query = query.layer_query
         seed = query.seed
-        full_metadata = query.full_metadata
         layer = Layer(layer_query, self.generators_dict)
         if not seed:
-            seed = 1
-        # if not seed:
-        #    seed = self.seed_generator.generate_seed()
-        # layers_seed_generator = SeedGenerator(seed=seed)
-        # layer.generate_seed(layers_seed_generator)
+           seed = self.seed_generator.generate_seed()
+        layers_seed_generator = SeedGenerator(seed=seed)
+        layer.generate_seed(layers_seed_generator)
         image = layer.generate(width, height)
-        if full_metadata is None or full_metadata:
-            metadata = ImageMetadataFull(
-                width=width,
-                height=height,
-                seed=seed,
-                layer_query=layer_query
-            )
-        else:
-            metadata = ImageMetadataShort(
-                seed=seed
-            )
+        metadata = ImageMetadataFull(
+            width=width,
+            height=height,
+            seed=seed,
+            layer_query=layer_query
+        )
         return image, metadata
 
     def create_generators_dict(self) -> None:
