@@ -10,7 +10,7 @@ from image_generator.generator import GeneratorType, Generator
 class LayerQuery(BaseModel):
     name: str
     generator_type: GeneratorType
-    values: Optional[Dict[str, Union[int, float, str, List[str], Tuple[int, int], Tuple[float, float], bool]]] = None
+    values: Optional[Dict[str, Union[int, float, str, List[str], Tuple[int, int], Tuple[float, float], bool, List[List[bool]]]]] = None
     blending_values: Optional[Dict[str, Union[int, float, str, List[str], Tuple[int, int], Tuple[float, float], bool]]] = None
     layers: Optional[List[LayerQuery]] = None
 
