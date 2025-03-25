@@ -17,7 +17,8 @@ from PIL.Image import Resampling
 from image_generator.algorithm import Algorithm
 from image_generator.parameter import Parameter, DataType, VisibleType
 from image_generator.utils import apply_transparency_mask, crop_image_by_size, convert_list_of_rgb_to_rgba, \
-    convert_hex_list_to_rgba, combine_lists_to_tuples, apply_color_changes_rgba, convert_hex_list_to_rgb
+    convert_hex_list_to_rgba, combine_lists_to_tuples, apply_color_changes_rgba, convert_hex_list_to_rgb, \
+    scale_dimensions_in_ratio
 
 
 def read_xml_file(file_path: str) -> List[Dict[str, Any]]:
@@ -183,8 +184,8 @@ def run_wfc(pattern_name: str,
 
 class WFCAlgorithm(Algorithm):
     def __init__(self,
-                 name: str,
-                 visible_name: str,
+                 name: str = "wfc",
+                 visible_name: str = "Wave Function Collapse",
                  ):
         parameters = [
             Parameter(name="colors",
@@ -219,9 +220,12 @@ class WFCAlgorithm(Algorithm):
                   height: int,
                   seed: Optional[int] = None,
                   area: Optional[List[List[bool]]] = None,
-                  colors=None,
+                  colors: Optional[List[str]] = None,
                   scale: Tuple[float, float] = (1.0, 2.0),
-                  pattern: str = "RedMaze"
+                  pattern: str = "RedMaze",
+                  max_g_width: int = 250,
+                  max_g_height: int = 250,
+                  **kwargs
                   ) -> Image:
 
         if colors is None:
@@ -229,8 +233,11 @@ class WFCAlgorithm(Algorithm):
         random.seed(seed)
         scale = random.uniform(*scale)
 
+        g_width, g_height = scale_dimensions_in_ratio(width, height,
+                                                      max_g_width, max_g_height)
+        print(g_width, g_height)
         image = run_wfc(pattern,
-                      192, 108,
+                        g_width, g_height,
                         round(width * scale), round(height * scale),
                         seed, 100)
 
@@ -253,5 +260,5 @@ class WFCAlgorithm(Algorithm):
 
 if __name__ == '__main__':
     wfc_alg = WFCAlgorithm("wfc", "Wave Function Collapse")
-    img = wfc_alg.algorithm(1920, 1080, None, None, ["#000000FF", "#ffffff22", "#0000ffFF", "#00ff00FF"], (1, 2), "RedMaze")
+    img = wfc_alg.algorithm(1920, 1080, None, None, ["#000000FF", "#ffffff22", "#0000ffFF", "#00ff00FF"], (1, 1), "RedMaze")
     img.show()

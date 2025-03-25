@@ -9,6 +9,7 @@ from image_generator.algorithms.wfc_algorithm import WFCAlgorithm
 from image_generator.blendings.alpha_blending import AlphaBlending
 from image_generator.algorithms.flow_field_algorithm import FlowFieldGenerator
 from image_generator.algorithms.noises import ProceduralBackgroundGenerator
+from image_generator.blendings.zone_blending import ZoneBlending
 from image_generator.image_generator import ImageGenerator
 
 lorenz_algorithm = AttractorAlgorithm("lorenz_attractor", "Lorenz Attractor", LorenzAttractor())
@@ -18,16 +19,19 @@ smooth_wave_algorithm = SmoothWaveBackgroundAlgorithm("smooth_wave_background", 
 gradient_algorithm = GradientAlgorithm("gradient_algorithm", "Gradient Algorithm")
 voronoi_algorithm = VoronoiAlgorithm("voronoi_algorithm", "Voronoi Algorithm")
 hex_pattern_algorithm = HexPatternAlgorithm("hex_pattern_algorithm", "Hex Pattern Algorithm")
-wave_function_collapse_algorithm = WFCAlgorithm("wfc", "Wave Function Collapse")
+wave_function_collapse_algorithm = WFCAlgorithm()
 flow_field_generator = FlowFieldGenerator("flow_field_generator", "Flow Field Generator")
 procedural_background_generator = ProceduralBackgroundGenerator("procedural_background_generator", "Procedural Background Generator")
-image_generator = ImageGenerator(generators=[lorenz_algorithm,
-                                             plain_algorithm,
-                                             alpha_blending,
-                                             smooth_wave_algorithm,
-                                             gradient_algorithm,
-                                             voronoi_algorithm,
-                                             hex_pattern_algorithm,
-                                             wave_function_collapse_algorithm,
-                                             flow_field_generator,
-                                             procedural_background_generator])
+zone_blending = ZoneBlending()
+generators = [lorenz_algorithm,
+              plain_algorithm,
+              alpha_blending,
+              smooth_wave_algorithm,
+              gradient_algorithm,
+              voronoi_algorithm,
+              hex_pattern_algorithm,
+              wave_function_collapse_algorithm,
+              flow_field_generator,
+              procedural_background_generator,
+              zone_blending]
+image_generator = ImageGenerator(generators=generators)

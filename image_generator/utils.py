@@ -134,3 +134,35 @@ def apply_color_palette(noise_map, colors, color_variation=0.2):
     final_color = np.clip(interpolated_color + variation * 255, 0, 255)
 
     return final_color.astype(np.uint8)
+
+
+def extract_color_to_int(image: Image.Image) -> np.ndarray:
+    img_array = np.array(image)
+
+    color_map = {}
+    color_counter = 1
+
+    for i in range(img_array.shape[0]):
+        for j in range(img_array.shape[1]):
+            color = tuple(img_array[i, j])
+            if color not in color_map:
+                color_map[color] = color_counter
+                color_counter += 1
+
+    int_array = np.zeros((img_array.shape[0], img_array.shape[1]), dtype=int)
+
+    for i in range(img_array.shape[0]):
+        for j in range(img_array.shape[1]):
+            color = tuple(img_array[i, j])
+            int_array[i, j] = color_map[color]
+
+    return int_array
+
+
+def scale_dimensions_in_ratio(final_width: int, final_height: int,
+                              max_size_w: int = 250, max_size_h: int = 250
+                              ) -> tuple[int, int]:
+    scale_factor = min(max_size_w / final_width, max_size_h / final_height, 1.0)
+    new_width = int(final_width * scale_factor)
+    new_height = int(final_height * scale_factor)
+    return new_width, new_height
