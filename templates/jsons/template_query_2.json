@@ -1,0 +1,31 @@
+{
+  "image_path": "template_image_2.png",
+  "query_full": {
+    "width": 640,
+    "height": 480,
+    "seed": null,
+    "layer_query": {
+      "name": "alpha_blending",
+      "generator_type": "blending",
+      "values": {
+        "seed": 1247389304
+      },
+      "layers": [
+        {
+          "name": "gradient_algorithm",
+          "generator_type": "algorithm",
+          "values": {
+            "colors": [
+              "#22C2D8",
+              "#D83822"
+            ],
+            "seed": 214934970
+          },
+          "blending_values": {
+            "opacity": 1.0
+          }
+        }
+      ]
+    }
+  }
+}
