@@ -1,6 +1,12 @@
+import random
+
 import numpy as np
 from PIL import Image
-from typing import Tuple, List, Optional
+from typing import Tuple, List, Optional, Union
+
+Color = Tuple[int, int, int]  # RGB
+ColorAlpha = Tuple[int, int, int, int]  # RGBA
+ColorType = Union[Color, ColorAlpha, List[Color], List[ColorAlpha]]  # Accepts single or list of colors
 
 
 def apply_transparency_mask(image: Image.Image,
@@ -55,7 +61,7 @@ def hex_to_rgba_normalized(hex_color: str) -> Tuple[float, float, float, float]:
 
 
 def apply_color_changes_rgba(image: Image.Image, mask: Optional[np.ndarray],
-                             color_changes: List[Tuple[Tuple[int, int, int, int], Tuple[int, int, int, int]]]
+                             color_changes: List[Tuple[Union[Color, ColorAlpha], Union[Color, ColorAlpha]]]
                              ) -> Image.Image:
     if image.mode != 'RGBA':
         image = image.convert('RGBA')
@@ -63,7 +69,8 @@ def apply_color_changes_rgba(image: Image.Image, mask: Optional[np.ndarray],
     pixels = image.load()
     width, height = image.size
 
-    color_map = {old_color: new_color for old_color, new_color in color_changes}
+    color_map = {ensure_color_format(old_color, True): ensure_color_format(new_color, True)
+                 for old_color, new_color in color_changes}
 
     if mask is None or not np.any(mask):
         for y in range(height):
@@ -82,11 +89,11 @@ def apply_color_changes_rgba(image: Image.Image, mask: Optional[np.ndarray],
     return image
 
 
-def convert_hex_list_to_rgb(hex_colors: List[str]) -> List[Tuple[int, int, int]]:
+def convert_hex_list_to_rgb(hex_colors: List[str]) -> List[Color]:
     return [hex_to_rgb(hex_color) for hex_color in hex_colors]
 
 
-def convert_hex_list_to_rgba(hex_colors: List[str]) -> List[Tuple[int, int, int, int]]:
+def convert_hex_list_to_rgba(hex_colors: List[str]) -> List[ColorAlpha]:
     return [hex_to_rgba(hex_color) for hex_color in hex_colors]
 
 
@@ -103,8 +110,20 @@ def crop_image_by_size(image: Image.Image, width: int, height: int, left: int=0,
     return cropped_image
 
 
-def convert_list_of_rgb_to_rgba(rgb_colors: List[Tuple[int, int, int]]) -> List[Tuple[int, int, int, int]]:
-    return [(r, g, b, 255) for r, g, b in rgb_colors]
+def convert_list_of_rgb_to_rgba(rgb_colors: List[Color]) -> List[ColorAlpha]:
+    return ensure_color_format(rgb_colors, True)
+
+
+def ensure_color_format(colors: ColorType, use_alpha: bool) -> ColorType:
+    is_single = isinstance(colors, tuple)
+    colors = [colors] if is_single else colors
+
+    if use_alpha:
+        colors = [(c[0], c[1], c[2], c[3] if len(c) == 4 else 255) for c in colors]
+    else:
+        colors = [(c[0], c[1], c[2]) for c in colors]
+
+    return colors[0] if is_single else colors
 
 
 def interpolate_colors(color1, color2, t):
@@ -166,3 +185,32 @@ def scale_dimensions_in_ratio(final_width: int, final_height: int,
     new_width = int(final_width * scale_factor)
     new_height = int(final_height * scale_factor)
     return new_width, new_height
+
+
+def get_unique_colors_rgb(image: Image) -> List[Color]:
+    if image.mode != 'RGB':
+        image = image.convert('RGB')
+
+    img_array = np.array(image)
+    pixels = img_array.reshape(-1, 3)
+    unique_colors = np.unique(pixels, axis=0)
+    return [tuple(color) for color in unique_colors]
+
+
+def generate_random_colors(n: int, seed: int, use_alpha: bool = False) -> List[Union[Color, ColorAlpha]]:
+    random.seed(seed)
+
+    if use_alpha:
+        return [(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)) for _
+                in range(n)]
+    else:
+        return [(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)) for _ in range(n)]
+
+
+def extend_colors(colors: List[Union[Color, ColorAlpha]],
+                  pattern_colors: List[Union[Color, ColorAlpha]],
+                  seed: int, use_alpha: bool = False):
+    if len(colors) < len(pattern_colors):
+        missing_count = len(pattern_colors) - len(colors)
+        colors.extend(generate_random_colors(missing_count, seed, use_alpha))
+    return ensure_color_format(colors, use_alpha)

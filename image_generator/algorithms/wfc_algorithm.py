@@ -18,7 +18,7 @@ from image_generator.algorithm import Algorithm
 from image_generator.parameter import Parameter, DataType, VisibleType
 from image_generator.utils import apply_transparency_mask, crop_image_by_size, convert_list_of_rgb_to_rgba, \
     convert_hex_list_to_rgba, combine_lists_to_tuples, apply_color_changes_rgba, convert_hex_list_to_rgb, \
-    scale_dimensions_in_ratio
+    scale_dimensions_in_ratio, get_unique_colors_rgb, extend_colors, ensure_color_format
 
 
 def read_xml_file(file_path: str) -> List[Dict[str, Any]]:
@@ -111,16 +111,29 @@ def array_to_image(array: np.ndarray) -> Optional[Image.Image]:
         return None
 
 
-def run_overlapping(node: Dict[str, Any], width: int, height: int, seed: int, limit: int) -> (bool, np.ndarray):
-    name = get_attribute(node, "name")
-    size = get_attribute(node, "size", "48")
-    N = int(get_attribute(node, "N", "3"))
+def run_overlapping(options: wfc_cpp.Options, numpy_pattern_img: wfc_cpp.Array2Duint32_t, seed: int, limit: int) -> (bool, np.ndarray):
+    wfc = wfc_cpp.OverlappingWFC(options, numpy_pattern_img)
+    is_done = wfc.run_overlapping_wfc(seed, limit)
+    array2d_vect = wfc.get_output()
+    img_numpy = (array2d_vect.to_numpy())
+    return is_done, img_numpy
 
-    periodic_output = get_attribute(node, "periodic", "False") == "True"
-    periodic_input = get_attribute(node, "periodicInput", "True") == "True"
-    ground = get_attribute(node, "ground", "False") == "True"
-    symmetry = int(get_attribute(node, "symmetry", "8"))
-    heuristic = get_attribute(node, "heuristic", "Entropy")
+
+def run_wfc(pattern_node: Dict[str, Any],
+            width_g: int, height_g: int,
+            width_f: int, height_f: int,
+            seed: int, gen_attempt_limit: int
+            ) -> Image.Image:
+
+    name = get_attribute(pattern_node, "name")
+    # size = get_attribute(pattern_node, "size", "48")
+    N = int(get_attribute(pattern_node, "N", "3"))
+
+    periodic_output = get_attribute(pattern_node, "periodic", "False") == "True"
+    periodic_input = get_attribute(pattern_node, "periodicInput", "True") == "True"
+    ground = get_attribute(pattern_node, "ground", "False") == "True"
+    symmetry = int(get_attribute(pattern_node, "symmetry", "8"))
+    heuristic = get_attribute(pattern_node, "heuristic", "Entropy")
 
     print(f"< {name}")
 
@@ -138,43 +151,21 @@ def run_overlapping(node: Dict[str, Any], width: int, height: int, seed: int, li
     options.periodic_output = periodic_output
     options.i_W = pattern_img["MX"]
     options.i_H = pattern_img["MY"]
-    options.o_W = width
-    options.o_H = height
+    options.o_W = width_g
+    options.o_H = height_g
     options.symmetry = (1 << symmetry) - 1
     options.pattern_size = N
     options.heuristic = to_heuristic(heuristic)
     options.ground = ground
-
-
-    wfc = wfc_cpp.OverlappingWFC(options, numpy_pattern_img)
-
-    is_done = wfc.run_overlapping_wfc(seed, limit)
-    #is_done = wfc.run(seed, limit)
-    print(is_done)
-
-    array2d_vect = wfc.get_output()
-    img_numpy = (array2d_vect.to_numpy())
-    return (is_done, img_numpy)
-
-
-def run_wfc(pattern_name: str,
-            width_g: int, height_g: int,
-            width_f: int, height_f: int,
-            seed: int, gen_attempt_limit: int
-            ) -> Image.Image:
-    current_folder = os.path.dirname(os.path.abspath(__file__))
-    xml_file_path = os.path.join(current_folder, "patterns.xml")
-    xml_nodes = read_xml_file(xml_file_path)
-    node = find_node_by_name(xml_nodes, pattern_name)
 
     random.seed(seed)
 
     is_done = False
     attempts = 0
 
-    while((not is_done) and (attempts < gen_attempt_limit)):
+    while (not is_done) and (attempts < gen_attempt_limit):
         seed_internal = random.randint(0, 10000)
-        (is_done, numpy_img) = run_overlapping(node, width_g, height_g, seed_internal, -1)
+        (is_done, numpy_img) = run_overlapping(options, numpy_pattern_img, seed_internal, -1)
         attempts += 1
 
     img_t = array_to_image(numpy_img)
@@ -202,6 +193,13 @@ class WFCAlgorithm(Algorithm):
                       default=(1.0, 2.0),
                       min_value=1.0,
                       max_value=10.0),
+            Parameter(name="max_gen_dim",
+                      visible_name="Base max generation dimensions",
+                      data_type=DataType.INTEGER,
+                      visible_type=VisibleType.SLIDER,
+                      default=192,
+                      min_value=80,
+                      max_value=250),
             Parameter(name="pattern",
                       visible_name="Pattern",
                       data_type=DataType.ENUM_LIST,
@@ -223,32 +221,36 @@ class WFCAlgorithm(Algorithm):
                   colors: Optional[List[str]] = None,
                   scale: Tuple[float, float] = (1.0, 2.0),
                   pattern: str = "RedMaze",
-                  max_g_width: int = 250,
-                  max_g_height: int = 250,
+                  max_gen_dim: int = 192,
                   **kwargs
                   ) -> Image:
 
-        if colors is None:
-            colors = []
+        current_folder = os.path.dirname(os.path.abspath(__file__))
+        xml_file_path = os.path.join(current_folder, "patterns.xml")
+
+        xml_nodes = read_xml_file(xml_file_path)
+        pattern_node = find_node_by_name(xml_nodes, pattern)
+
+        name = get_attribute(pattern_node, "name")
+        pattern_image_path = os.path.join(current_folder, f"patterns/{name}.png")
+        pattern_image = Image.open(pattern_image_path)
+
+        pattern_colors = get_unique_colors_rgb(pattern_image)
+
         random.seed(seed)
         scale = random.uniform(*scale)
 
-        g_width, g_height = scale_dimensions_in_ratio(width, height,
-                                                      max_g_width, max_g_height)
-        print(g_width, g_height)
-        image = run_wfc(pattern,
+        g_width, g_height = scale_dimensions_in_ratio(width, height, max_gen_dim, max_gen_dim)
+
+        image = run_wfc(pattern_node,
                         g_width, g_height,
                         round(width * scale), round(height * scale),
                         seed, 100)
 
         image = crop_image_by_size(image, width, height)
 
-        current_folder = os.path.dirname(os.path.abspath(__file__))
-        xml_file_path = os.path.join(current_folder, "patterns.xml")
-        xml_nodes = read_xml_file(xml_file_path)
-        node = find_node_by_name(xml_nodes, pattern)
-        pattern_colors = convert_list_of_rgb_to_rgba(get_colors_from_node(node))
-        to_change_colors = convert_list_of_rgb_to_rgba(convert_hex_list_to_rgb(colors))
+        to_change_colors = convert_hex_list_to_rgb(colors)
+        to_change_colors = extend_colors(to_change_colors, pattern_colors, seed, True)
         color_change_rules = combine_lists_to_tuples(pattern_colors, to_change_colors)
 
         image = apply_color_changes_rgba(image, None, color_change_rules)

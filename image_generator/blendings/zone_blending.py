@@ -46,7 +46,7 @@ def distribute_zones(zone_matrix: np.ndarray, layers_stuid_l: List[Layer_Uid]) -
     layers_weights = collect_layers_weights(layers_stuid_l)
     unique_zones, counts = np.unique(zone_matrix, return_counts=True)
 
-    non_zero_mask = unique_zones != -1
+    non_zero_mask = unique_zones != 0
     unique_zones = unique_zones[non_zero_mask]
     counts = counts[non_zero_mask]
 
@@ -179,7 +179,6 @@ def generate_zones_matrix(zgf: int,
                           area: Optional[List[List[bool]]] = None,
                           **kwargs) -> np.ndarray:
     random.seed(seed)
-
     img = generators[zgf].algorithm(width=width, height=height,
                                     seed=seed, area=area,
                                     colors=basic_colors,
