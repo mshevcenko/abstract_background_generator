@@ -11,15 +11,15 @@ from image_generator.algorithms.wfc_algorithm import WFCAlgorithm
 from image_generator.algorithms.flow_field_algorithm import FlowFieldGenerator
 from image_generator.algorithms.noises import ProceduralBackgroundGenerator
 
-lorenz_algorithm = AttractorAlgorithm("lorenz_attractor", "Lorenz Attractor", LorenzAttractor())
-plain_algorithm = PlainAlgorithm("plain_algorithm", "Plain Algorithm", "#EAD196")
-smooth_wave_algorithm = SmoothWaveBackgroundAlgorithm("smooth_wave_background", "Smooth Wave Background")
-gradient_algorithm = GradientAlgorithm("gradient_algorithm", "Gradient Algorithm")
-voronoi_algorithm = VoronoiAlgorithm("voronoi_algorithm", "Voronoi Algorithm")
-hex_pattern_algorithm = HexPatternAlgorithm("hex_pattern_algorithm", "Hex Pattern Algorithm")
-wave_function_collapse_algorithm = WFCAlgorithm()
-flow_field_generator = FlowFieldGenerator("flow_field_generator", "Flow Field Generator")
-procedural_background_generator = ProceduralBackgroundGenerator("procedural_background_generator", "Procedural Background Generator")
+lorenz_algorithm = AttractorAlgorithm("lorenz_attractor", "Cosmic flow", LorenzAttractor())
+plain_algorithm = PlainAlgorithm("plain_algorithm", "Color", "#EAD196")
+smooth_wave_algorithm = SmoothWaveBackgroundAlgorithm("smooth_wave_background", "Waves")
+gradient_algorithm = GradientAlgorithm("gradient_algorithm", "Gradient")
+voronoi_algorithm = VoronoiAlgorithm("voronoi_algorithm", "Cellular pattern") #to rename
+hex_pattern_algorithm = HexPatternAlgorithm("hex_pattern_algorithm", "Hex grid")
+wave_function_collapse_algorithm = WFCAlgorithm(visible_name="Pattern replicator")
+flow_field_generator = FlowFieldGenerator("flow_field_generator", "Fluid")
+procedural_background_generator = ProceduralBackgroundGenerator("procedural_background_generator", "Noises")
 
 
 class AlgorithmInstancesEnum(Enum):
