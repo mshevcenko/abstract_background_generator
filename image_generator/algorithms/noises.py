@@ -104,8 +104,7 @@ class ProceduralBackgroundGenerator(Algorithm):
         
         
         normalized_colors = [hex_to_rgb(color) for color in colors]
-        print(island_type)
-        print(normalized_colors)
+
         if island_type:
           
           center_x, center_y = width / 2, height / 2

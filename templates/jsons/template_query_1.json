@@ -8,7 +8,7 @@
       "name": "alpha_blending",
       "generator_type": "blending",
       "values": {
-        "seed": 1528649270
+        "seed": 777421958
       },
       "layers": [
         {
@@ -24,12 +24,12 @@
               4.32
             ],
             "size": [
-              1.0,
-              2.0
+              1,
+              2
             ],
             "blur_radius": [
-              0.0,
-              4.0
+              0,
+              4
             ],
             "num_points": [
               10000,
@@ -37,16 +37,16 @@
             ],
             "draw_lines": true,
             "offset_x": [
-              0.0,
-              0.0
+              0,
+              0
             ],
             "offset_y": [
-              0.0,
-              0.0
+              0,
+              0
             ],
             "rotation_x": [
-              0.0,
-              6.29
+              28.53,
+              58.77
             ],
             "rotation_y": [
               0.0,
@@ -56,7 +56,7 @@
               0.0,
               6.29
             ],
-            "seed": 1440564204
+            "seed": 846687559
           },
           "blending_values": {
             "opacity": 1.0
@@ -69,7 +69,7 @@
             "colors": [
               "#FEFDFB"
             ],
-            "seed": 234065580
+            "seed": 2047910745
           },
           "blending_values": {
             "opacity": 1.0
