@@ -1,7 +1,7 @@
 import numpy as np
 import random
 from PIL import Image, ImageDraw
-from random import randint, random
+from random import randint
 from scipy.spatial import Voronoi
 from typing import Optional, List, Dict, Any
 

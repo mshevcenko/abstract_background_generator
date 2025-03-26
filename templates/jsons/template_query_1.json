@@ -1,0 +1,81 @@
+{
+  "image_path": "template_image_1.png",
+  "query_full": {
+    "width": 640,
+    "height": 480,
+    "seed": null,
+    "layer_query": {
+      "name": "alpha_blending",
+      "generator_type": "blending",
+      "values": {
+        "seed": 1528649270
+      },
+      "layers": [
+        {
+          "name": "lorenz_attractor",
+          "generator_type": "algorithm",
+          "values": {
+            "colors": [
+              "#ff0000",
+              "#00ff00"
+            ],
+            "scale": [
+              1.0,
+              4.32
+            ],
+            "size": [
+              1.0,
+              2.0
+            ],
+            "blur_radius": [
+              0.0,
+              4.0
+            ],
+            "num_points": [
+              10000,
+              10000
+            ],
+            "draw_lines": true,
+            "offset_x": [
+              0.0,
+              0.0
+            ],
+            "offset_y": [
+              0.0,
+              0.0
+            ],
+            "rotation_x": [
+              0.0,
+              6.29
+            ],
+            "rotation_y": [
+              0.0,
+              6.29
+            ],
+            "rotation_z": [
+              0.0,
+              6.29
+            ],
+            "seed": 1440564204
+          },
+          "blending_values": {
+            "opacity": 1.0
+          }
+        },
+        {
+          "name": "plain_algorithm",
+          "generator_type": "algorithm",
+          "values": {
+            "colors": [
+              "#FEFDFB"
+            ],
+            "seed": 234065580
+          },
+          "blending_values": {
+            "opacity": 1.0
+          }
+        }
+      ]
+    }
+  }
+}
