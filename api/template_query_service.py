@@ -19,7 +19,7 @@ templates_images_directory = "templates/images"
 
 class TemplateQueryFull(BaseModel):
     query_full: QueryFull
-    image_id: str = None
+    image_id: Optional[str] = None
 
 
 class TemplateQueryIdModel(BaseModel):
@@ -28,6 +28,7 @@ class TemplateQueryIdModel(BaseModel):
 
 async def init_template_queries_collection():
     await template_queries_collection.drop()
+    template_num = 1
     for filename in os.listdir(templates_jsons_directory):
         if filename.endswith(".json"):
             full_path = os.path.join(templates_jsons_directory, filename)
@@ -50,7 +51,10 @@ async def init_template_queries_collection():
                 await grid_out.write(image_bytes)
                 await grid_out.close()
                 template_query_full = TemplateQueryFull(query_full=query_full, image_id=str(grid_out._id))
-                await template_queries_collection.insert_one(template_query_full.model_dump())
+                template_query_full_dict = template_query_full.model_dump()
+                template_query_full_dict["_id"] = str(template_num)
+                template_num += 1
+                await template_queries_collection.insert_one(template_query_full_dict)
 
 
 async def get_image_bytes(image_id: str) -> bytes:
@@ -62,7 +66,7 @@ async def get_image_bytes(image_id: str) -> bytes:
 
 
 async def get_query_document(template_query_id: str) -> TemplateQueryFull:
-    template_query = await template_queries_collection.find_one({"_id": ObjectId(template_query_id)})
+    template_query = await template_queries_collection.find_one({"_id": template_query_id})
     template_query = TemplateQueryFull(**template_query)
     if not template_query:
         raise ValueError("Query not found")
