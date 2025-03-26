@@ -102,7 +102,7 @@ class FlowFieldGenerator(Algorithm):
                     octaves=octaves
                 ) * math.pi * 2
 
-        img = Image.new('RGB', (width, height), (0, 0, 0))
+        img = Image.new('RGBA', (width, height), (0, 0, 0, 0))
         draw = ImageDraw.Draw(img)
 
 

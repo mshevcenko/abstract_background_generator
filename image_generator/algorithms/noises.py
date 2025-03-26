@@ -5,7 +5,7 @@ import random
 from typing import Optional, List
 from image_generator.algorithm import Algorithm
 from image_generator.parameter import Parameter, DataType, VisibleType
-from image_generator.utils import apply_transparency_mask, hex_to_rgb_normalized, apply_color_palette
+from image_generator.utils import apply_transparency_mask, hex_to_rgb_normalized, apply_color_palette, hex_to_rgb
 
 class ProceduralBackgroundGenerator(Algorithm):
     def __init__(self,
@@ -101,8 +101,12 @@ class ProceduralBackgroundGenerator(Algorithm):
         else:
             raise ValueError("Invalid noise type")
         
-        normalized_colors = [hex_to_rgb_normalized(color) for color in colors]
+        
+        normalized_colors = [hex_to_rgb(color) for color in colors]
+        print(island_type)
+        print(normalized_colors)
         if island_type:
+          
           center_x, center_y = width / 2, height / 2
           max_distance = np.sqrt(center_x**2 + center_y**2)
 
