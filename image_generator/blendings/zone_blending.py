@@ -192,12 +192,8 @@ def gen_annot_for_algorithm_str(algorithm_index: int, f_part: str = " (if using 
     return ""
 
 
-#wfc_annot = gen_annot_for_algorithm_str(AlgorithmInstancesEnum.wfc.value)
 parameters_for_wfc = copy.deepcopy(wfc_specific_parameters)
-#append_to_visible_name(parameters_for_wfc, wfc_annot)
 
-
-#voronoi_annot = gen_annot_for_algorithm_str(AlgorithmInstancesEnum.voronoi.value)
 parameters_for_voronoi = [
     Parameter(
         name="n_points",
@@ -209,10 +205,7 @@ parameters_for_voronoi = [
         max_value=500
     )
 ]
-#append_to_visible_name(parameters_for_voronoi, voronoi_annot)
 
-
-#hexes_annot = gen_annot_for_algorithm_str(AlgorithmInstancesEnum.hex_pattern.value)
 parameters_for_hexes = [
     Parameter(
         name="hex_size",
@@ -233,10 +226,7 @@ parameters_for_hexes = [
         max_value=100
     )
 ]
-#append_to_visible_name(parameters_for_hexes, hexes_annot)
 
-
-#waves_annot = gen_annot_for_algorithm_str(AlgorithmInstancesEnum.smooth_wave.value)
 parameters_for_waves = [
     Parameter(
         name="n_layers",
@@ -248,7 +238,7 @@ parameters_for_waves = [
         max_value=20
     )
 ]
-#append_to_visible_name(parameters_for_waves, waves_annot)
+
 
 enum_to_params_dict = {
     AlgorithmInstancesEnum.wfc.value: parameters_for_wfc,
@@ -256,60 +246,6 @@ enum_to_params_dict = {
     AlgorithmInstancesEnum.hex_pattern.value: parameters_for_hexes,
     AlgorithmInstancesEnum.voronoi.value: parameters_for_voronoi,
 }
-
-
-class ZoneBlending(Blending):
-    def __init__(self,
-                 name="zone_blending",
-                 visible_name="Zone Blending"):
-        parameters = [
-            Parameter(name="zone_gen_fun",
-                      visible_name="Zone generation function",
-                      data_type=DataType.ENUM_LIST,
-                      visible_type=VisibleType.SELECTOR,
-                      default=AlgorithmInstancesEnum.voronoi.value,
-                      possible_values=allowed_zone_gen_fun),
-            *parameters_for_wfc,
-            *parameters_for_voronoi,
-            *parameters_for_hexes,
-
-        ]
-        blending_parameters = [
-            Parameter(
-                name=ZONE_WEIGHT_KEY,
-                visible_name="Zone weight",
-                data_type=DataType.FLOAT,
-                visible_type=VisibleType.SLIDER,
-                default=1.0,
-                min_value=1.0,
-                max_value=9999.0
-            )
-        ]
-        super().__init__(name, visible_name, parameters, blending_parameters)
-
-    def blending(self,
-                 width: int,
-                 height: int,
-                 layers: List[Layer] = None,
-                 seed: int = None,
-                 area: Optional[List[List[bool]]] = None,
-                 zone_gen_fun: int = AlgorithmInstancesEnum.voronoi.value,
-                 **kwargs) -> Image:
-        random.seed(seed)
-        zones_matrix = generate_zones_matrix(zone_gen_fun,
-                                             monochrome=True,
-                                             width=width,
-                                             height=height,
-                                             **kwargs
-                                             )
-        zones_info = generate_zone_info(zones_matrix, layers)
-
-        combined_image = combine_images_using_zones(
-            [zinfo.layer.generate(width, height, area=zinfo.mask.tolist()) for zinfo in zones_info],
-            zones_info, width, height
-        )
-
-        return combined_image
 
 
 class ZoneBlendingNamed(Blending):
