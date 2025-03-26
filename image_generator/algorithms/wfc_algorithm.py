@@ -111,7 +111,7 @@ def array_to_image(array: np.ndarray) -> Optional[Image.Image]:
 
 
 def run_overlapping(options: wfc_cpp.Options, numpy_pattern_img: wfc_cpp.Array2Duint32_t, seed: int, limit: int) -> (
-bool, np.ndarray):
+        bool, np.ndarray):
     wfc = wfc_cpp.OverlappingWFC(options, numpy_pattern_img)
     is_done = wfc.run_overlapping_wfc(seed, limit)
     array2d_vect = wfc.get_output()
@@ -191,7 +191,14 @@ wfc_specific_parameters = [
               visible_type=VisibleType.SELECTOR,
               default="RedMaze",
               possible_values=allowed_patterns,
-              )
+              ),
+    Parameter(name="scale",
+              visible_name="Additional scaling",
+              data_type=DataType.FLOAT_TUPLE,
+              visible_type=VisibleType.RANGE_SLIDER,
+              default=(1.0, 2.0),
+              min_value=1.0,
+              max_value=10.0),
 ]
 
 
@@ -208,13 +215,6 @@ class WFCAlgorithm(Algorithm):
                       default=[],
                       min_count=0,
                       max_count=10),
-            Parameter(name="scale",
-                      visible_name="Additional scaling",
-                      data_type=DataType.FLOAT_TUPLE,
-                      visible_type=VisibleType.RANGE_SLIDER,
-                      default=(1.0, 2.0),
-                      min_value=1.0,
-                      max_value=10.0),
             *wfc_specific_parameters
         ]
         super().__init__(name, visible_name, parameters)
