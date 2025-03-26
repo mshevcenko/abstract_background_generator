@@ -1,8 +1,11 @@
+import copy
 import random
 
 import numpy as np
 from PIL import Image
 from typing import Tuple, List, Optional, Union
+
+from image_generator.parameter import Parameter
 
 Color = Tuple[int, int, int]  # RGB
 ColorAlpha = Tuple[int, int, int, int]  # RGBA
@@ -214,3 +217,15 @@ def extend_colors(colors: List[Union[Color, ColorAlpha]],
         missing_count = len(pattern_colors) - len(colors)
         colors.extend(generate_random_colors(missing_count, seed, use_alpha))
     return ensure_color_format(colors, use_alpha)
+
+
+def append_to_visible_name(params: List[Parameter], append_str: str):
+    for param in params:
+        param.visible_name += append_str
+        param.model.visible_name += append_str
+
+
+def get_copy_with_appended_visible_name(params: List[Parameter], append_str: str):
+    params_copy = copy.deepcopy(params)
+    append_to_visible_name(params_copy, append_str)
+    return params_copy

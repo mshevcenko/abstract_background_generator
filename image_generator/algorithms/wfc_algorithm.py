@@ -13,7 +13,6 @@ from typing import Dict, Any, List, Tuple
 
 from PIL.Image import Resampling
 
-
 from image_generator.algorithm import Algorithm
 from image_generator.parameter import Parameter, DataType, VisibleType
 from image_generator.utils import apply_transparency_mask, crop_image_by_size, convert_list_of_rgb_to_rgba, \
@@ -111,7 +110,8 @@ def array_to_image(array: np.ndarray) -> Optional[Image.Image]:
         return None
 
 
-def run_overlapping(options: wfc_cpp.Options, numpy_pattern_img: wfc_cpp.Array2Duint32_t, seed: int, limit: int) -> (bool, np.ndarray):
+def run_overlapping(options: wfc_cpp.Options, numpy_pattern_img: wfc_cpp.Array2Duint32_t, seed: int, limit: int) -> (
+bool, np.ndarray):
     wfc = wfc_cpp.OverlappingWFC(options, numpy_pattern_img)
     is_done = wfc.run_overlapping_wfc(seed, limit)
     array2d_vect = wfc.get_output()
@@ -124,7 +124,6 @@ def run_wfc(pattern_node: Dict[str, Any],
             width_f: int, height_f: int,
             seed: int, gen_attempt_limit: int
             ) -> Image.Image:
-
     name = get_attribute(pattern_node, "name")
     # size = get_attribute(pattern_node, "size", "48")
     N = int(get_attribute(pattern_node, "N", "3"))
@@ -173,6 +172,29 @@ def run_wfc(pattern_node: Dict[str, Any],
     return img
 
 
+allowed_patterns = [
+    {"value": "RedMaze", "visible_value": "Red Maze (3 colors)"},
+    {"value": "Spirals", "visible_value": "Spirals (2 colors)"},
+]
+
+wfc_specific_parameters = [
+    Parameter(name="max_gen_dim",
+              visible_name="Base max generation dimensions",
+              data_type=DataType.INTEGER,
+              visible_type=VisibleType.SLIDER,
+              default=192,
+              min_value=80,
+              max_value=250),
+    Parameter(name="pattern",
+              visible_name="Pattern",
+              data_type=DataType.ENUM_LIST,
+              visible_type=VisibleType.SELECTOR,
+              default="RedMaze",
+              possible_values=allowed_patterns,
+              )
+]
+
+
 class WFCAlgorithm(Algorithm):
     def __init__(self,
                  name: str = "wfc",
@@ -193,23 +215,7 @@ class WFCAlgorithm(Algorithm):
                       default=(1.0, 2.0),
                       min_value=1.0,
                       max_value=10.0),
-            Parameter(name="max_gen_dim",
-                      visible_name="Base max generation dimensions",
-                      data_type=DataType.INTEGER,
-                      visible_type=VisibleType.SLIDER,
-                      default=192,
-                      min_value=80,
-                      max_value=250),
-            Parameter(name="pattern",
-                      visible_name="Pattern",
-                      data_type=DataType.ENUM_LIST,
-                      visible_type=VisibleType.SELECTOR,
-                      default="RedMaze",
-                      possible_values=[
-                          {"value": "RedMaze", "visible_value": "Red Maze (3 colors)"},
-                          {"value": "Spirals", "visible_value": "Spirals (2 colors)"},
-                      ],
-                      ),
+            *wfc_specific_parameters
         ]
         super().__init__(name, visible_name, parameters)
 
@@ -224,7 +230,6 @@ class WFCAlgorithm(Algorithm):
                   max_gen_dim: int = 192,
                   **kwargs
                   ) -> Image:
-
         current_folder = os.path.dirname(os.path.abspath(__file__))
         xml_file_path = os.path.join(current_folder, "patterns.xml")
 
@@ -249,6 +254,8 @@ class WFCAlgorithm(Algorithm):
 
         image = crop_image_by_size(image, width, height)
 
+        if colors is None:
+            colors = []
         to_change_colors = convert_hex_list_to_rgb(colors)
         to_change_colors = extend_colors(to_change_colors, pattern_colors, seed, True)
         color_change_rules = combine_lists_to_tuples(pattern_colors, to_change_colors)
@@ -262,5 +269,6 @@ class WFCAlgorithm(Algorithm):
 
 if __name__ == '__main__':
     wfc_alg = WFCAlgorithm("wfc", "Wave Function Collapse")
-    img = wfc_alg.algorithm(1920, 1080, None, None, ["#000000FF", "#ffffff22", "#0000ffFF", "#00ff00FF"], (1, 1), "RedMaze")
+    img = wfc_alg.algorithm(1920, 1080, None, None, ["#000000FF", "#ffffff22", "#0000ffFF", "#00ff00FF"], (1, 1),
+                            "RedMaze")
     img.show()

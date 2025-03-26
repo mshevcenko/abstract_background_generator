@@ -51,7 +51,8 @@ class HexPatternAlgorithm(Algorithm):
                   area: Optional[List[List[bool]]] = None,
                   colors: Optional[List[str]] = None,
                   hex_size: int = 80,
-                  spacing: int = 0) -> Image:
+                  spacing: int = 0,
+                  **kwargs) -> Image:
         if seed is not None:
             random.seed(seed)
 

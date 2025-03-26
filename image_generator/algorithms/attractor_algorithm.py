@@ -179,7 +179,8 @@ class AttractorAlgorithm(Algorithm):
                   offset_y: Tuple[float, float] = (-1.0, 1.0),
                   rotation_x: Tuple[float, float] = (0.0, 6.29),
                   rotation_y: Tuple[float, float] = (0.0, 6.29),
-                  rotation_z: Tuple[float, float] = (0.0, 6.29)) -> Image:
+                  rotation_z: Tuple[float, float] = (0.0, 6.29),
+                  **kwargs) -> Image:
         random.seed(seed)
         scale = random.uniform(*scale)
         min_size = size[0]

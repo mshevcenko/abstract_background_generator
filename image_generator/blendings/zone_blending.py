@@ -1,22 +1,20 @@
+import copy
 import random
-from enum import Enum
 
 import PIL
 import numpy as np
 from PIL.Image import Image
 from typing import List, Optional, Dict
 
-import api.image_generator_config
-from image_generator.algorithm import Algorithm
-from image_generator.algorithms.voronoi_algorithm import VoronoiAlgorithm
-from image_generator.algorithms.wfc_algorithm import WFCAlgorithm
+from api.algorithm_instances_config import algorithm_instances_list, AlgorithmInstancesEnum
+from image_generator.algorithms.wfc_algorithm import allowed_patterns, wfc_specific_parameters
 from image_generator.layer import Layer
 from image_generator.blending import Blending
 from image_generator.parameter import Parameter, DataType, VisibleType
-from image_generator.utils import extract_color_to_int
+from image_generator.utils import extract_color_to_int, get_copy_with_appended_visible_name, append_to_visible_name
 
 
-class Layer_Uid:
+class LayerUid:
     def __init__(self, uid: int, layer: Layer):
         self.uid = uid
         self.layer = layer
@@ -38,11 +36,11 @@ class ZoneInfo:
 ZONE_WEIGHT_KEY = "zone_weight"
 
 
-def collect_layers_weights(layers_stuid_l: List[Layer_Uid]) -> Dict[int, float]:
+def collect_layers_weights(layers_stuid_l: List[LayerUid]) -> Dict[int, float]:
     return {ll.uid: ll.layer.blending_values.get(ZONE_WEIGHT_KEY, 0) for ll in layers_stuid_l}
 
 
-def distribute_zones(zone_matrix: np.ndarray, layers_stuid_l: List[Layer_Uid]) -> Dict[int, List[int]]:
+def distribute_zones(zone_matrix: np.ndarray, layers_stuid_l: List[LayerUid]) -> Dict[int, List[int]]:
     layers_weights = collect_layers_weights(layers_stuid_l)
     unique_zones, counts = np.unique(zone_matrix, return_counts=True)
 
@@ -130,7 +128,7 @@ def extract_zones(zone_matrix: np.ndarray, layer: Layer, assigned_zones: List[in
 
 
 def generate_zone_info(matrix: np.ndarray, layers: List[Layer]) -> List[ZoneInfo]:
-    layers_stuid_l: List[Layer_Uid] = [Layer_Uid(index, layer) for index, layer in enumerate(layers)]
+    layers_stuid_l: List[LayerUid] = [LayerUid(index, layer) for index, layer in enumerate(layers)]
     uid_and_zone_id_lists = distribute_zones(matrix, layers_stuid_l)
     res = []
     for layers_stuid in layers_stuid_l:
@@ -158,33 +156,99 @@ def combine_images_using_zones(images: List[Image], zones: List[ZoneInfo],
     return final_image
 
 
-class ZoneGenFunction(Enum):
-    voronoi = 0
-    wave_function_collapse = 1
-
-
-generators = [
-    VoronoiAlgorithm("vor", "vor"),
-    WFCAlgorithm()
-]
-
-zone_patterns = ["RedMaze", "Spirals"]
 basic_colors: List[str] = ["#ff0000", "#00ff00"]
 
 
 def generate_zones_matrix(zgf: int,
                           width: int,
                           height: int,
-                          seed: int,
-                          area: Optional[List[List[bool]]] = None,
                           **kwargs) -> np.ndarray:
-    random.seed(seed)
-    img = generators[zgf].algorithm(width=width, height=height,
-                                    seed=seed, area=area,
-                                    colors=basic_colors,
-                                    n_points=random.randint(10, 500),
-                                    **kwargs)
+    img = algorithm_instances_list[zgf].algorithm(width=width, height=height, **kwargs)
     return extract_color_to_int(img)
+
+
+def generate_allowed_zone_gen_fun(enum_values: List[AlgorithmInstancesEnum]) -> List[Dict]:
+    zone_gen_fun = []
+    for enum_value in enum_values:
+        zone_gen_fun.append({
+            "value": enum_value.value,
+            "visible_value": algorithm_instances_list[enum_value.value].visible_name
+        })
+    return zone_gen_fun
+
+
+allowed_zone_gen_fun = generate_allowed_zone_gen_fun([
+    AlgorithmInstancesEnum.voronoi,
+    AlgorithmInstancesEnum.wfc,
+    AlgorithmInstancesEnum.smooth_wave,
+    AlgorithmInstancesEnum.hex_pattern,
+])
+
+
+def gen_annot_for_algorithm_str(algorithm_index: int, f_part: str = " (if using ", s_part: str = ")") -> str:
+    for zone in allowed_zone_gen_fun:
+        if zone["value"] == algorithm_index:
+            return f"{f_part}{zone['visible_value']}{s_part}"
+    return ""
+
+
+wfc_annot = gen_annot_for_algorithm_str(AlgorithmInstancesEnum.wfc.value)
+parameters_for_wfc = copy.deepcopy(wfc_specific_parameters)
+append_to_visible_name(parameters_for_wfc, wfc_annot)
+
+
+voronoi_annot = gen_annot_for_algorithm_str(AlgorithmInstancesEnum.voronoi.value)
+parameters_for_voronoi = [
+    Parameter(
+        name="n_points",
+        visible_name="Number of points",
+        data_type=DataType.INTEGER,
+        visible_type=VisibleType.SLIDER,
+        default=100,
+        min_value=10,
+        max_value=500
+    )
+]
+append_to_visible_name(parameters_for_voronoi, voronoi_annot)
+
+
+hexes_annot = gen_annot_for_algorithm_str(AlgorithmInstancesEnum.hex_pattern.value)
+parameters_for_hexes = [
+    Parameter(
+        name="hex_size",
+        visible_name="Hex Size",
+        data_type=DataType.INTEGER,
+        visible_type=VisibleType.SLIDER,
+        default=80,
+        min_value=10,
+        max_value=200
+    ),
+    Parameter(
+        name="spacing",
+        visible_name="Spacing",
+        data_type=DataType.INTEGER,
+        visible_type=VisibleType.SLIDER,
+        default=0,
+        min_value=0,
+        max_value=100
+    )
+]
+append_to_visible_name(parameters_for_hexes, hexes_annot)
+
+
+waves_annot = gen_annot_for_algorithm_str(AlgorithmInstancesEnum.smooth_wave.value)
+parameters_for_waves = [
+    Parameter(
+        name="n_layers",
+        visible_name="Number of layers",
+        data_type=DataType.INTEGER,
+        visible_type=VisibleType.SLIDER,
+        default=10,
+        min_value=5,
+        max_value=20
+    )
+]
+append_to_visible_name(parameters_for_waves, waves_annot)
 
 
 class ZoneBlending(Blending):
@@ -196,30 +260,19 @@ class ZoneBlending(Blending):
                       visible_name="Zone generation function",
                       data_type=DataType.ENUM_LIST,
                       visible_type=VisibleType.SELECTOR,
-                      default=ZoneGenFunction.voronoi.value,
-                      possible_values=[
-                          {"value": ZoneGenFunction.voronoi.value,
-                           "visible_value": "Voronoi"},
-
-                          {"value": ZoneGenFunction.wave_function_collapse.value,
-                           "visible_value": "WFC"}
-                      ], ),
+                      default=AlgorithmInstancesEnum.voronoi.value,
+                      possible_values=allowed_zone_gen_fun),
             Parameter(name="scale",
-                      visible_name="Additional scaling",
+                      visible_name="Additional scaling (if algorithm allows)",
                       data_type=DataType.FLOAT_TUPLE,
                       visible_type=VisibleType.RANGE_SLIDER,
                       default=(1.0, 2.0),
                       min_value=1.0,
                       max_value=10.0),
-            Parameter(name="pattern",
-                      visible_name="Pattern",
-                      data_type=DataType.ENUM_LIST,
-                      visible_type=VisibleType.SELECTOR,
-                      default="RedMaze",
-                      possible_values=[
-                          {"value": "RedMaze", "visible_value": "Red Maze"},
-                          {"value": "Spirals", "visible_value": "Spirals"},
-                      ], )
+            *parameters_for_wfc,
+            *parameters_for_voronoi,
+            *parameters_for_hexes,
+
         ]
         blending_parameters = [
             Parameter(
@@ -240,11 +293,12 @@ class ZoneBlending(Blending):
                  layers: List[Layer] = None,
                  seed: int = None,
                  area: Optional[List[List[bool]]] = None,
-                 zone_gen_fun: int = ZoneGenFunction.voronoi,
+                 zone_gen_fun: int = AlgorithmInstancesEnum.voronoi.value,
                  **kwargs) -> Image:
         zones_matrix = generate_zones_matrix(zone_gen_fun,
-                                             width, height,
-                                             seed, area,
+                                             monochrome=True,
+                                             width=width,
+                                             height=height,
                                              **kwargs
                                              )
         zones_info = generate_zone_info(zones_matrix, layers)

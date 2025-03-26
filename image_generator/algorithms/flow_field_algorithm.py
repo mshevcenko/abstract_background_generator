@@ -74,11 +74,11 @@ class FlowFieldGenerator(Algorithm):
                   colors: List[str] = ["#ff0000", "#00ff00"],
                   scale: float = 100.0,
                   blur_radius: float = 1.0,
-                  octaves: int =6,
+                  octaves: int = 6,
                   line_count: int = 1000,
-                  line_length:int =100,
-                  line_width: int =1,
-                  )-> Image.Image:
+                  line_length: int = 100,
+                  line_width: int = 1,
+                  **kwargs) -> Image.Image:
         random.seed(seed)
         colors = [hex_to_rgb(color) for color in colors]
         flow_field_image = self._generate_flow_field(width, height, colors, scale, octaves,

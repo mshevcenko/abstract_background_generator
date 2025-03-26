@@ -41,7 +41,8 @@ class GradientAlgorithm(Algorithm):
                   seed: Optional[int] = None,
                   area: Optional[List[List[bool]]] = None,
                   colors: Optional[List[str]] = None,
-                  angle: float = 0.0) -> Image:
+                  angle: float = 0.0,
+                  **kwargs) -> Image:
         if seed is not None:
             random.seed(seed)
 

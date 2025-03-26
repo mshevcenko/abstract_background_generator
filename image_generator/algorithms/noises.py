@@ -86,7 +86,8 @@ class ProceduralBackgroundGenerator(Algorithm):
                   octaves: int =6,
                   persistence:float =0.5,
                   lacunarity: float =2.0,
-                  island_type: bool = False)-> Image.Image:
+                  island_type: bool = False,
+                  **kwargs)-> Image.Image:
         random.seed(seed)
         if noise_type == 0:
             noise_map= self._generate_perlin_noise(width, height, scale, octaves, persistence, lacunarity)

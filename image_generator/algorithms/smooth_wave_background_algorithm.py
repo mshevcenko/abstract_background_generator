@@ -62,7 +62,8 @@ class SmoothWaveBackgroundAlgorithm(Algorithm):
                   area: Optional[List[List[bool]]] = None,
                   colors: Optional[List[str]] = None,
                   n_layers: int = 7,
-                  monochrome: bool = False) -> Image:
+                  monochrome: bool = False,
+                  **kwargs) -> Image:
         if seed is not None:
             random.seed(seed)
 

@@ -41,7 +41,8 @@ class VoronoiAlgorithm(Algorithm):
                   seed: Optional[int] = None,
                   area: Optional[List[List[bool]]] = None,
                   colors: Optional[List[str]] = None,
-                  n_points: int = 100) -> Image:
+                  n_points: int = 100,
+                  **kwargs) -> Image:
         if seed is not None:
             random.seed(seed)
 
