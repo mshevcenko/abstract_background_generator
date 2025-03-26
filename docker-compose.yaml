@@ -1,0 +1,25 @@
+version: "3.9"
+
+services:
+  api:
+    image: zeltronick/abstract-background-generator
+    container_name: abstract_image_generator_app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mongo
+    environment:
+      MONGO_URL: "mongodb://mongo:27017/abstract_image_generator_db"
+    volumes:
+      - .:/app
+
+  mongo:
+    image: mongo
+    container_name: abstract_image_generator_mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+volumes:
+  mongo_data:

@@ -1,4 +1,6 @@
 import numpy as np
+import math
+import random
 from PIL import Image, ImageDraw
 from random import randint
 from typing import Optional, List, Dict, Any
@@ -18,12 +20,19 @@ class GradientAlgorithm(Algorithm):
             default=["#123456", "#654321"],
             min_count=2,
             max_count=2,
+        ),
+        Parameter(
+            name="angle",
+            visible_name="Angle",
+            data_type=DataType.FLOAT,
+            visible_type=VisibleType.SLIDER,
+            default=0.0,
+            min_value=0.0,
+            max_value=360.0,
         )
     ]
 
-    def __init__(self,
-                 name: str,
-                 visible_name: str):
+    def __init__(self, name: str, visible_name: str):
         super().__init__(name, visible_name, self.PARAMETERS)
 
     def algorithm(self,
@@ -32,9 +41,10 @@ class GradientAlgorithm(Algorithm):
                   seed: Optional[int] = None,
                   area: Optional[List[List[bool]]] = None,
                   colors: Optional[List[str]] = None,
-                  **kwargs) -> Image:
+                  angle: float = 0.0) -> Image:
         if seed is not None:
-            np.random.seed(seed)
+            random.seed(seed)
+
         if colors is not None and len(colors) >= 2:
             base_color = hex_to_rgb(colors[0])
             secondary_color = hex_to_rgb(colors[1])
@@ -42,11 +52,21 @@ class GradientAlgorithm(Algorithm):
             base_color = (randint(50, 150), randint(50, 150), randint(50, 150))
             secondary_color = (randint(100, 255), randint(100, 255), randint(100, 255))
 
-        img = Image.new("RGB", (width, height), (0, 0, 0))
-        draw = ImageDraw.Draw(img)
+        theta = math.radians(angle)
+        direction = (math.cos(theta), math.sin(theta))
 
-        for i in range(height):
-            t = i / height
-            color = interpolate_colors(base_color, secondary_color, t)
-            draw.line([(0, i), (width, i)], fill=color)
+        corners = np.array([[0, 0], [width, 0], [0, height], [width, height]])
+        dots = corners[:, 0] * direction[0] + corners[:, 1] * direction[1]
+        min_dot = dots.min()
+        max_dot = dots.max()
+
+        x_coords, y_coords = np.meshgrid(np.arange(width), np.arange(height))
+        dots_pixels = x_coords * direction[0] + y_coords * direction[1]
+        t = (dots_pixels - min_dot) / (max_dot - min_dot)
+
+        base_arr = np.array(base_color, dtype=np.float32).reshape(1, 1, 3)
+        sec_arr = np.array(secondary_color, dtype=np.float32).reshape(1, 1, 3)
+        gradient_arr = (base_arr * (1 - t[..., None]) + sec_arr * t[..., None]).astype(np.uint8)
+
+        img = Image.fromarray(gradient_arr, "RGB")
         return img

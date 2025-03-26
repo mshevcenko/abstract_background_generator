@@ -26,12 +26,16 @@ def rotation_matrix(rx, ry, rz):
 
 
 def interpolate_color(color_list, t):
+    if len(color_list) == 1:
+        return color_list[0]
     if t <= 0:
         return color_list[0]
     if t >= 1:
         return color_list[-1]
     n = len(color_list) - 1
+    print(t)
     scaled = t * n
+    print(scaled)
     idx = int(math.floor(scaled))
     frac = scaled - idx
     c0 = np.array(color_list[idx])
@@ -86,7 +90,7 @@ class AttractorAlgorithm(Algorithm):
                       data_type=DataType.COLORS,
                       visible_type=VisibleType.COLORS,
                       default=["#ff0000", "#00ff00"],
-                      min_count=2,
+                      min_count=1,
                       max_count=10),
             Parameter(name="scale",
                       visible_name="Scale",
@@ -139,23 +143,23 @@ class AttractorAlgorithm(Algorithm):
                       visible_name="Rotation x",
                       data_type=DataType.FLOAT_TUPLE,
                       visible_type=VisibleType.RANGE_SLIDER,
-                      default=(0.0, 6.29),
-                      min_value=0.0,
-                      max_value=6.29),
+                      default=(-180.0, 180.0),
+                      min_value=-180.0,
+                      max_value=180.0),
             Parameter(name="rotation_y",
                       visible_name="Rotation y",
                       data_type=DataType.FLOAT_TUPLE,
                       visible_type=VisibleType.RANGE_SLIDER,
-                      default=(0.0, 6.29),
-                      min_value=0.0,
-                      max_value=6.29),
+                      default=(-180.0, 180.0),
+                      min_value=-180.0,
+                      max_value=180.0),
             Parameter(name="rotation_z",
                       visible_name="Rotation z",
                       data_type=DataType.FLOAT_TUPLE,
                       visible_type=VisibleType.RANGE_SLIDER,
-                      default=(0.0, 6.29),
-                      min_value=0.0,
-                      max_value=6.29)
+                      default=(-180.0, 180.0),
+                      min_value=-180.0,
+                      max_value=180.0)
         ]
         super().__init__(name, visible_name, parameters)
         self.attractor = attractor
@@ -184,9 +188,9 @@ class AttractorAlgorithm(Algorithm):
         num_points = int(random.uniform(*num_points))
         offset_x = random.uniform(*offset_x)
         offset_y = random.uniform(*offset_y)
-        rotation_x = random.uniform(*rotation_x)
-        rotation_y = random.uniform(*rotation_y)
-        rotation_z = random.uniform(*rotation_z)
+        rotation_x = math.radians(random.uniform(*rotation_x))
+        rotation_y = math.radians(random.uniform(*rotation_y))
+        rotation_z = math.radians(random.uniform(*rotation_z))
         normalized_colors = [hex_to_rgb_normalized(color) for color in colors]
         points = self.attractor.generate_points(num_points=num_points, seed=seed)
         plane_origin = points[0]

@@ -24,4 +24,5 @@ RUN rm -r ./wfc_whls
 EXPOSE 8000
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
+ENV MONGO_URL="mongodb://localhost:27017"
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]

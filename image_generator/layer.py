@@ -10,7 +10,7 @@ from image_generator.generator import GeneratorType, Generator
 class LayerQuery(BaseModel):
     name: str
     generator_type: GeneratorType
-    values: Optional[Dict[str, Union[int, float, str, List[str], Tuple[int, int], Tuple[float, float], bool]]] = None
+    values: Optional[Dict[str, Union[int, float, str, List[str], Tuple[int, int], Tuple[float, float], bool, List[List[bool]]]]] = None
     blending_values: Optional[Dict[str, Union[int, float, str, List[str], Tuple[int, int], Tuple[float, float], bool]]] = None
     layers: Optional[List[LayerQuery]] = None
 
@@ -64,8 +64,11 @@ class Layer:
 
     def generate_seed(self,
                       seed_generator: SeedGenerator,
+                      overwrite: bool = False,
                       recursive: bool = True) -> None:
-        self.values["seed"] = seed_generator.generate_seed()
+        seed = seed_generator.generate_seed()
+        if overwrite or "seed" not in self.values:
+            self.values["seed"] = seed
         if recursive:
             for layer in self.layers:
                 layer.generate_seed(seed_generator)

@@ -2,8 +2,9 @@ import numpy as np
 from typing import Optional
 
 int64_info = np.iinfo(np.int64)
+int32_info = np.iinfo(np.int32)
 low = 0
-high = int64_info.max
+high = int32_info.max #int64_info.max
 
 
 class SeedGenerator:
@@ -15,5 +16,5 @@ class SeedGenerator:
         else:
             self.rng = np.random.default_rng()
 
-    def generate_seed(self):
+    def generate_seed(self) -> int:
         return self.rng.integers(low=low, high=high, endpoint=True).item()

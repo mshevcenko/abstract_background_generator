@@ -1,4 +1,6 @@
 import numpy as np
+import math
+import random
 from PIL import Image, ImageDraw
 from random import randint
 from typing import Optional, List, Dict, Any
@@ -27,12 +29,19 @@ class HexPatternAlgorithm(Algorithm):
             default=80,
             min_value=10,
             max_value=200
+        ),
+        Parameter(
+            name="spacing",
+            visible_name="Spacing",
+            data_type=DataType.INTEGER,
+            visible_type=VisibleType.SLIDER,
+            default=0,
+            min_value=0,
+            max_value=100
         )
     ]
 
-    def __init__(self,
-                 name: str,
-                 visible_name: str):
+    def __init__(self, name: str, visible_name: str):
         super().__init__(name, visible_name, self.PARAMETERS)
 
     def algorithm(self,
@@ -41,10 +50,10 @@ class HexPatternAlgorithm(Algorithm):
                   seed: Optional[int] = None,
                   area: Optional[List[List[bool]]] = None,
                   colors: Optional[List[str]] = None,
-                  **kwargs) -> Image:
+                  hex_size: int = 80,
+                  spacing: int = 0) -> Image:
         if seed is not None:
-            np.random.seed(seed)
-        hex_size = kwargs.get("hex_size", 80)
+            random.seed(seed)
 
         if colors is not None and len(colors) >= 2:
             base_color = hex_to_rgb(colors[0])
@@ -56,19 +65,28 @@ class HexPatternAlgorithm(Algorithm):
         img = Image.new("RGB", (width, height), (randint(20, 50), randint(20, 50), randint(20, 50)))
         draw = ImageDraw.Draw(img)
 
-        cols = width // hex_size
-        rows = height // hex_size
+        horizontal_step = hex_size * 0.75 + spacing
+        vertical_step = hex_size * (math.sqrt(3) / 2) + spacing
 
-        for i in range(cols + 2):
-            for j in range(rows + 2):
-                x = i * hex_size * 0.75
-                y = j * hex_size * (np.sqrt(3) / 2)
-                if i % 2:
-                    y += hex_size * (np.sqrt(3) / 4)
+        cols = int(np.ceil(width / horizontal_step)) + 1
+        rows = int(np.ceil(height / vertical_step)) + 1
 
-                hexagon = [(x + hex_size * np.cos(theta), y + hex_size * np.sin(theta))
-                           for theta in np.linspace(0, 2 * np.pi, 7)]
+        for i in range(cols):
+            for j in range(rows):
+                x_center = i * horizontal_step
+                y_center = j * vertical_step
+                if i % 2 == 1:
+                    y_center += vertical_step / 2
+                hexagon = [
+                    (x_center + hex_size * math.cos(theta), y_center + hex_size * math.sin(theta))
+                    for theta in np.linspace(0, 2 * math.pi, 7)
+                ]
                 t = (i + j) / (cols + rows)
                 color = interpolate_colors(base_color, secondary_color, t)
                 draw.polygon(hexagon, fill=color, outline=(20, 20, 20))
         return img
+
+if __name__ == '__main__':
+    wfc_alg = HexPatternAlgorithm("gradient_algorithm", "Gradient Algorithm")
+    img = wfc_alg.algorithm(1920, 1080, None, None, ["#ffffff20"], 10, 0)
+    img.show()
