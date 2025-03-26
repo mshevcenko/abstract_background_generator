@@ -33,9 +33,7 @@ def interpolate_color(color_list, t):
     if t >= 1:
         return color_list[-1]
     n = len(color_list) - 1
-    print(t)
     scaled = t * n
-    print(scaled)
     idx = int(math.floor(scaled))
     frac = scaled - idx
     c0 = np.array(color_list[idx])
