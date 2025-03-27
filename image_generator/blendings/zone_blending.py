@@ -164,6 +164,7 @@ def generate_zones_matrix(zgf: int,
                           height: int,
                           **kwargs) -> np.ndarray:
     img = algorithm_instances_list[zgf].algorithm(width=width, height=height, **kwargs)
+    img.show()
     return extract_color_to_int(img)
 
 
@@ -280,13 +281,15 @@ class ZoneBlendingNamed(Blending):
                  seed: int = None,
                  area: Optional[List[List[bool]]] = None,
                  **kwargs) -> Image:
-        random.seed(seed)
         zones_matrix = generate_zones_matrix(self.zone_gen_fun,
                                              monochrome=True,
                                              width=width,
                                              height=height,
+                                             seed=seed,
+                                             area=area,
                                              **kwargs
                                              )
+        random.seed(seed)
         zones_info = generate_zone_info(zones_matrix, layers)
 
         combined_image = combine_images_using_zones(
