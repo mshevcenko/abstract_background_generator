@@ -108,8 +108,8 @@ class WFC {
         propagator.flat.shrink_to_fit();
 
         // density = 100% - sparsity
-        fprintf(stderr, "Propagator density: %.2f%%\n",
-                100.f * dense / (P * P * 4));
+        //fprintf(stderr, "Propagator density: %.2f%%\n",
+        //        100.f * dense / (P * P * 4));
     }
 
     /** Initialize wave */
@@ -140,13 +140,13 @@ class WFC {
 
         wave = new Wave(L, P, D, weights, wLogW, heuristic);
 
-        fprintf(stderr, "P = %lu, D = %lu, L = %lu\n", P, D, L);
+        //fprintf(stderr, "P = %lu, D = %lu, L = %lu\n", P, D, L);
 
         auto b = bytes();
         if (b > 1024 * 1024) {
-            fprintf(stderr, "memory usage: %.2fmb\n", b / 1024.f / 1024.f);
+            //fprintf(stderr, "memory usage: %.2fmb\n", b / 1024.f / 1024.f);
         } else {
-            fprintf(stderr, "memory usage: %.2fkb\n", b / 1024.f);
+            //printf(stderr, "memory usage: %.2fkb\n", b / 1024.f);
         }
     }
 

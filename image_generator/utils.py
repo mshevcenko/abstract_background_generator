@@ -105,7 +105,7 @@ def combine_lists_to_tuples(list1: List, list2: List) -> List[Tuple]:
     return [(list1[i], list2[i]) for i in range(min_length)]
 
 
-def crop_image_by_size(image: Image.Image, width: int, height: int, left: int=0, upper: int=0) -> Image.Image:
+def crop_image_by_size(image: Image.Image, width: int, height: int, left: int = 0, upper: int = 0) -> Image.Image:
     right = left + width
     lower = upper + height
     box = (left, upper, right, lower)
@@ -135,8 +135,9 @@ def interpolate_colors(color1, color2, t):
         int(color1[1] * (1 - t) + color2[1] * t),
         int(color1[2] * (1 - t) + color2[2] * t)
     )
-def apply_color_palette(noise_map, colors, color_variation=0.2):
 
+
+def apply_color_palette(noise_map, colors, color_variation=0.2):
     colors_array = np.array(colors, dtype=np.float32)
     n_colors = colors_array.shape[0]
 
@@ -181,9 +182,9 @@ def extract_color_to_int(image: Image.Image) -> np.ndarray:
     return int_array
 
 
-def scale_dimensions_in_ratio(final_width: int, final_height: int,
-                              max_size_w: int = 250, max_size_h: int = 250
-                              ) -> tuple[int, int]:
+def scale_down_dimensions_in_ratio(final_width: int, final_height: int,
+                                   max_size_w: int = 250, max_size_h: int = 250
+                                   ) -> tuple[int, int]:
     scale_factor = min(max_size_w / final_width, max_size_h / final_height, 1.0)
     new_width = int(final_width * scale_factor)
     new_height = int(final_height * scale_factor)

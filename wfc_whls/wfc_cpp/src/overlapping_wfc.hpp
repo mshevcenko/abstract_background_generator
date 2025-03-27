@@ -77,15 +77,6 @@ class OverlappingWFC : public WFC {
         auto sample = ords<uint8_t>(input.data, colors);
         size_t C = colors.size();
 
-        /*
-        for (int y = 0; y < input.MY; y++) {
-            for (int x = 0; x < input.MX; x++) {
-                fprintf(stderr, "%d", sample[x + y * input.MX]);
-            }
-            fprintf(stderr, "\n");
-        }
-        */
-
         size_t W = 1;
         for (int i = 0; i < N * N; i++) W *= C;
 
@@ -222,8 +213,8 @@ class OverlappingWFC : public WFC {
         }
 
         if (sus) {
-            std::cerr << "get_output() called on contradicted wfc(overlap)"
-                      << std::endl;
+            //std::cerr << "get_output() called on contradicted wfc(overlap)"
+            //          << std::endl;
         }
 
         return out;
