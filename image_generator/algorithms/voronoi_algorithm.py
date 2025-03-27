@@ -45,6 +45,7 @@ class VoronoiAlgorithm(Algorithm):
                   **kwargs) -> Image:
         if seed is not None:
             random.seed(seed)
+            np.random.seed(seed)
 
         margin = max(width, height) * 0.1
         points = np.random.rand(n_points, 2)
