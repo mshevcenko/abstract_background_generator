@@ -113,7 +113,7 @@ class PatternData:
 
 PatternDataList = [
     PatternData(name="some_lines", visible_name="Some lines", image_name="some_lines", nn=2, periodic=True),
-    PatternData(name="chess", visible_name="Chess", image_name="chess", nn=2, periodic=True),
+    PatternData(name="chess", visible_name="Chess", image_name="Chess", nn=2, periodic=True),
     PatternData(name="Skyline", visible_name="Skyline", image_name="Skyline", nn=3, symmetry=2, ground=True,
                 periodic=True),
     PatternData(name="Flowers", visible_name="Flowers", image_name="Flowers", nn=3, symmetry=2, ground=True,
