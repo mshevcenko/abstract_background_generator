@@ -164,7 +164,6 @@ def generate_zones_matrix(zgf: int,
                           height: int,
                           **kwargs) -> np.ndarray:
     img = algorithm_instances_list[zgf].algorithm(width=width, height=height, **kwargs)
-    img.show()
     return extract_color_to_int(img)
 
 
