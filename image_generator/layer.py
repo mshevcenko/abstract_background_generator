@@ -29,11 +29,10 @@ class Layer:
         self.generator_type = layer_query.generator_type
         self.generator_name = layer_query.name
         self.generator = self.generators_dict[self.generator_name]
-        self.values = {}
-        self.layers = {}
         self.blending_values = {}
-        if self.layer_query.values:
-            self.values = self.layer_query.values
+        self.layers = {}
+        if not self.layer_query.values:
+            self.layer_query.values = {}
         if self.layer_query.blending_values:
             self.blending_values = self.layer_query.blending_values
         if self.layer_query.layers:
@@ -52,23 +51,27 @@ class Layer:
                  height: int,
                  seed: Optional[int] = None,
                  area: Optional[List[List[bool]]] = None) -> Image:
-        values = self.values.copy()
+        values = self.layer_query.values.copy()
         if seed:
             values["seed"] = seed
         if area:
             values["area"] = area
         if self.generator_type == GeneratorType.ALGORITHM:
-            return self.generator.generate(width, height, values=values)
+            image = self.generator.generate(width, height, values=values)
+            return image
         else:
-            return self.generator.generate(width, height, values=values, layers=self.layers)
+            image = self.generator.generate(width, height, values=values, layers=self.layers)
+            return image
 
     def generate_seed(self,
                       seed_generator: SeedGenerator,
                       overwrite: bool = False,
                       recursive: bool = True) -> None:
         seed = seed_generator.generate_seed()
-        if overwrite or "seed" not in self.values:
-            self.values["seed"] = seed
+        if not self.layer_query.values:
+            self.layer_query.values = {}
+        if overwrite or "seed" not in self.layer_query.values:
+            self.layer_query.values["seed"] = seed
         if recursive:
             for layer in self.layers:
                 layer.generate_seed(seed_generator)
