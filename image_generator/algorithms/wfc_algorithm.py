@@ -14,87 +14,11 @@ from typing import Dict, Any, List, Tuple
 from PIL.Image import Resampling
 
 from image_generator.algorithm import Algorithm
+from image_generator.algorithms.wfc_pattern_data import pattern_data_dict, PatternData, PatternImage
 from image_generator.parameter import Parameter, DataType, VisibleType
 from image_generator.utils import apply_transparency_mask, crop_image_by_size, convert_list_of_rgb_to_rgba, \
     convert_hex_list_to_rgba, combine_lists_to_tuples, apply_color_changes_rgba, convert_hex_list_to_rgb, \
-    scale_dimensions_in_ratio, get_unique_colors_rgb, extend_colors, ensure_color_format
-
-
-def read_xml_file(file_path: str) -> List[Dict[str, Any]]:
-    tree = ET.parse(file_path)
-    root = tree.getroot()
-
-    def parse_node(node: ET.Element) -> Dict[str, Any]:
-        parsed_node = {
-            "tag": node.tag,
-            "attributes": node.attrib,
-            "children": [parse_node(child) for child in node],
-            "text": node.text.strip() if node.text else ""
-        }
-        return parsed_node
-
-    return [parse_node(child) for child in root]
-
-
-def find_node_by_name(nodes: List[Dict[str, Any]], name: str) -> Optional[Dict[str, Any]]:
-    for node in nodes:
-        if node.get("attributes", {}).get("name") == name:
-            return node
-
-        result = find_node_by_name(node.get("children", []), name)
-        if result:
-            return result
-
-    return None
-
-
-def get_attribute(node: Dict[str, Any], attribute_name: str, default_value: Any = None) -> Any:
-    return node.get("attributes", {}).get(attribute_name, default_value)
-
-
-def get_colors_from_node(node: Dict[str, Any]) -> List[Tuple[int, int, int]]:
-    colors_node = next((child for child in node.get("children", []) if child["tag"] == "colors"), None)
-
-    if not colors_node:
-        return []
-
-    colors = []
-    for color_node in colors_node.get("children", []):
-        if color_node["tag"] == "color":
-            try:
-                r, g, b = map(int, color_node["text"].split(","))
-                colors.append((r, g, b))
-            except ValueError:
-                print(f"Invalid color value: {color_node['text']}")
-
-    return colors
-
-
-def read_image(image_path: str) -> Dict[str, Union[np.ndarray, int]]:
-    """Reads an image and converts it to a 2D numpy array of uint32."""
-    try:
-        with Image.open(image_path) as img:
-            img = img.convert("RGB")
-            np_image = np.array(img, dtype=np.uint32)  # Convert to uint32 array
-
-            mx, my = img.size
-            flattened_img = (np_image[:, :, 0] << 16) + (np_image[:, :, 1] << 8) + np_image[:, :, 2]
-
-            return {"MX": mx, "MY": my, "data": flattened_img}
-    except Exception as e:
-        print(f"Error while loading {image_path}: {e}")
-        return None
-
-
-def to_heuristic(heuristic_string: str) -> wfc_cpp.Heuristic:
-    if heuristic_string == "Scanline":
-        return wfc_cpp.Heuristic.Scanline
-    elif heuristic_string == "Entropy":
-        return wfc_cpp.Heuristic.Entropy
-    elif heuristic_string == "MRV":
-        return wfc_cpp.Heuristic.MRV
-    else:
-        raise ValueError(f"Invalid Heuristic: {heuristic_string}")
+    scale_down_dimensions_in_ratio, get_unique_colors_rgb, extend_colors, ensure_color_format
 
 
 def array_to_image(array: np.ndarray) -> Optional[Image.Image]:
@@ -119,52 +43,20 @@ def run_overlapping(options: wfc_cpp.Options, numpy_pattern_img: wfc_cpp.Array2D
     return is_done, img_numpy
 
 
-def run_wfc(pattern_node: Dict[str, Any],
+def run_wfc(pattern_data: PatternData,
             width_g: int, height_g: int,
             width_f: int, height_f: int,
             seed: int, gen_attempt_limit: int
             ) -> Image.Image:
-    name = get_attribute(pattern_node, "name")
-    # size = get_attribute(pattern_node, "size", "48")
-    N = int(get_attribute(pattern_node, "N", "3"))
-
-    periodic_output = get_attribute(pattern_node, "periodic", "False") == "True"
-    periodic_input = get_attribute(pattern_node, "periodicInput", "True") == "True"
-    ground = get_attribute(pattern_node, "ground", "False") == "True"
-    symmetry = int(get_attribute(pattern_node, "symmetry", "8"))
-    heuristic = get_attribute(pattern_node, "heuristic", "Entropy")
-
-    print(f"< {name}")
-
-    current_folder = os.path.dirname(os.path.abspath(__file__))
-    image_path = os.path.join(current_folder, f"patterns/{name}.png")
-    pattern_img = read_image(image_path)
-
-    if pattern_img is None:
-        raise RuntimeError(f"Error while loading {image_path}")
-
-    numpy_pattern_img = wfc_cpp.Array2Duint32_t.from_numpy(pattern_img["data"])
-
-    options = wfc_cpp.Options()
-    options.periodic_input = periodic_input
-    options.periodic_output = periodic_output
-    options.i_W = pattern_img["MX"]
-    options.i_H = pattern_img["MY"]
-    options.o_W = width_g
-    options.o_H = height_g
-    options.symmetry = (1 << symmetry) - 1
-    options.pattern_size = N
-    options.heuristic = to_heuristic(heuristic)
-    options.ground = ground
-
+    options = pattern_data.to_wfc_options(width_g, height_g, False)
     random.seed(seed)
 
     is_done = False
     attempts = 0
 
     while (not is_done) and (attempts < gen_attempt_limit):
-        seed_internal = random.randint(0, 10000)
-        (is_done, numpy_img) = run_overlapping(options, numpy_pattern_img, seed_internal, -1)
+        seed_internal = random.randint(0, 2000000000)
+        (is_done, numpy_img) = run_overlapping(options, pattern_data.pattern_image.image, seed_internal, pattern_data.limit)
         attempts += 1
 
     img_t = array_to_image(numpy_img)
@@ -172,10 +64,10 @@ def run_wfc(pattern_node: Dict[str, Any],
     return img
 
 
-allowed_patterns = [
-    {"value": "RedMaze", "visible_value": "Red Maze (3 colors)"},
-    {"value": "Spirals", "visible_value": "Spirals (2 colors)"},
-]
+allowed_patterns = [{
+    "value": key,
+    "visible_value": value.visible_name
+} for key, value in pattern_data_dict.items()]
 
 wfc_specific_parameters = [
     Parameter(name="max_gen_dim",
@@ -230,24 +122,14 @@ class WFCAlgorithm(Algorithm):
                   max_gen_dim: int = 192,
                   **kwargs
                   ) -> Image:
-        current_folder = os.path.dirname(os.path.abspath(__file__))
-        xml_file_path = os.path.join(current_folder, "patterns.xml")
 
-        xml_nodes = read_xml_file(xml_file_path)
-        pattern_node = find_node_by_name(xml_nodes, pattern)
-
-        name = get_attribute(pattern_node, "name")
-        pattern_image_path = os.path.join(current_folder, f"patterns/{name}.png")
-        pattern_image = Image.open(pattern_image_path)
-
-        pattern_colors = get_unique_colors_rgb(pattern_image)
-
+        pattern_data = pattern_data_dict[pattern]
         random.seed(seed)
         scale = random.uniform(*scale)
 
-        g_width, g_height = scale_dimensions_in_ratio(width, height, max_gen_dim, max_gen_dim)
+        g_width, g_height = scale_down_dimensions_in_ratio(width, height, max_gen_dim, max_gen_dim)
 
-        image = run_wfc(pattern_node,
+        image = run_wfc(pattern_data,
                         g_width, g_height,
                         round(width * scale), round(height * scale),
                         seed, 100)
@@ -257,8 +139,8 @@ class WFCAlgorithm(Algorithm):
         if colors is None:
             colors = []
         to_change_colors = convert_hex_list_to_rgb(colors)
-        to_change_colors = extend_colors(to_change_colors, pattern_colors, seed, True)
-        color_change_rules = combine_lists_to_tuples(pattern_colors, to_change_colors)
+        to_change_colors = extend_colors(to_change_colors, pattern_data.pattern_image.colors, seed, True)
+        color_change_rules = combine_lists_to_tuples(pattern_data.pattern_image.colors, to_change_colors)
 
         image = apply_color_changes_rgba(image, None, color_change_rules)
         if area is not None:

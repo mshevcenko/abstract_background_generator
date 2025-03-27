@@ -12,13 +12,7 @@
   <overlapping name="Paths" N="3" periodic="True"/>
   <overlapping name="Platformer" N="2" symmetry="2" ground="True" periodic="True"/>
   <overlapping name="Platformer" N="3" symmetry="2" ground="True" periodic="True"/>
-  <overlapping name="RedMaze" N="2">
-    <colors>
-      <color>255,255,255</color>
-      <color>0,0,0</color>
-      <color>255,0,0</color>
-    </colors>
-  </overlapping>
+  <overlapping name="RedMaze" N="2"/>
   <overlapping name="Rooms" N="3" screenshots="3" periodic="True"/>
   <overlapping name="Rule126" N="3" symmetry="2" periodicInput="False" periodic="False"/>
   <overlapping name="SimpleKnot" N="3" periodic="True"/>
@@ -51,12 +45,7 @@
   <overlapping name="Skew1" N="3" periodic="True"/>
   <overlapping name="Skew2" N="3" periodic="True"/>
   <overlapping name="SmileCity" N="3" periodic="True"/>
-  <overlapping name="Spirals" N="3" periodic="True">
-    <colors>
-      <color>66,69,80</color>
-      <color>255,0,114</color>
-    </colors>
-  </overlapping>
+  <overlapping name="Spirals" N="3" periodic="True"/>
   <overlapping name="Town" N="3" periodic="True"/>
   <overlapping name="Wall" N="2" symmetry="1" screenshots="1"/>
   <overlapping name="Wall" N="3" symmetry="2" screenshots="1"/>
