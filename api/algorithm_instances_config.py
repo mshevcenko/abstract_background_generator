@@ -2,6 +2,7 @@ from enum import Enum
 
 from image_generator.algorithms.attractor_algorithm import AttractorAlgorithm
 from image_generator.algorithms.attractors.lorenz_attractor import LorenzAttractor
+from image_generator.algorithms.geometric_shape_algorithm import GeometricShapesAlgorithm
 from image_generator.algorithms.gradient_algorithm import GradientAlgorithm
 from image_generator.algorithms.hex_pattern_algorithm import HexPatternAlgorithm
 from image_generator.algorithms.plain_algorithm import PlainAlgorithm
@@ -20,6 +21,7 @@ hex_pattern_algorithm = HexPatternAlgorithm("hex_pattern_algorithm", "Hex grid")
 wave_function_collapse_algorithm = WFCAlgorithm(visible_name="Pattern replicator")
 flow_field_generator = FlowFieldGenerator("flow_field_generator", "Fluid")
 procedural_background_generator = ProceduralBackgroundGenerator("procedural_background_generator", "Noises")
+geometric_shape_algorithm = GeometricShapesAlgorithm("geometric_shape_algorithm", "Geometric shapes")
 
 
 class AlgorithmInstancesEnum(Enum):
@@ -32,6 +34,7 @@ class AlgorithmInstancesEnum(Enum):
     wfc = 6
     flow_field = 7
     noise = 8
+    geometric_shape = 9
 
 
 algorithm_instances_list = [
@@ -43,5 +46,6 @@ algorithm_instances_list = [
     hex_pattern_algorithm,
     wave_function_collapse_algorithm,
     flow_field_generator,
-    procedural_background_generator
+    procedural_background_generator,
+    geometric_shape_algorithm
 ]
