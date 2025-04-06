@@ -16,9 +16,10 @@ class Blending(Generator):
     def __init__(self,
                  name: str,
                  visible_name: str,
+                 description: str,
                  parameters: List[Parameter],
                  blending_parameters: List[Parameter]):
-        super().__init__(GeneratorType.BLENDING, name, visible_name, parameters)
+        super().__init__(GeneratorType.BLENDING, name, visible_name, description, parameters)
         self.blending_parameters = blending_parameters
         check_parameters_unique_names(self.blending_parameters)
         self.model = BlendingModel(

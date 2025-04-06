@@ -14,8 +14,9 @@ class Algorithm(Generator):
     def __init__(self,
                  name: str,
                  visible_name: str,
+                 description: str,
                  parameters: List[Parameter]):
-        super().__init__(GeneratorType.ALGORITHM, name, visible_name, parameters)
+        super().__init__(GeneratorType.ALGORITHM, name, visible_name, description, parameters)
         self.model = AlgorithmModel(**self.model.dict())
 
     @abstractmethod
@@ -24,7 +25,6 @@ class Algorithm(Generator):
                   height: int,
                   seed: Optional[int] = None,
                   area: Optional[List[List[bool]]] = None,
-                  colors: Optional[List[str]] = None,
                   **kwargs) -> Image:
         pass
 
