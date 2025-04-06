@@ -72,6 +72,7 @@ allowed_patterns = [{
 wfc_specific_parameters = [
     Parameter(name="max_gen_dim",
               visible_name="Base max generation dimensions",
+              description="",
               data_type=DataType.INTEGER,
               visible_type=VisibleType.SLIDER,
               default=192,
@@ -79,6 +80,7 @@ wfc_specific_parameters = [
               max_value=250),
     Parameter(name="pattern",
               visible_name="Pattern",
+              description="",
               data_type=DataType.ENUM_LIST,
               visible_type=VisibleType.SELECTOR,
               default="RedMaze",
@@ -86,6 +88,7 @@ wfc_specific_parameters = [
               ),
     Parameter(name="scale",
               visible_name="Additional scaling",
+              description="",
               data_type=DataType.FLOAT_TUPLE,
               visible_type=VisibleType.RANGE_SLIDER,
               default=(1.0, 2.0),
@@ -102,6 +105,7 @@ class WFCAlgorithm(Algorithm):
         parameters = [
             Parameter(name="colors",
                       visible_name="Colors",
+                      description="",
                       data_type=DataType.COLORS,
                       visible_type=VisibleType.COLORS,
                       default=[],
@@ -109,7 +113,7 @@ class WFCAlgorithm(Algorithm):
                       max_count=10),
             *wfc_specific_parameters
         ]
-        super().__init__(name, visible_name, parameters)
+        super().__init__(name, visible_name, "", parameters)
 
     def algorithm(self,
                   width: int,

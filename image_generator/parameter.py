@@ -31,6 +31,7 @@ class EnumValueDict(TypedDict):
 class ParameterModel(BaseModel):
     name: str
     visible_name: str
+    description: str
     data_type: DataType
     visible_type: VisibleType
     default: Union[int, float, str, List[str], Tuple[int, int], Tuple[float, float], bool]
@@ -46,6 +47,7 @@ class Parameter:
     def __init__(self,
                  name: str,
                  visible_name: str,
+                 description: str,
                  data_type: DataType,
                  visible_type: VisibleType,
                  default: Union[int, float, str, List[str], Tuple[int, int], Tuple[float, float], bool],
@@ -56,6 +58,7 @@ class Parameter:
                  max_count: Optional[int] = None):
         self.name = name
         self.visible_name = visible_name
+        self.description = description
         self.visible_type = visible_type
         self.data_type = data_type
         self.min_value = min_value
@@ -68,6 +71,7 @@ class Parameter:
         self.model = ParameterModel(
             name=self.name,
             visible_name=self.visible_name,
+            description=self.description,
             visible_type=self.visible_type,
             data_type=self.data_type,
             min_value=self.min_value,
@@ -80,13 +84,15 @@ class Parameter:
 
     def __check(self) -> None:
         if not isinstance(self.name, str):
-            raise ValueError(f"Parameter name(\"{self.name}\") is not str")
+            raise ValueError(f"Parameter name(\"{self.name}\") must be str")
         if not isinstance(self.visible_name, str):
-            raise ValueError(f"Parameter visible_name(\"{self.visible_name}\") is not str")
+            raise ValueError(f"Parameter visible_name(\"{self.visible_name}\") must be str")
+        if not isinstance(self.description, str):
+            raise ValueError(f"Parameter description(\"{self.description}\") must be str")
         if not isinstance(self.data_type, DataType):
-            raise ValueError(f"Parameter data_type(\"{self.data_type}\") is not DataType")
+            raise ValueError(f"Parameter data_type(\"{self.data_type}\") must be DataType")
         if not isinstance(self.visible_type, VisibleType):
-            raise ValueError(f"Parameter visible_type(\"{self.visible_type}\") is not VisibleType")
+            raise ValueError(f"Parameter visible_type(\"{self.visible_type}\") must be VisibleType")
         self.__check_data_type_visible_type()
         self.__check_min_value_max_value()
         self.__check_min_count_max_count()

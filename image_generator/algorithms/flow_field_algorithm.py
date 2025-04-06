@@ -16,6 +16,7 @@ class FlowFieldGenerator(Algorithm):
         parameters = [
             Parameter(name="colors",
                       visible_name="Colors",
+                      description="",
                       data_type=DataType.COLORS,
                       visible_type=VisibleType.COLORS,
                       default=["#ff0000", "#00ff00"],
@@ -23,6 +24,7 @@ class FlowFieldGenerator(Algorithm):
                       max_count=10),
             Parameter(name="scale",
                       visible_name="Scale",
+                      description="",
                       data_type=DataType.FLOAT,
                       visible_type=VisibleType.SLIDER,
                       default=1.0,
@@ -30,6 +32,7 @@ class FlowFieldGenerator(Algorithm):
                       max_value=100.0),
             Parameter(name="blur_radius",
                       visible_name="Blur radius",
+                      description="",
                       data_type=DataType.FLOAT,
                       visible_type=VisibleType.SLIDER,
                       default=1.0,
@@ -37,6 +40,7 @@ class FlowFieldGenerator(Algorithm):
                       max_value=10.0),
             Parameter(name="octaves",
                       visible_name="Octaves",
+                      description="",
                       data_type=DataType.INTEGER,
                       visible_type=VisibleType.SLIDER,
                       default=6,
@@ -44,6 +48,7 @@ class FlowFieldGenerator(Algorithm):
                       max_value=32),
             Parameter(name="line_count",
                       visible_name="line_count",
+                      description="",
                       data_type=DataType.INTEGER,
                       visible_type=VisibleType.SLIDER,
                       default=1000,
@@ -51,6 +56,7 @@ class FlowFieldGenerator(Algorithm):
                       max_value=10000),
             Parameter(name="line_length",
                       visible_name="Line_length",
+                      description="",
                       data_type=DataType.INTEGER,
                       visible_type=VisibleType.SLIDER,
                       default=100,
@@ -58,13 +64,14 @@ class FlowFieldGenerator(Algorithm):
                       max_value=10000),
             Parameter(name="line_width",
                       visible_name="line_width",
+                      description="",
                       data_type=DataType.INTEGER,
                       visible_type=VisibleType.SLIDER,
                       default=1,
                       min_value=1,
                       max_value=100),
         ]
-        super().__init__(name, visible_name, parameters)
+        super().__init__(name, visible_name, "", parameters)
 
     def algorithm(self,
                   width: int,

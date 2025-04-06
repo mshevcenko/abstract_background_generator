@@ -16,6 +16,7 @@ class PlainAlgorithm(Algorithm):
             Parameter(
                 name="colors",
                 visible_name="Colors",
+                description="",
                 data_type=DataType.COLORS,
                 visible_type=VisibleType.COLORS,
                 default=[color],
@@ -23,7 +24,7 @@ class PlainAlgorithm(Algorithm):
                 max_count=1
             )
         ]
-        super().__init__(name, visible_name, parameters)
+        super().__init__(name, visible_name, "", parameters)
 
     def algorithm(self,
                   width: int,

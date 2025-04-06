@@ -14,6 +14,7 @@ class ProceduralBackgroundGenerator(Algorithm):
         parameters = [
             Parameter(name="colors",
                       visible_name="Colors",
+                      description="",
                       data_type=DataType.COLORS,
                       visible_type=VisibleType.COLORS,
                       default=["#ff0000", "#00ff00"],
@@ -21,6 +22,7 @@ class ProceduralBackgroundGenerator(Algorithm):
                       max_count=10),
             Parameter(name="noise_type",
                       visible_name="Noise type",
+                      description="",
                       data_type=DataType.ENUM_LIST,
                       visible_type=VisibleType.SELECTOR,
                       default=0,
@@ -32,6 +34,7 @@ class ProceduralBackgroundGenerator(Algorithm):
                       ),
             Parameter(name="scale",
                       visible_name="Scale",
+                      description="",
                       data_type=DataType.FLOAT,
                       visible_type=VisibleType.SLIDER,
                       default=1.0,
@@ -39,6 +42,7 @@ class ProceduralBackgroundGenerator(Algorithm):
                       max_value=100.0),
             Parameter(name="blur_radius",
                       visible_name="Blur radius",
+                      description="",
                       data_type=DataType.FLOAT,
                       visible_type=VisibleType.SLIDER,
                       default=1.0,
@@ -46,6 +50,7 @@ class ProceduralBackgroundGenerator(Algorithm):
                       max_value=10.0),
             Parameter(name="octaves",
                       visible_name="Octaves",
+                      description="",
                       data_type=DataType.INTEGER,
                       visible_type=VisibleType.SLIDER,
                       default=6,
@@ -53,6 +58,7 @@ class ProceduralBackgroundGenerator(Algorithm):
                       max_value=32),
             Parameter(name="persistence",
                       visible_name="Persistence",
+                      description="",
                       data_type=DataType.FLOAT,
                       visible_type=VisibleType.SLIDER,
                       default=0.5,
@@ -60,6 +66,7 @@ class ProceduralBackgroundGenerator(Algorithm):
                       max_value=3.0),
             Parameter(name="lacunarity",
                       visible_name="Lacunarity",
+                      description="",
                       data_type=DataType.FLOAT,
                       visible_type=VisibleType.SLIDER,
                       default=2.0,
@@ -67,11 +74,12 @@ class ProceduralBackgroundGenerator(Algorithm):
                       max_value=6.0),
             Parameter(name="island_type",
                       visible_name="Island Type",
+                      description="",
                       data_type=DataType.BOOL,
                       visible_type=VisibleType.CHECKBOX,
                       default=False),
         ]
-        super().__init__(name, visible_name, parameters)
+        super().__init__(name, visible_name, "", parameters)
         
 
     def algorithm(self,

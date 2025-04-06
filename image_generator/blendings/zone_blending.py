@@ -198,6 +198,7 @@ parameters_for_voronoi = [
     Parameter(
         name="n_points",
         visible_name="Number of points",
+        description="",
         data_type=DataType.INTEGER,
         visible_type=VisibleType.SLIDER,
         default=100,
@@ -210,6 +211,7 @@ parameters_for_hexes = [
     Parameter(
         name="hex_size",
         visible_name="Hex Size",
+        description="",
         data_type=DataType.INTEGER,
         visible_type=VisibleType.SLIDER,
         default=80,
@@ -219,6 +221,7 @@ parameters_for_hexes = [
     Parameter(
         name="spacing",
         visible_name="Spacing",
+        description="",
         data_type=DataType.INTEGER,
         visible_type=VisibleType.SLIDER,
         default=0,
@@ -231,6 +234,7 @@ parameters_for_waves = [
     Parameter(
         name="n_layers",
         visible_name="Number of layers",
+        description="",
         data_type=DataType.INTEGER,
         visible_type=VisibleType.SLIDER,
         default=10,
@@ -262,6 +266,7 @@ class ZoneBlendingNamed(Blending):
             Parameter(
                 name=ZONE_WEIGHT_KEY,
                 visible_name="Zone weight",
+                description="",
                 data_type=DataType.FLOAT,
                 visible_type=VisibleType.SLIDER,
                 default=1.0,
@@ -271,6 +276,7 @@ class ZoneBlendingNamed(Blending):
         ]
         super().__init__(name + str(zone_gen_fun),
                          gen_annot_for_algorithm_str(zone_gen_fun, visible_name + " using", ""),
+                         "",
                          parameters, blending_parameters)
 
     def blending(self,

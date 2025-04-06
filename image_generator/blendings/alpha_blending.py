@@ -15,6 +15,7 @@ class AlphaBlending(Blending):
             Parameter(
                 name="opacity",
                 visible_name="Opacity",
+                description="",
                 data_type=DataType.FLOAT,
                 visible_type=VisibleType.SLIDER,
                 default=1.0,
@@ -22,7 +23,7 @@ class AlphaBlending(Blending):
                 max_value=1.0
             )
         ]
-        super().__init__(name, visible_name, [], blending_parameters)
+        super().__init__(name, visible_name, "", [], blending_parameters)
 
     def blending(self,
                  width: int,

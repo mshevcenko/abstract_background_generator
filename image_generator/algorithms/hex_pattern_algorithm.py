@@ -15,6 +15,7 @@ class HexPatternAlgorithm(Algorithm):
         Parameter(
             name="colors",
             visible_name="Colors",
+            description="",
             data_type=DataType.COLORS,
             visible_type=VisibleType.COLORS,
             default=["#FFA500", "#00FF00"],
@@ -24,6 +25,7 @@ class HexPatternAlgorithm(Algorithm):
         Parameter(
             name="hex_size",
             visible_name="Hex Size",
+            description="",
             data_type=DataType.INTEGER,
             visible_type=VisibleType.SLIDER,
             default=80,
@@ -33,6 +35,7 @@ class HexPatternAlgorithm(Algorithm):
         Parameter(
             name="spacing",
             visible_name="Spacing",
+            description="",
             data_type=DataType.INTEGER,
             visible_type=VisibleType.SLIDER,
             default=0,
@@ -42,7 +45,7 @@ class HexPatternAlgorithm(Algorithm):
     ]
 
     def __init__(self, name: str, visible_name: str):
-        super().__init__(name, visible_name, self.PARAMETERS)
+        super().__init__(name, visible_name, "", self.PARAMETERS)
 
     def algorithm(self,
                   width: int,

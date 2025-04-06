@@ -14,6 +14,7 @@ class GeometricShapesAlgorithm(Algorithm):
         Parameter(
             name="shape_type",
             visible_name="Shape Type",
+            description="",
             data_type=DataType.ENUM_LIST,
             visible_type=VisibleType.SELECTOR,
             default="triangle",
@@ -26,6 +27,7 @@ class GeometricShapesAlgorithm(Algorithm):
         Parameter(
             name="size",
             visible_name="Size",
+            description="",
             data_type=DataType.INTEGER,
             visible_type=VisibleType.SLIDER,
             default=40,
@@ -35,6 +37,7 @@ class GeometricShapesAlgorithm(Algorithm):
         Parameter(
             name="colors",
             visible_name="Fill Color",
+            description="",
             data_type=DataType.COLORS,
             visible_type=VisibleType.COLORS,
             default=["#FF0000"],
@@ -44,6 +47,7 @@ class GeometricShapesAlgorithm(Algorithm):
         Parameter(
             name="angle",
             visible_name="Rotation Angle",
+            description="",
             data_type=DataType.FLOAT,
             visible_type=VisibleType.SLIDER,
             default=0.0,
@@ -53,6 +57,7 @@ class GeometricShapesAlgorithm(Algorithm):
         Parameter(
             name="blur_radius",
             visible_name="Blur Radius",
+            description="",
             data_type=DataType.FLOAT,
             visible_type=VisibleType.SLIDER,
             default=0.0,
@@ -62,6 +67,7 @@ class GeometricShapesAlgorithm(Algorithm):
         Parameter(
             name="border_thickness",
             visible_name="Border Thickness",
+            description="",
             data_type=DataType.INTEGER,
             visible_type=VisibleType.SLIDER,
             default=2,
@@ -80,6 +86,7 @@ class GeometricShapesAlgorithm(Algorithm):
         Parameter(
             name="num_shapes",
             visible_name="Number of Shapes",
+            description="",
             data_type=DataType.INTEGER,
             visible_type=VisibleType.SLIDER,
             default=12,
@@ -89,6 +96,7 @@ class GeometricShapesAlgorithm(Algorithm):
         Parameter(
             name="arrangement",
             visible_name="Arrangement",
+            description="",
             data_type=DataType.ENUM_LIST,
             visible_type=VisibleType.SELECTOR,
             default="random",
@@ -101,7 +109,7 @@ class GeometricShapesAlgorithm(Algorithm):
     ]
 
     def __init__(self, name: str, visible_name: str):
-        super().__init__(name, visible_name, self.PARAMETERS)
+        super().__init__(name, visible_name, "", self.PARAMETERS)
 
     def generate_shape(self,
                        shape_type: str = 'triangle',

@@ -15,6 +15,7 @@ class SmoothWaveBackgroundAlgorithm(Algorithm):
         Parameter(
             name="colors",
             visible_name="Colors",
+            description="",
             data_type=DataType.COLORS,
             visible_type=VisibleType.COLORS,
             default=["#FF0000", "#FFFFFF"],
@@ -24,6 +25,7 @@ class SmoothWaveBackgroundAlgorithm(Algorithm):
         Parameter(
             name="n_layers",
             visible_name="Number of layers",
+            description="",
             data_type=DataType.INTEGER,
             visible_type=VisibleType.SLIDER,
             default=10,
@@ -33,6 +35,7 @@ class SmoothWaveBackgroundAlgorithm(Algorithm):
         Parameter(
             name="monochrome",
             visible_name="Monochrome mode",
+            description="",
             data_type=DataType.BOOL,
             visible_type=VisibleType.CHECKBOX,
             default=False
@@ -40,7 +43,7 @@ class SmoothWaveBackgroundAlgorithm(Algorithm):
     ]
 
     def __init__(self, name: str, visible_name: str):
-        super().__init__(name, visible_name, self.PARAMETERS)
+        super().__init__(name, visible_name, "", self.PARAMETERS)
 
     def generate_wave_points(self, width: int, base_y: float, amplitude: float, n_points: int = 250) -> List[Tuple[float, float]]:
         xs = np.linspace(0, width, n_points)

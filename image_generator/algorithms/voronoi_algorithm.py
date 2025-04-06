@@ -15,6 +15,7 @@ class VoronoiAlgorithm(Algorithm):
         Parameter(
             name="colors",
             visible_name="Colors",
+            description="",
             data_type=DataType.COLORS,
             visible_type=VisibleType.COLORS,
             default=["#FF5733", "#33FF57"],
@@ -24,6 +25,7 @@ class VoronoiAlgorithm(Algorithm):
         Parameter(
             name="n_points",
             visible_name="Number of points",
+            description="",
             data_type=DataType.INTEGER,
             visible_type=VisibleType.SLIDER,
             default=100,
@@ -33,7 +35,7 @@ class VoronoiAlgorithm(Algorithm):
     ]
 
     def __init__(self, name: str, visible_name: str):
-        super().__init__(name, visible_name, self.PARAMETERS)
+        super().__init__(name, visible_name, "", self.PARAMETERS)
 
     def algorithm(self,
                   width: int,
