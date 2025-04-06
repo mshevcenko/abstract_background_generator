@@ -33,7 +33,7 @@ class GeometricShapesAlgorithm(Algorithm):
             max_value=200
         ),
         Parameter(
-            name="color",
+            name="colors",
             visible_name="Fill Color",
             data_type=DataType.COLORS,
             visible_type=VisibleType.COLORS,
@@ -68,15 +68,15 @@ class GeometricShapesAlgorithm(Algorithm):
             min_value=0,
             max_value=10
         ),
-        Parameter(
-            name="border_color",
-            visible_name="Border Color",
-            data_type=DataType.COLORS,
-            visible_type=VisibleType.COLORS,
-            default=["#000000"],
-            min_count=1,
-            max_count=1
-        ),
+        # Parameter(
+        #     name="border_color",
+        #     visible_name="Border Color",
+        #     data_type=DataType.COLORS,
+        #     visible_type=VisibleType.COLORS,
+        #     default=["#000000"],
+        #     min_count=1,
+        #     max_count=1
+        # ),
         Parameter(
             name="num_shapes",
             visible_name="Number of Shapes",
@@ -251,7 +251,8 @@ class GeometricShapesAlgorithm(Algorithm):
                   blur_radius: float = 0.0,
                   border_thickness: int = 2,
                   num_shapes: int = 12,
-                  arrangement: str = "spiral") -> Image:
+                  arrangement: str = "spiral",
+                  **kwargs) -> Image:
 
         if seed is not None:
             random.seed(seed)
