@@ -1,8 +1,9 @@
+import random
 from typing import List, Dict, Union, Optional, Tuple
 from PIL.Image import Image
 from pydantic import BaseModel
-from image_generator.algorithm import AlgorithmModel
-from image_generator.blending import BlendingModel
+from image_generator.algorithm import AlgorithmModel, Algorithm
+from image_generator.blending import BlendingModel, Blending
 from image_generator.layer import Layer, LayerQuery
 from image_generator.generator import Generator, GeneratorType
 from image_generator.seed_generator import SeedGenerator
@@ -20,18 +21,12 @@ class QueryFull(BaseModel):
     seed: Optional[int] = None
 
 
-class QueryShort(BaseModel):
-    layer_query_seed: int
-    width: int
-    height: int
-    seed: Optional[int]
-    full_metadata: Optional[bool]
-
-
 class QueryRandom(BaseModel):
     width: int
     height: int
-    full_metadata: Optional[bool]
+    count: int
+    min_layers_count: Optional[int] = None
+    max_layers_count: Optional[int] = None
 
 
 class ImageMetadataFull(BaseModel):
@@ -39,15 +34,6 @@ class ImageMetadataFull(BaseModel):
     height: int
     seed: int
     layer_query: LayerQuery
-
-
-class ImageMetadataShort(BaseModel):
-    seed: int
-
-
-class ImageMetadataRandomShort(BaseModel):
-    seed: int
-    layer_query_seed: int
 
 
 class ImageGenerator:
@@ -58,6 +44,8 @@ class ImageGenerator:
         self.seed_generator = SeedGenerator()
         self.generators_dict = {}
         self.create_generators_dict()
+        self.blendings = [blending for blending in self.generators if blending.generator_type == GeneratorType.BLENDING]
+        self.algorithms = [algorithm for algorithm in self.generators if algorithm.generator_type == GeneratorType.ALGORITHM]
         self.model = ImageGeneratorModel(
             blendings=[blending.model for blending in self.generators if blending.generator_type == GeneratorType.BLENDING],
             algorithms=[algorithm.model for algorithm in self.generators if algorithm.generator_type == GeneratorType.ALGORITHM],
@@ -82,6 +70,75 @@ class ImageGenerator:
             layer_query=layer_query
         )
         return image, metadata
+
+    def __random_algorithm_query(self) -> LayerQuery:
+        algorithms = [algorithm for algorithm in self.algorithms if algorithm.name != "geometric_shape_algorithm"]
+        algorithm: Algorithm = random.choice(algorithms)
+        values = {parameter.name: parameter.random_value() for parameter in algorithm.parameters}
+        return LayerQuery(name=algorithm.name,
+                          generator_type=algorithm.generator_type,
+                          values=values)
+
+    def __random_blending_query(self,
+                                layers_count: int) -> LayerQuery:
+        blending: Blending = random.choice(self.blendings)
+        values = {parameter.name: parameter.random_value() for parameter in blending.parameters}
+        blending_values = {parameter.name: parameter.random_value() for parameter in blending.blending_parameters}
+        layers = []
+        i = 0
+        while i <= layers_count:
+            is_next_blending: bool = False
+            if layers_count - i > 0:
+                is_next_blending = random.uniform(0.0, 1.0) < 0.3
+            if is_next_blending:
+                inner_blending_layers_count = random.randint(1, layers_count - i)
+                inner_layer_query = self.__random_blending_query(layers_count=inner_blending_layers_count)
+                i += inner_blending_layers_count
+            else:
+                inner_layer_query = self.__random_algorithm_query()
+            layers.append(inner_layer_query)
+            i += 1
+        return LayerQuery(name=blending.name,
+                          generator_type=blending.generator_type,
+                          values=values,
+                          blending_values=blending_values,
+                          layers=layers)
+
+    def random_query(self,
+                     width: int,
+                     height: int,
+                     min_layers_count: int = 2,
+                     max_layers_count: int = 7) -> QueryFull:
+        if min_layers_count < 2:
+            min_layers_count = 2
+        if min_layers_count > max_layers_count:
+            max_layers_count = min_layers_count
+        layers_count = random.randint(min_layers_count, max_layers_count)
+        layer_query = self.__random_blending_query(layers_count=layers_count - 1)
+        return QueryFull(width=width,
+                         height=height,
+                         layer_query=layer_query)
+
+    def generate_random_images(self,
+                               query_random: QueryRandom) -> List[Tuple[Image, ImageMetadataFull]]:
+        images_metadatas = []
+        width = query_random.width
+        height = query_random.height
+        count = query_random.count
+        min_layers_count = query_random.min_layers_count
+        max_layers_count = query_random.max_layers_count
+        if min_layers_count is None:
+            min_layers_count = 2
+        if max_layers_count is None:
+            max_layers_count = min_layers_count
+        for _ in range(count):
+            query = self.random_query(width=width,
+                                      height=height,
+                                      min_layers_count=min_layers_count,
+                                      max_layers_count=max_layers_count)
+            image_metadata = self.generate_image_query_full(query)
+            images_metadatas.append(image_metadata)
+        return images_metadatas
 
     def create_generators_dict(self) -> None:
         for generator in self.generators:

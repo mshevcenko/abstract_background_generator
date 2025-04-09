@@ -1,3 +1,5 @@
+import random
+import colorsys
 from enum import Enum
 from pydantic import BaseModel
 from typing import Any, Dict, Optional, List, Union, Tuple
@@ -229,13 +231,48 @@ class Parameter:
             if self.max_count is not None:
                 raise ValueError(f"Parameter max_count(\"{self.max_count}\") of visible_type \"{self.visible_type}\" must be None")
 
-
     def check_value(self,
                     value: Union[int, float, str, List[str], Tuple[int, int], Tuple[float, float], bool]) -> None:
         pass
 
+    def __get_random_colors(self, count: int) -> List[str]:
+        colors = []
+        hue = random.random()
+        golden_ratio_conjugate = 0.618033988749895
+
+        for _ in range(count):
+            hue = (hue + golden_ratio_conjugate) % 1
+            saturation = 0.5
+            brightness = 0.95
+            r, g, b = colorsys.hsv_to_rgb(hue, saturation, brightness)
+            hex_color = "#{:02x}{:02x}{:02x}".format(int(r * 255), int(g * 255), int(b * 255))
+            colors.append(hex_color)
+
+        return colors
+
     def random_value(self) -> Union[int, float, str, List[str], Tuple[int, int], Tuple[float, float], bool]:
-        pass
+        if self.data_type == DataType.INTEGER:
+            return random.randint(self.min_value, self.max_value)
+        elif self.data_type == DataType.FLOAT:
+            return random.uniform(self.min_value, self.max_value)
+        elif self.data_type == DataType.INTEGER_TUPLE:
+            value = [random.randint(self.min_value, self.max_value), random.randint(self.min_value, self.max_value)]
+            value.sort()
+            return value[0], value[1]
+        elif self.data_type == DataType.FLOAT_TUPLE:
+            value = [random.uniform(self.min_value, self.max_value), random.uniform(self.min_value, self.max_value)]
+            value.sort()
+            return value[0], value[1]
+        elif self.data_type == DataType.BOOL:
+            return random.random() < 0.5
+        elif self.data_type == DataType.ENUM_LIST:
+            values = [possible_value["value"] for possible_value in self.possible_values]
+            return random.choice(values)
+        elif self.data_type == DataType.COLORS:
+            count = random.randint(self.min_count, self.max_count)
+            colors = self.__get_random_colors(count)
+            return colors
+        raise ValueError(f"Unsupported data_type: \"{self.data_type}\"")
 
 
 def check_values(parameters: List[Parameter],

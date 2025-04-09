@@ -5,8 +5,7 @@ from api.store_query_service import QueryIdModel
 from api.image_generator_config import image_generator
 from api import store_query_service, template_query_service
 from requests_toolbelt.multipart.encoder import MultipartEncoder
-from image_generator.image_generator import ImageGeneratorModel, QueryFull
-
+from image_generator.image_generator import ImageGeneratorModel, QueryFull, QueryRandom
 
 api_router = APIRouter(prefix="/api")
 
@@ -96,6 +95,34 @@ async def template_query_id(template_query_id: str,
     return Response(status_code=200)
 
 
-# @api_router.post("/image-generator/query/random")
-# async def generate_image_query_random():
-#     pass
+@api_router.post("/image-generator/query/random")
+async def generate_image_query_random(query_random: QueryRandom,
+                                      include_metadata: Optional[bool] = True,
+                                      include_image: Optional[bool] = True) -> Response:
+    images_metadatas = image_generator.generate_random_images(query_random=query_random)
+    fields = []
+    if not include_metadata and not include_image:
+        return Response(status_code=200)
+    for idx, (image, metadata) in enumerate(images_metadatas):
+        buf = io.BytesIO()
+        image.save(buf, format="PNG")
+        buf.seek(0)
+        image_bytes = buf.read()
+        if include_image:
+            fields.append((f"image{idx}", ("image.png", image_bytes, "image/png")))
+        if include_metadata:
+            fields.append((f"metadata{idx}", ("metadata.json", metadata.model_dump_json().encode("utf-8"), "application/json")))
+    multipart_encoder = MultipartEncoder(fields=fields)
+    return Response(content=multipart_encoder.to_string(), media_type=multipart_encoder.content_type)
+
+
+@api_router.post("/image-generator/query/random/image")
+async def generate_image_query_random(query_random: QueryRandom) -> Response:
+    query_random.count = 1
+    images_metadatas = image_generator.generate_random_images(query_random=query_random)
+    image = images_metadatas[0][0]
+    buf = io.BytesIO()
+    image.save(buf, format="PNG")
+    buf.seek(0)
+    image_bytes = buf.read()
+    return Response(content=image_bytes, media_type="image/png")
