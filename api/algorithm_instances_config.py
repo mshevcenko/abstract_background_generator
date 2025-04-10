@@ -11,6 +11,7 @@ from image_generator.algorithms.voronoi_algorithm import VoronoiAlgorithm
 from image_generator.algorithms.wfc_algorithm import WFCAlgorithm
 from image_generator.algorithms.flow_field_algorithm import FlowFieldGenerator
 from image_generator.algorithms.noises import ProceduralBackgroundGenerator
+from image_generator.algorithms.dragon_curve_algorithm import DragonCurveGenerator
 
 lorenz_algorithm = AttractorAlgorithm("lorenz_attractor", "Cosmic flow", LorenzAttractor())
 plain_algorithm = PlainAlgorithm("plain_algorithm", "Color", "#EAD196")
@@ -22,6 +23,7 @@ wave_function_collapse_algorithm = WFCAlgorithm(visible_name="Pattern replicator
 flow_field_generator = FlowFieldGenerator("flow_field_generator", "Fluid")
 procedural_background_generator = ProceduralBackgroundGenerator("procedural_background_generator", "Noises")
 geometric_shape_algorithm = GeometricShapesAlgorithm("geometric_shape_algorithm", "Geometric shapes")
+dragon_algorithm = DragonCurveGenerator("dragon_curve_algorithm", "Dragon shapes")
 
 
 class AlgorithmInstancesEnum(Enum):
@@ -35,6 +37,7 @@ class AlgorithmInstancesEnum(Enum):
     flow_field = 7
     noise = 8
     geometric_shape = 9
+    dragon_algorithm = 10
 
 
 algorithm_instances_list = [
@@ -47,5 +50,6 @@ algorithm_instances_list = [
     wave_function_collapse_algorithm,
     flow_field_generator,
     procedural_background_generator,
-    geometric_shape_algorithm
+    geometric_shape_algorithm,
+    dragon_algorithm
 ]
