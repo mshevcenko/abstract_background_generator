@@ -16,7 +16,7 @@ class PlainAlgorithm(Algorithm):
             Parameter(
                 name="colors",
                 visible_name="Colors",
-                description="",
+                description="Color of full layer. Only one color is possible.",
                 data_type=DataType.COLORS,
                 visible_type=VisibleType.COLORS,
                 default=[color],
@@ -24,7 +24,7 @@ class PlainAlgorithm(Algorithm):
                 max_count=1
             )
         ]
-        super().__init__(name, visible_name, "", parameters)
+        super().__init__(name, visible_name, "Just plain color.", parameters)
 
     def algorithm(self,
                   width: int,

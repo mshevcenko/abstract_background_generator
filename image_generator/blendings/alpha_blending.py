@@ -15,7 +15,7 @@ class AlphaBlending(Blending):
             Parameter(
                 name="opacity",
                 visible_name="Opacity",
-                description="",
+                description="Blending parameter. Controls opacity of full layer. 1 for a fully opaque result layer, 0 for a fully transparent one.",
                 data_type=DataType.FLOAT,
                 visible_type=VisibleType.SLIDER,
                 default=1.0,
@@ -23,7 +23,7 @@ class AlphaBlending(Blending):
                 max_value=1.0
             )
         ]
-        super().__init__(name, visible_name, "", [], blending_parameters)
+        super().__init__(name, visible_name, "Blending of layers by transparency (opacity). Mixes layers in one image by alpha color value. Have blending parameter Opacity for each inner layer to control alpha.", [], blending_parameters)
 
     def blending(self,
                  width: int,
