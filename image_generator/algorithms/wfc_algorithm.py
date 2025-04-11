@@ -18,7 +18,7 @@ from image_generator.algorithms.wfc_pattern_data import pattern_data_dict, Patte
 from image_generator.parameter import Parameter, DataType, VisibleType
 from image_generator.utils import apply_transparency_mask, crop_image_by_size, convert_list_of_rgb_to_rgba, \
     convert_hex_list_to_rgba, combine_lists_to_tuples, apply_color_changes_rgba, convert_hex_list_to_rgb, \
-    scale_down_dimensions_in_ratio, get_unique_colors_rgb, extend_colors, ensure_color_format
+    scale_down_dimensions_in_ratio_int, get_unique_colors_rgb, extend_colors, ensure_color_format
 
 
 def array_to_image(array: np.ndarray) -> Optional[Image.Image]:
@@ -69,10 +69,12 @@ allowed_patterns = [{
     "visible_value": value.visible_name
 } for key, value in pattern_data_dict.items()]
 
-wfc_specific_parameters = [
+wfc_blending_parameters = [
     Parameter(name="max_gen_dim",
               visible_name="Base max generation dimensions",
-              description="",
+              description="Sets maximum dimension size that will be used in generation of pattern (base pixel form) "
+                          "that will be scaled to needed width and height (has effect on generation speed "
+                          "(for diferent patterns can be different preferable size))",
               data_type=DataType.INTEGER,
               visible_type=VisibleType.SLIDER,
               default=192,
@@ -80,7 +82,7 @@ wfc_specific_parameters = [
               max_value=250),
     Parameter(name="pattern",
               visible_name="Pattern",
-              description="",
+              description="Name of pattern that will be used for replication",
               data_type=DataType.ENUM_LIST,
               visible_type=VisibleType.SELECTOR,
               default="RedMaze",
@@ -88,7 +90,8 @@ wfc_specific_parameters = [
               ),
     Parameter(name="scale",
               visible_name="Additional scaling",
-              description="",
+              description="Additional scaling value that will be applied after scaling generated pixels to needed "
+                          "width and height",
               data_type=DataType.FLOAT_TUPLE,
               visible_type=VisibleType.RANGE_SLIDER,
               default=(1.0, 2.0),
@@ -105,15 +108,17 @@ class WFCAlgorithm(Algorithm):
         parameters = [
             Parameter(name="colors",
                       visible_name="Colors",
-                      description="",
+                      description="The colors used to alter the base pattern color (indicated by the number of colors "
+                                  "in the pattern name). If insufficient colors are provided, they will be generated "
+                                  "randomly",
                       data_type=DataType.COLORS,
                       visible_type=VisibleType.COLORS,
                       default=[],
                       min_count=0,
                       max_count=10),
-            *wfc_specific_parameters
+            *wfc_blending_parameters
         ]
-        super().__init__(name, visible_name, "", parameters)
+        super().__init__(name, visible_name, "Create images using pattern that will be replicated", parameters)
 
     def algorithm(self,
                   width: int,
@@ -131,7 +136,7 @@ class WFCAlgorithm(Algorithm):
         random.seed(seed)
         scale = random.uniform(*scale)
 
-        g_width, g_height = scale_down_dimensions_in_ratio(width, height, max_gen_dim, max_gen_dim)
+        g_width, g_height = scale_down_dimensions_in_ratio_int(width, height, max_gen_dim, max_gen_dim)
 
         image = run_wfc(pattern_data,
                         g_width, g_height,

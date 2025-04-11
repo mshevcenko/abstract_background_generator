@@ -182,12 +182,21 @@ def extract_color_to_int(image: Image.Image) -> np.ndarray:
     return int_array
 
 
-def scale_down_dimensions_in_ratio(final_width: int, final_height: int,
-                                   max_size_w: int = 250, max_size_h: int = 250
-                                   ) -> tuple[int, int]:
+def scale_down_dimensions_in_ratio_int(final_width: int, final_height: int,
+                                       max_size_w: int = 250, max_size_h: int = 250
+                                       ) -> tuple[int, int]:
     scale_factor = min(max_size_w / final_width, max_size_h / final_height, 1.0)
     new_width = int(final_width * scale_factor)
     new_height = int(final_height * scale_factor)
+    return new_width, new_height
+
+
+def scale_down_dimensions_in_ratio_float(final_width: float, final_height: float,
+                                         max_size_w: float = 250, max_size_h: float = 250
+                                         ) -> tuple[float, float]:
+    scale_factor = min(max_size_w / final_width, max_size_h / final_height, 1.0)
+    new_width = float(final_width * scale_factor)
+    new_height = float(final_height * scale_factor)
     return new_width, new_height
 
 
