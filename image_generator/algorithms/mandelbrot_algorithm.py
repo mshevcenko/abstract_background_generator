@@ -111,9 +111,8 @@ mandelbrot_blending_parameters = [
               max_value=2000),
 
     Parameter(name="scale",
-              visible_name="Additional scaling",
-              description="Additional scaling value that will be applied after scaling generated pixels to needed "
-                          "width and height",
+              visible_name="Zoom",
+              description="Determine the zoom level relative to the center coordinates",
               data_type=DataType.FLOAT_TUPLE,
               visible_type=VisibleType.RANGE_SLIDER,
               default=(1.0, 2000.0),
