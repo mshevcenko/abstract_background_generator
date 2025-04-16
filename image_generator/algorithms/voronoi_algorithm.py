@@ -15,7 +15,7 @@ class VoronoiAlgorithm(Algorithm):
         Parameter(
             name="colors",
             visible_name="Colors",
-            description="",
+            description="Colors used to fill the cells.",
             data_type=DataType.COLORS,
             visible_type=VisibleType.COLORS,
             default=["#FF5733", "#33FF57"],
@@ -25,7 +25,7 @@ class VoronoiAlgorithm(Algorithm):
         Parameter(
             name="n_points",
             visible_name="Number of points",
-            description="",
+            description="Number of points that define the diagram.",
             data_type=DataType.INTEGER,
             visible_type=VisibleType.SLIDER,
             default=100,

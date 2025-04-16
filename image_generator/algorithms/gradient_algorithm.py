@@ -15,7 +15,7 @@ class GradientAlgorithm(Algorithm):
         Parameter(
             name="colors",
             visible_name="Colors",
-            description="",
+            description="Two colors used to create a linear gradient.",
             data_type=DataType.COLORS,
             visible_type=VisibleType.COLORS,
             default=["#123456", "#654321"],
@@ -25,7 +25,7 @@ class GradientAlgorithm(Algorithm):
         Parameter(
             name="angle",
             visible_name="Angle",
-            description="",
+            description="Angle of the gradient direction",
             data_type=DataType.FLOAT,
             visible_type=VisibleType.SLIDER,
             default=0.0,
