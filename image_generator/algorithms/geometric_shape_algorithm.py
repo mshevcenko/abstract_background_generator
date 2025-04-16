@@ -14,7 +14,7 @@ class GeometricShapesAlgorithm(Algorithm):
         Parameter(
             name="shape_type",
             visible_name="Shape Type",
-            description="",
+            description="Type of geometric shape to generate (triangle, circle, or rectangle).",
             data_type=DataType.ENUM_LIST,
             visible_type=VisibleType.SELECTOR,
             default="triangle",
@@ -27,27 +27,27 @@ class GeometricShapesAlgorithm(Algorithm):
         Parameter(
             name="size",
             visible_name="Size",
-            description="",
+            description="Size of each shape in pixels.",
             data_type=DataType.INTEGER,
             visible_type=VisibleType.SLIDER,
             default=40,
             min_value=10,
-            max_value=200
+            max_value=50
         ),
         Parameter(
             name="colors",
             visible_name="Fill Color",
-            description="",
+            description="Main and optional secondary fill color. Third color (if present) is used as border color.",
             data_type=DataType.COLORS,
             visible_type=VisibleType.COLORS,
             default=["#FF0000"],
             min_count=1,
-            max_count=2
+            max_count=3
         ),
         Parameter(
             name="angle",
             visible_name="Rotation Angle",
-            description="",
+            description="Rotation angle (in degrees) applied to all shapes if random angle is disabled.",
             data_type=DataType.FLOAT,
             visible_type=VisibleType.SLIDER,
             default=0.0,
@@ -57,7 +57,7 @@ class GeometricShapesAlgorithm(Algorithm):
         Parameter(
             name="blur_radius",
             visible_name="Blur Radius",
-            description="",
+            description="Amount of blur applied to each shape to soften edges.",
             data_type=DataType.FLOAT,
             visible_type=VisibleType.SLIDER,
             default=0.0,
@@ -67,36 +67,35 @@ class GeometricShapesAlgorithm(Algorithm):
         Parameter(
             name="border_thickness",
             visible_name="Border Thickness",
-            description="",
+            description="Width of the shape border in pixels.",
             data_type=DataType.INTEGER,
             visible_type=VisibleType.SLIDER,
             default=2,
             min_value=0,
             max_value=10
         ),
-        # Parameter(
-        #     name="border_color",
-        #     visible_name="Border Color",
-        #     data_type=DataType.COLORS,
-        #     visible_type=VisibleType.COLORS,
-        #     default=["#000000"],
-        #     min_count=1,
-        #     max_count=1
-        # ),
         Parameter(
             name="num_shapes",
             visible_name="Number of Shapes",
-            description="",
+            description="Total number of shapes to draw on the canvas.",
             data_type=DataType.INTEGER,
             visible_type=VisibleType.SLIDER,
             default=12,
             min_value=1,
-            max_value=100
+            max_value=2500
+        ),
+        Parameter(
+            name="random_angle",
+            visible_name="Random Angle per Shape",
+            description="If enabled, each shape will have a randomly generated rotation angle.",
+            data_type=DataType.BOOL,
+            visible_type=VisibleType.CHECKBOX,
+            default=False
         ),
         Parameter(
             name="arrangement",
             visible_name="Arrangement",
-            description="",
+            description="Placement style of shapes on the canvas: random, grid, or spiral layout.",
             data_type=DataType.ENUM_LIST,
             visible_type=VisibleType.SELECTOR,
             default="random",
@@ -186,10 +185,13 @@ class GeometricShapesAlgorithm(Algorithm):
                                 angle: float,
                                 blur_radius: float,
                                 border_thickness: int,
-                                border_color: Tuple[int, int, int, int]) -> None:
+                                border_color: Tuple[int, int, int, int],
+                                random_angle: bool
+                                ) -> None:
         bg_width, bg_height = background.size
         for _ in range(num_shapes):
-            shape_img = self.generate_shape(shape_type, size, color, angle,
+            actual_angle = randrange(0, 360) if random_angle else angle
+            shape_img = self.generate_shape(shape_type, size, color, actual_angle,
                                             blur_radius, border_thickness, border_color)
             pos_x = randrange(0, bg_width - shape_img.width)
             pos_y = randrange(0, bg_height - shape_img.height)
@@ -204,7 +206,9 @@ class GeometricShapesAlgorithm(Algorithm):
                                angle: float,
                                blur_radius: float,
                                border_thickness: int,
-                               border_color: Tuple[int, int, int, int]) -> None:
+                               border_color: Tuple[int, int, int, int],
+                               random_angle: bool
+                               ) -> None:
         bg_width, bg_height = background.size
         cols = int(math.sqrt(num_shapes))
         rows = int(math.ceil(num_shapes / cols))
@@ -215,13 +219,30 @@ class GeometricShapesAlgorithm(Algorithm):
             for col in range(cols):
                 if shape_count >= num_shapes:
                     break
-                shape_img = self.generate_shape(shape_type, size, color, angle,
+                actual_angle = randrange(0, 360) if random_angle else angle
+                shape_img = self.generate_shape(shape_type, size, color, actual_angle,
                                                 blur_radius, border_thickness, border_color)
                 center_x = int(col * cell_width + cell_width / 2)
                 center_y = int(row * cell_height + cell_height / 2)
                 pos = (center_x - shape_img.width // 2, center_y - shape_img.height // 2)
                 background.paste(shape_img, pos, shape_img)
                 shape_count += 1
+
+    def crop_to_content(self, img: Image, padding: int = 20) -> Image:
+        bbox = img.getbbox()
+        if not bbox:
+            return img
+
+        left, upper, right, lower = bbox
+        left = max(0, left + padding)
+        upper = max(0, upper + padding)
+        right = min(img.width, right - padding)
+        lower = min(img.height, lower - padding)
+
+        if right <= left or lower <= upper:
+            return img.crop(bbox)
+
+        return img.crop((left, upper, right, lower))
 
     def arrange_shapes_in_spiral(self,
                                  background: Image,
@@ -232,7 +253,9 @@ class GeometricShapesAlgorithm(Algorithm):
                                  angle: float,
                                  blur_radius: float,
                                  border_thickness: int,
-                                 border_color: Tuple[int, int, int, int]) -> None:
+                                 border_color: Tuple[int, int, int, int],
+                                 random_angle: bool
+                                 ) -> None:
         bg_width, bg_height = background.size
         center = (bg_width // 2, bg_height // 2)
         b = min(bg_width, bg_height) / (4 * num_shapes)
@@ -241,7 +264,7 @@ class GeometricShapesAlgorithm(Algorithm):
             r = b * theta
             pos_x = int(center[0] + r * math.cos(theta))
             pos_y = int(center[1] + r * math.sin(theta))
-            shape_angle = math.degrees(math.atan2(pos_y - center[1], pos_x - center[0])) + 90
+            shape_angle = randrange(0, 360) if random_angle else math.degrees(math.atan2(pos_y - center[1], pos_x - center[0])) + 90
             shape_img = self.generate_shape(shape_type, size, color, shape_angle,
                                             blur_radius, border_thickness, border_color)
             pos = (pos_x - shape_img.width // 2, pos_y - shape_img.height // 2)
@@ -259,11 +282,15 @@ class GeometricShapesAlgorithm(Algorithm):
                   blur_radius: float = 0.0,
                   border_thickness: int = 2,
                   num_shapes: int = 12,
+                  random_angle: bool = False,
                   arrangement: str = "spiral",
                   **kwargs) -> Image:
 
         if seed is not None:
             random.seed(seed)
+
+        max_allowed_size = min(width, height) // 4
+        size = min(size, max_allowed_size)
 
         if colors is not None and len(colors) > 0:
             if len(colors) == 1:
@@ -272,41 +299,27 @@ class GeometricShapesAlgorithm(Algorithm):
                 fill_color = (hex_to_rgb(colors[0]), hex_to_rgb(colors[1]))
         else:
             fill_color = (255, 0, 0, 200)
-        if colors is not None and len(colors) > 1:
-            b_color = hex_to_rgb(colors[1])
+        if colors is not None and len(colors) > 2:
+            b_color = hex_to_rgb(colors[2])
         else:
-            b_color = (0, 0, 0, 255)
+            b_color = (0, 0, 0, 0)
 
         background = Image.new('RGBA', (width, height), (255, 255, 255, 0))
 
         if arrangement == "random":
             self.arrange_shapes_randomly(background, num_shapes, shape_type, size,
-                                         fill_color, angle, blur_radius, border_thickness, b_color)
+                                         fill_color, angle, blur_radius, border_thickness, b_color, random_angle)
+            background = self.crop_to_content(background)
         elif arrangement == "grid":
             self.arrange_shapes_in_grid(background, num_shapes, shape_type, size,
-                                        fill_color, angle, blur_radius, border_thickness, b_color)
+                                        fill_color, angle, blur_radius, border_thickness, b_color, random_angle)
+            background = self.crop_to_content(background)
         elif arrangement == "spiral":
             self.arrange_shapes_in_spiral(background, num_shapes, shape_type, size,
-                                          fill_color, angle, blur_radius, border_thickness, b_color)
+                                          fill_color, angle, blur_radius, border_thickness, b_color,random_angle)
+            background = self.crop_to_content(background)
         else:
             self.arrange_shapes_randomly(background, num_shapes, shape_type, size,
-                                         fill_color, angle, blur_radius, border_thickness, b_color)
+                                         fill_color, angle, blur_radius, border_thickness, b_color,random_angle)
+            background = self.crop_to_content(background)
         return background
-
-if __name__ == '__main__':
-    geo_alg = GeometricShapesAlgorithm("geometric", "Geometric Shapes")
-    img = geo_alg.algorithm(
-        width=1920,
-        height=1080,
-        seed=42,
-        area=None,
-        colors=["#FF0066", "#0066FF"],
-        shape_type="circle",
-        size=80,
-        angle=15.0,
-        blur_radius=0.2,
-        border_thickness=0,
-        num_shapes=80,
-        arrangement="random"
-    )
-    img.show()
