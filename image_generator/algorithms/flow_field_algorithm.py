@@ -71,7 +71,7 @@ class FlowFieldGenerator(Algorithm):
                       min_value=1,
                       max_value=100),
         ]
-        super().__init__(name, visible_name, "", parameters)
+        super().__init__(name, visible_name, "Create image using flow field algorithm", parameters)
 
     def algorithm(self,
                   width: int,
