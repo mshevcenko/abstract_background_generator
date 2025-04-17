@@ -75,9 +75,9 @@ wfc_blending_parameters = [
               description="Sets maximum dimension size that will be used in generation of pattern (base pixel form) "
                           "that will be scaled to needed width and height (has effect on generation speed "
                           "(for diferent patterns can be different preferable size))",
-              data_type=DataType.INTEGER,
-              visible_type=VisibleType.SLIDER,
-              default=192,
+              data_type=DataType.INTEGER_TUPLE,
+              visible_type=VisibleType.RANGE_SLIDER,
+              default=(192, 192),
               min_value=80,
               max_value=250),
     Parameter(name="pattern",
@@ -128,13 +128,14 @@ class WFCAlgorithm(Algorithm):
                   colors: Optional[List[str]] = None,
                   scale: Tuple[float, float] = (1.0, 2.0),
                   pattern: str = "RedMaze",
-                  max_gen_dim: int = 192,
+                  max_gen_dim: Tuple[int, int] = (192, 192),
                   **kwargs
                   ) -> Image:
 
         pattern_data = pattern_data_dict[pattern]
         random.seed(seed)
         scale = random.uniform(*scale)
+        max_gen_dim = random.randint(*max_gen_dim)
 
         g_width, g_height = scale_down_dimensions_in_ratio_int(width, height, max_gen_dim, max_gen_dim)
 

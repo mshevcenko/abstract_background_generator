@@ -37,7 +37,7 @@ ZONE_WEIGHT_KEY = "zone_weight"
 
 
 def collect_layers_weights(layers_stuid_l: List[LayerUid]) -> Dict[int, float]:
-    return {ll.uid: ll.layer.blending_values.get(ZONE_WEIGHT_KEY, 0) for ll in layers_stuid_l}
+    return {ll.uid: random.randint(*ll.layer.blending_values.get(ZONE_WEIGHT_KEY, 0)) for ll in layers_stuid_l}
 
 
 def distribute_zones(zone_matrix: np.ndarray, layers_stuid_l: List[LayerUid]) -> Dict[int, List[int]]:
@@ -239,9 +239,9 @@ class ZoneBlendingNamed(Blending):
                 visible_name="Zone weight",
                 description="Sets weight that will be given to this algorithm when distributing color zones "
                             "(bigger weight -> bigger chances of get zone and get bigger zone)",
-                data_type=DataType.FLOAT,
-                visible_type=VisibleType.SLIDER,
-                default=1.0,
+                data_type=DataType.FLOAT_TUPLE,
+                visible_type=VisibleType.RANGE_SLIDER,
+                default=(1.0, 100.0),
                 min_value=1.0,
                 max_value=9999.0
             )

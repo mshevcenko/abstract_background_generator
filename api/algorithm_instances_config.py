@@ -5,6 +5,7 @@ from image_generator.algorithms.attractors.lorenz_attractor import LorenzAttract
 from image_generator.algorithms.geometric_shape_algorithm import GeometricShapesAlgorithm
 from image_generator.algorithms.gradient_algorithm import GradientAlgorithm
 from image_generator.algorithms.hex_pattern_algorithm import HexPatternAlgorithm
+from image_generator.algorithms.julia_algorithm import JuliaMandelbrotAlgorithm
 from image_generator.algorithms.mandelbrot_algorithm import MandelbrotAlgorithm
 from image_generator.algorithms.plain_algorithm import PlainAlgorithm
 from image_generator.algorithms.smooth_wave_background_algorithm import SmoothWaveBackgroundAlgorithm
@@ -26,7 +27,7 @@ procedural_background_generator = ProceduralBackgroundGenerator("procedural_back
 geometric_shape_algorithm = GeometricShapesAlgorithm("geometric_shape_algorithm", "Geometric shapes")
 dragon_algorithm = DragonCurveGenerator("dragon_curve_algorithm", "Dragon shapes")
 mandelbrot_algorithm = MandelbrotAlgorithm()
-
+julia_mandelbrot_algorithm = JuliaMandelbrotAlgorithm()
 
 class AlgorithmInstancesEnum(Enum):
     lorenz = 0
@@ -41,6 +42,7 @@ class AlgorithmInstancesEnum(Enum):
     geometric_shape = 9
     dragon_algorithm = 10
     mandelbrot = 11
+    julia_mandelbrot = 12
 
 
 algorithm_instances_list = [
@@ -56,4 +58,5 @@ algorithm_instances_list = [
     geometric_shape_algorithm,
     dragon_algorithm,
     mandelbrot_algorithm,
+    julia_mandelbrot_algorithm,
 ]

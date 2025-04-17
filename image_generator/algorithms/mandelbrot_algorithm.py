@@ -68,9 +68,36 @@ def mandelbrot(width: int,
 
     # Iteration counts with smoothing
     for i in range(max_iter):
-        # mask = np.abs(Z)**2 <= bailout_radius_squared
-        mask = (Z.real ** 2 + Z.imag ** 2) <= bailout_radius_squared
+        mask = np.abs(Z) <= bailout_radius_squared
+        # mask = (Z.real ** 2 + Z.imag ** 2) <= bailout_radius_squared
         Z[mask] = Z[mask] ** 2 + C[mask]
+        M[mask] += 1
+
+    return Z, M, max_iter
+
+
+def burning_ship(width: int,
+                 height: int,
+                 xmin: float, xmax: float,
+                 ymin: float, ymax: float,
+                 max_iter: int = 1000,
+                 bailout_radius_squared: float = 1 << 16):
+    # Generate pixel grid
+    x_pixels = np.linspace(xmin, xmax, width)
+    y_pixels = np.linspace(ymin, ymax, height)
+    X, Y = np.meshgrid(x_pixels, y_pixels)
+    C = X + 1j * Y
+    Z = np.zeros_like(C)
+    M = np.zeros(C.shape)
+
+    for i in range(max_iter):
+        mask = np.abs(Z) <= bailout_radius_squared
+        # mask = (Z.real ** 2 + Z.imag ** 2) <= bailout_radius_squared
+
+        Z_real = np.abs(Z.real[mask])
+        Z_imag = np.abs(Z.imag[mask])
+        Z[mask] = (Z_real + 1j * Z_imag) ** 2 + C[mask]
+
         M[mask] += 1
 
     return Z, M, max_iter
@@ -100,7 +127,33 @@ def color_mandelbrot(Z: np.ndarray,
     return colored[:, :, :3]
 
 
+fractal_functions = [mandelbrot, burning_ship]
+
+
+class AvailableFractalTypesEnum(Enum):
+    mandelbrot = 0
+    burning_ship = 1
+
+
+available_fractals_types = [
+    "Mandelbrot",
+    "Burning ship"
+]
+
+allowed_available_fractals_types = [{
+    "value": index,
+    "visible_value": val
+} for index, val in enumerate(available_fractals_types)]
+
 mandelbrot_blending_parameters = [
+    Parameter(name="fractal_type",
+              visible_name="Fractal type",
+              description="Selector to choose fractal type to generate (default values are specified for mandelbrot)",
+              data_type=DataType.ENUM_LIST,
+              visible_type=VisibleType.SELECTOR,
+              possible_values=allowed_available_fractals_types,
+              default=AvailableFractalTypesEnum.mandelbrot.value),
+
     Parameter(name="max_iterations",
               visible_name="Maximum iterations",
               description="Maximum iterations calculation of escape time",  # TODO write more "normal" explanation
@@ -117,7 +170,7 @@ mandelbrot_blending_parameters = [
               visible_type=VisibleType.RANGE_SLIDER,
               default=(1.0, 2000.0),
               min_value=1.0,
-              max_value=10000.0),
+              max_value=2000.0),
 
     Parameter(name="center_x_base",
               visible_name="X coord of center",
@@ -166,8 +219,6 @@ available_coloring_types = [
     "Smooth",
     "Wavy"
 ]
-
-
 
 allowed_available_coloring_types = [{
     "value": index,
@@ -218,12 +269,12 @@ mandelbrot_non_blending_parameters = [
 class MandelbrotAlgorithm(Algorithm):
     def __init__(self,
                  name: str = "mandelbrot_fractal",
-                 visible_name: str = "Mandelbrot fractal",
+                 visible_name: str = "Fractal",
                  ):
         parameters = [
             Parameter(name="colors",
                       visible_name="Colors",
-                      description="Colors that will be used in pallet for representing mandelbrot fractal",
+                      description="Colors that will be used in pallet for representing chosen fractal",
                       data_type=DataType.COLORS,
                       visible_type=VisibleType.COLORS,
                       default=["#000000", "#0000FF", "#00FFFF", "#FFFF00", "#FF0000", "#FFFFFF"],
@@ -232,7 +283,7 @@ class MandelbrotAlgorithm(Algorithm):
             *mandelbrot_non_blending_parameters,
             *mandelbrot_blending_parameters,
         ]
-        super().__init__(name, visible_name, "Create image using escape time algorithm for Mandelbrot set", parameters)
+        super().__init__(name, visible_name, "Create image using escape time algorithm for chosen fractal set", parameters)
 
     def algorithm(self,
                   width: int,
@@ -256,6 +307,7 @@ class MandelbrotAlgorithm(Algorithm):
                   coloring_pallet: int = 0,
                   coloring_type: int = 0,
 
+                  fractal_type: int = 0,
                   **kwargs
                   ) -> Image:
 
@@ -285,10 +337,10 @@ class MandelbrotAlgorithm(Algorithm):
                 color_map = CustomColormap(colors, interpolation=interpol)
 
         xmin, xmax, ymin, ymax = calculate_mandelbrot_window(width, height, scale, xc, yc)
-        Z, M, max_iter = mandelbrot(width, height, xmin, xmax, ymin, ymax,
-                                    max_iter=max_iterations,
-                                    bailout_radius_squared=bailout_radius_squared
-                                    )
+        Z, M, max_iter = fractal_functions[fractal_type](width, height, xmin, xmax, ymin, ymax,
+                                                         max_iter=max_iterations,
+                                                         bailout_radius_squared=bailout_radius_squared
+                                                         )
         # matplotlib.colormaps['viridis'] can be used
 
         image = color_mandelbrot(Z, M, max_iter,
