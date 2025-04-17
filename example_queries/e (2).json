@@ -1,0 +1,47 @@
+{
+  "width": 640,
+  "height": 480,
+  "layer_query": {
+    "name": "zone_blending6",
+    "generator_type": "blending",
+    "values": {
+      "max_gen_dim": 214,
+      "pattern": "Rule126",
+      "scale": [
+        2.7651147705741685,
+        4.909619602138656
+      ],
+      "seed": 1764497797
+    },
+    "layers": [
+      {
+        "name": "voronoi_algorithm",
+        "generator_type": "algorithm",
+        "values": {
+          "colors": [
+            "#7993f2",
+            "#b6f279"
+          ],
+          "n_points": 457,
+          "seed": 1105963178
+        },
+        "blending_values": {
+          "zone_weight": 1
+        }
+      },
+      {
+        "name": "plain_algorithm",
+        "generator_type": "algorithm",
+        "values": {
+          "colors": [
+            "#FBFBFB"
+          ],
+          "seed": 169231159
+        },
+        "blending_values": {
+          "zone_weight": 1
+        }
+      }
+    ]
+  }
+}

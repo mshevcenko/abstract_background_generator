@@ -1,0 +1,104 @@
+{
+  "width": 640,
+  "height": 480,
+  "layer_query": {
+    "name": "zone_blending6",
+    "generator_type": "blending",
+    "values": {
+      "max_gen_dim": 180,
+      "pattern": "Knot",
+      "scale": [
+        1.0010147418394577,
+        1.0513631925880207
+      ],
+      "seed": 797978752
+    },
+    "layers": [
+      {
+        "name": "wfc",
+        "generator_type": "algorithm",
+        "values": {
+          "colors": [],
+          "max_gen_dim": 217,
+          "pattern": "Font",
+          "scale": [
+            1.9452463580554376,
+            9.313532780815363
+          ],
+          "seed": 80448688
+        },
+        "blending_values": {
+          "zone_weight": 185.68379587463795
+        }
+      },
+      {
+        "name": "mandelbrot_fractal",
+        "generator_type": "algorithm",
+        "values": {
+          "colors": [
+            "#79f2da",
+            "#f2b779",
+            "#9479f2",
+            "#81f279",
+            "#f279a4",
+            "#79c8f2",
+            "#ebf279",
+            "#d579f2",
+            "#79f2b2",
+            "#f28e79"
+          ],
+          "use_coloring_pallets": true,
+          "coloring_pallet": 112,
+          "bailout_radius_squared": [
+            34141.327960543786,
+            52443.3595022091
+          ],
+          "coloring_type": 0,
+          "max_iterations": [
+            1136,
+            1451
+          ],
+          "scale": [
+            3274.2340604411916,
+            5087.334690602025
+          ],
+          "center_x_base": [
+            -6473,
+            -1034
+          ],
+          "center_ex": [
+            -3,
+            -2
+          ],
+          "center_y_base": [
+            2273,
+            3712
+          ],
+          "center_ey": [
+            -30,
+            -6
+          ],
+          "seed": 1471268965
+        },
+        "blending_values": {
+          "zone_weight": 2457.045917141483
+        }
+      },
+      {
+        "name": "voronoi_algorithm",
+        "generator_type": "algorithm",
+        "values": {
+          "colors": [
+            "#79f281",
+            "#f27994"
+          ],
+          "n_points": 26,
+          "seed": 1283273983
+        },
+        "blending_values": {
+          "zone_weight": 9028.581209870628
+        }
+      }
+    ]
+  }
+}

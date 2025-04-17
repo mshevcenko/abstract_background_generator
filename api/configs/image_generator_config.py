@@ -1,5 +1,5 @@
-from api.algorithm_instances_config import algorithm_instances_list
-from api.blending_instances_config import blending_instances_list
+from api.configs.algorithm_instances_config import algorithm_instances_list
+from api.configs.blending_instances_config import blending_instances_list
 from image_generator.image_generator import ImageGenerator
 
 generators = blending_instances_list + algorithm_instances_list
