@@ -6,12 +6,12 @@ import numpy as np
 from PIL.Image import Image
 from typing import List, Optional, Dict
 
-from api.algorithm_instances_config import algorithm_instances_list, AlgorithmInstancesEnum
-from image_generator.algorithms.wfc_algorithm import allowed_patterns, wfc_blending_parameters
+from api.configs.algorithm_instances_config import algorithm_instances_list, AlgorithmInstancesEnum
+from image_generator.algorithms.wfc_algorithm import wfc_blending_parameters
 from image_generator.layer import Layer
 from image_generator.blending import Blending
 from image_generator.parameter import Parameter, DataType, VisibleType
-from image_generator.utils import extract_color_to_int, get_copy_with_appended_visible_name, append_to_visible_name
+from image_generator.utils import extract_color_to_int
 
 
 class LayerUid:

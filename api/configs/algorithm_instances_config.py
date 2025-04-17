@@ -2,6 +2,7 @@ from enum import Enum
 
 from image_generator.algorithms.attractor_algorithm import AttractorAlgorithm
 from image_generator.algorithms.attractors.lorenz_attractor import LorenzAttractor
+from image_generator.algorithms.diamond_square import DiamondGenerator
 from image_generator.algorithms.geometric_shape_algorithm import GeometricShapesAlgorithm
 from image_generator.algorithms.gradient_algorithm import GradientAlgorithm
 from image_generator.algorithms.hex_pattern_algorithm import HexPatternAlgorithm
@@ -27,6 +28,7 @@ procedural_background_generator = ProceduralBackgroundGenerator("procedural_back
 geometric_shape_algorithm = GeometricShapesAlgorithm("geometric_shape_algorithm", "Geometric shapes")
 dragon_algorithm = DragonCurveGenerator("dragon_curve_algorithm", "Dragon shapes")
 mandelbrot_algorithm = MandelbrotAlgorithm()
+diamond_square = DiamondGenerator("diamond_square", "Diamond terrain")
 julia_mandelbrot_algorithm = JuliaMandelbrotAlgorithm()
 
 class AlgorithmInstancesEnum(Enum):
@@ -42,7 +44,8 @@ class AlgorithmInstancesEnum(Enum):
     geometric_shape = 9
     dragon_algorithm = 10
     mandelbrot = 11
-    julia_mandelbrot = 12
+    diamond=12
+    julia_mandelbrot = 13
 
 
 algorithm_instances_list = [
@@ -58,5 +61,6 @@ algorithm_instances_list = [
     geometric_shape_algorithm,
     dragon_algorithm,
     mandelbrot_algorithm,
+    diamond_square,
     julia_mandelbrot_algorithm,
 ]

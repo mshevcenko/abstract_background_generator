@@ -15,7 +15,7 @@ class HexPatternAlgorithm(Algorithm):
         Parameter(
             name="colors",
             visible_name="Colors",
-            description="",
+            description="Colors used to fill the hexagons in the pattern.",
             data_type=DataType.COLORS,
             visible_type=VisibleType.COLORS,
             default=["#FFA500", "#00FF00"],
@@ -25,7 +25,7 @@ class HexPatternAlgorithm(Algorithm):
         Parameter(
             name="hex_size",
             visible_name="Hex Size",
-            description="",
+            description="Size of each individual hexagon.",
             data_type=DataType.INTEGER,
             visible_type=VisibleType.SLIDER,
             default=80,
@@ -35,7 +35,7 @@ class HexPatternAlgorithm(Algorithm):
         Parameter(
             name="spacing",
             visible_name="Spacing",
-            description="",
+            description="Distance between adjacent hexagons.",
             data_type=DataType.INTEGER,
             visible_type=VisibleType.SLIDER,
             default=0,

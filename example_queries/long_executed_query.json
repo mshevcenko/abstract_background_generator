@@ -1,0 +1,105 @@
+{
+  "layer_query": {
+    "name": "zone_blending2",
+    "generator_type": "blending",
+    "values": {
+      "n_layers": 15,
+      "seed": 382002734
+    },
+    "blending_values": {
+      "zone_weight": 4036.184809320737
+    },
+    "layers": [
+      {
+        "name": "zone_blending6",
+        "generator_type": "blending",
+        "values": {
+          "max_gen_dim": 176,
+          "pattern": "NotKnot",
+          "scale": [
+            6.215692420867749,
+            9.589919581064088
+          ],
+          "seed": 207697258
+        },
+        "blending_values": {
+          "zone_weight": 2443.51633748216
+        },
+        "layers": [
+          {
+            "name": "dragon_curve_algorithm",
+            "generator_type": "algorithm",
+            "values": {
+              "colors": [
+                "#f27991",
+                "#79b4f2"
+              ],
+              "scale": 47.929219218240085,
+              "iterations": 24,
+              "matrix": 5,
+              "offset_x": 46,
+              "offset_y": 232,
+              "line_width": 24,
+              "matrix_offset_x": 1154,
+              "matrix_offset_y": 578,
+              "seed": 1085545887
+            },
+            "blending_values": null,
+            "layers": null
+          }
+        ]
+      },
+      {
+        "name": "procedural_background_generator",
+        "generator_type": "algorithm",
+        "values": {
+          "colors": [
+            "#e779f2",
+            "#79f2c3",
+            "#f2a079",
+            "#7d79f2",
+            "#98f279",
+            "#f279bb",
+            "#79dff2",
+            "#f2e279",
+            "#be79f2"
+          ],
+          "noise_type": 1,
+          "scale": 81.49722023617988,
+          "blur_radius": 8.262903008596899,
+          "octaves": 3,
+          "persistence": 2.2691617765776924,
+          "lacunarity": 2.28830909286184,
+          "island_type": false,
+          "seed": 59874610
+        },
+        "blending_values": null,
+        "layers": null
+      },
+      {
+        "name": "dragon_curve_algorithm",
+        "generator_type": "algorithm",
+        "values": {
+          "colors": [
+            "#f2aa79",
+            "#8779f2"
+          ],
+          "scale": 39.16127249394623,
+          "iterations": 10,
+          "matrix": 6,
+          "offset_x": 1461,
+          "offset_y": 1566,
+          "line_width": 38,
+          "matrix_offset_x": 814,
+          "matrix_offset_y": 942,
+          "seed": 114030379
+        },
+        "blending_values": null,
+        "layers": null
+      }
+    ]
+  },
+  "width": 640,
+  "height": 480,
+  "seed": 977351768
+}

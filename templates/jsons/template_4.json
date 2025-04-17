@@ -1,0 +1,84 @@
+{
+  "width": 640,
+  "height": 480,
+  "layer_query": {
+    "name": "zone_blending5",
+    "generator_type": "blending",
+    "values": {
+      "hex_size": 23,
+      "spacing": 20,
+      "seed": 1333449852
+    },
+    "layers": [
+      {
+        "name": "hex_pattern_algorithm",
+        "generator_type": "algorithm",
+        "values": {
+          "colors": [
+            "#8b79f2",
+            "#8af279"
+          ],
+          "hex_size": 16,
+          "spacing": 40,
+          "seed": 1510781005
+        },
+        "blending_values": {
+          "zone_weight": 1.0
+        }
+      },
+      {
+        "name": "lorenz_attractor",
+        "generator_type": "algorithm",
+        "values": {
+          "colors": [
+            "#87f279",
+            "#f279aa",
+            "#79cdf2",
+            "#f1f279"
+          ],
+          "scale": [
+            4.203222476299214,
+            7.3096029139200205
+          ],
+          "size": [
+            4.538222545940083,
+            7.466456676296361
+          ],
+          "blur_radius": [
+            6.972069971389948,
+            7.999430184922486
+          ],
+          "num_points": [
+            4761,
+            7571
+          ],
+          "draw_lines": true,
+          "offset_x": [
+            -0.9374792817909547,
+            0.038569838277912494
+          ],
+          "offset_y": [
+            -0.6459385998626621,
+            -0.5791188017094921
+          ],
+          "rotation_x": [
+            -100.34503634101686,
+            -90.9615055031938
+          ],
+          "rotation_y": [
+            60.61515894468951,
+            123.87739613948719
+          ],
+          "rotation_z": [
+            -74.13334170444651,
+            57.687920765715745
+          ],
+          "seed": 2019849217
+        },
+        "blending_values": {
+          "zone_weight": 1.0
+        }
+      }
+    ]
+  }
+}

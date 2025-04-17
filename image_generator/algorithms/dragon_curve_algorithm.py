@@ -89,7 +89,7 @@ class DragonCurveGenerator(Algorithm):
                       max_value=2000),
 
         ]
-        super().__init__(name, visible_name, "", parameters)
+        super().__init__(name, visible_name, "Create image using multiple dragon curves algorithm", parameters)
     
     def algorithm(self,
                   width: int,

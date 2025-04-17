@@ -1,4 +1,4 @@
-from api.algorithm_instances_config import AlgorithmInstancesEnum
+from api.configs.algorithm_instances_config import AlgorithmInstancesEnum
 from image_generator.blendings.alpha_blending import AlphaBlending
 from image_generator.blendings.zone_blending import ZoneBlendingNamed
 

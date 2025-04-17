@@ -1,0 +1,1187 @@
+{
+	"info": {
+		"_postman_id": "56b65342-5217-4027-a71f-d86c67efe916",
+		"name": "AbstractBackgroundGenerator",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "30748232"
+	},
+	"item": [
+		{
+			"name": "ImageGenerator",
+			"item": [
+				{
+					"name": "Model",
+					"item": [
+						{
+							"name": "ImageGeneratorModel",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseurl}}/api/image-generator/model",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"api",
+										"image-generator",
+										"model"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "QueryFull",
+					"item": [
+						{
+							"name": "GenerateQueryFull1",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"width\": 1024,\r\n    \"height\": 768,\r\n    \"layer_query\": {\r\n        \"name\": \"alpha_blending\",\r\n        \"generator_type\": \"blending\",\r\n        \"layers\": [\r\n            {\r\n                \"name\": \"lorenz_attractor\",\r\n                \"generator_type\": \"algorithm\",\r\n                \"values\": {\r\n                    \"scale\": [1.0, 1.0],\r\n                    \"offset_x\": [0.0, 0.0],\r\n                    \"offset_y\": [0.0, 0.0]\r\n                },\r\n                \"blending_values\": {\r\n                    \"opacity\": 1.0\r\n                }\r\n            },\r\n            {\r\n                \"name\": \"plain_algorithm\",\r\n                \"generator_type\": \"algorithm\",\r\n                \"values\": {\r\n                    \"colors\": [\"EAD196\"]\r\n                },\r\n                \"blending_values\": {\r\n                    \"opacity\": 0.5\r\n                }\r\n            },\r\n            {\r\n                \"name\": \"plain_algorithm\",\r\n                \"generator_type\": \"algorithm\",\r\n                \"values\": {\r\n                    \"colors\": [\"034C53\"]\r\n                },\r\n                \"blending_values\": {\r\n                    \"opacity\": 0.5\r\n                }\r\n            }\r\n        ]\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseurl}}/api/image-generator/query/full?include_metadata=false",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"api",
+										"image-generator",
+										"query",
+										"full"
+									],
+									"query": [
+										{
+											"key": "include_metadata",
+											"value": "false"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GenerateQueryFull2",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"width\": 1024,\r\n    \"height\": 768,\r\n    \"layer_query\": {\r\n        \"name\": \"alpha_blending\",\r\n        \"generator_type\": \"blending\",\r\n        \"layers\": [\r\n            {\r\n                \"name\": \"lorenz_attractor\",\r\n                \"generator_type\": \"algorithm\",\r\n                \"values\": {\r\n                    \"scale\": [1.0, 1.0],\r\n                    \"offset_x\": [0.0, 0.0],\r\n                    \"offset_y\": [0.0, 0.0]\r\n                },\r\n                \"blending_values\": {\r\n                    \"opacity\": 1.0\r\n                }\r\n            },\r\n            {\r\n                \"name\": \"plain_algorithm\",\r\n                \"generator_type\": \"algorithm\",\r\n                \"values\": {\r\n                    \"colors\": [\"EAD196\"]\r\n                },\r\n                \"blending_values\": {\r\n                    \"opacity\": 0.5\r\n                }\r\n            },\r\n            {\r\n                \"name\": \"plain_algorithm\",\r\n                \"generator_type\": \"algorithm\",\r\n                \"values\": {\r\n                    \"colors\": [\"034C53\"]\r\n                },\r\n                \"blending_values\": {\r\n                    \"opacity\": 0.5\r\n                }\r\n            }\r\n        ]\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseurl}}/api/image-generator/query/full?include_metadata=true",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"api",
+										"image-generator",
+										"query",
+										"full"
+									],
+									"query": [
+										{
+											"key": "include_metadata",
+											"value": "true"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GenerateQueryFull3",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"width\": 1024,\r\n    \"height\": 768,\r\n    \"full_metadata\": true,\r\n    \"layer_query\": {\r\n        \"name\": \"alpha_blending\",\r\n        \"generator_type\": \"blending\",\r\n        \"layers\": [\r\n            {\r\n                \"name\": \"lorenz_attractor\",\r\n                \"generator_type\": \"algorithm\",\r\n                \"values\": {\r\n                    \"scale\": [1.0, 1.0],\r\n                    \"offset_x\": [0.0, 0.0],\r\n                    \"offset_y\": [0.0, 0.0]\r\n                },\r\n                \"blending_values\": {\r\n                    \"opacity\": 1.0\r\n                }\r\n            },\r\n            {\r\n                \"name\": \"plain_algorithm\",\r\n                \"generator_type\": \"algorithm\",\r\n                \"values\": {\r\n                    \"colors\": [\"EAD196\"]\r\n                },\r\n                \"blending_values\": {\r\n                    \"opacity\": 0.5\r\n                }\r\n            },\r\n            {\r\n                \"name\": \"plain_algorithm\",\r\n                \"generator_type\": \"algorithm\",\r\n                \"values\": {\r\n                    \"colors\": [\"034C53\"]\r\n                },\r\n                \"blending_values\": {\r\n                    \"opacity\": 0.5\r\n                }\r\n            }\r\n        ]\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseurl}}/api/image-generator/query/full?include_metadata=true",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"api",
+										"image-generator",
+										"query",
+										"full"
+									],
+									"query": [
+										{
+											"key": "include_metadata",
+											"value": "true"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GenerateQueryFull4",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"width\": 1024,\r\n    \"height\": 768,\r\n    \"full_metadata\": false,\r\n    \"layer_query\": {\r\n        \"name\": \"alpha_blending\",\r\n        \"generator_type\": \"blending\",\r\n        \"layers\": [\r\n            {\r\n                \"name\": \"lorenz_attractor\",\r\n                \"generator_type\": \"algorithm\",\r\n                \"values\": {\r\n                    \"scale\": [1.0, 1.0],\r\n                    \"offset_x\": [0.0, 0.0],\r\n                    \"offset_y\": [0.0, 0.0]\r\n                },\r\n                \"blending_values\": {\r\n                    \"opacity\": 1.0\r\n                }\r\n            },\r\n            {\r\n                \"name\": \"plain_algorithm\",\r\n                \"generator_type\": \"algorithm\",\r\n                \"values\": {\r\n                    \"colors\": [\"EAD196\"]\r\n                },\r\n                \"blending_values\": {\r\n                    \"opacity\": 0.5\r\n                }\r\n            },\r\n            {\r\n                \"name\": \"plain_algorithm\",\r\n                \"generator_type\": \"algorithm\",\r\n                \"values\": {\r\n                    \"colors\": [\"034C53\"]\r\n                },\r\n                \"blending_values\": {\r\n                    \"opacity\": 0.5\r\n                }\r\n            }\r\n        ]\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseurl}}/api/image-generator/query/full?include_metadata=true",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"api",
+										"image-generator",
+										"query",
+										"full"
+									],
+									"query": [
+										{
+											"key": "include_metadata",
+											"value": "true"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "QueryRandom",
+					"item": [
+						{
+							"name": "GenerateQueryRandom",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"width\": 320,\r\n    \"height\": 240,\r\n    \"count\": 5\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseurl}}/api/image-generator/query/random?include_metadata=true&include_image=true",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"api",
+										"image-generator",
+										"query",
+										"random"
+									],
+									"query": [
+										{
+											"key": "include_metadata",
+											"value": "true"
+										},
+										{
+											"key": "include_image",
+											"value": "true"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GenerateQueryRandomImage",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"width\": 320,\r\n    \"height\": 240,\r\n    \"count\": 1\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseurl}}/api/image-generator/query/random/image",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"api",
+										"image-generator",
+										"query",
+										"random",
+										"image"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "StoreQuery",
+			"item": [
+				{
+					"name": "Full",
+					"item": [
+						{
+							"name": "StoreQueryFull1",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"width\": 1024,\r\n    \"height\": 768,\r\n    \"layer_query\": {\r\n        \"name\": \"alpha_blending\",\r\n        \"generator_type\": \"blending\",\r\n        \"layers\": [\r\n            {\r\n                \"name\": \"lorenz_attractor\",\r\n                \"generator_type\": \"algorithm\",\r\n                \"values\": {\r\n                    \"scale\": [1.0, 1.0],\r\n                    \"offset_x\": [0.0, 0.0],\r\n                    \"offset_y\": [0.0, 0.0]\r\n                },\r\n                \"blending_values\": {\r\n                    \"opacity\": 1.0\r\n                }\r\n            },\r\n            {\r\n                \"name\": \"plain_algorithm\",\r\n                \"generator_type\": \"algorithm\",\r\n                \"values\": {\r\n                    \"colors\": [\"EAD196\"]\r\n                },\r\n                \"blending_values\": {\r\n                    \"opacity\": 0.5\r\n                }\r\n            },\r\n            {\r\n                \"name\": \"plain_algorithm\",\r\n                \"generator_type\": \"algorithm\",\r\n                \"values\": {\r\n                    \"colors\": [\"034C53\"]\r\n                },\r\n                \"blending_values\": {\r\n                    \"opacity\": 0.5\r\n                }\r\n            }\r\n        ]\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseurl}}/api/store-query/full",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"api",
+										"store-query",
+										"full"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Id",
+					"item": [
+						{
+							"name": "StoreQueryId1",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseurl}}/api/store-query/:query_id?include_metadata=true&include_image=true",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"api",
+										"store-query",
+										":query_id"
+									],
+									"query": [
+										{
+											"key": "include_metadata",
+											"value": "true"
+										},
+										{
+											"key": "include_image",
+											"value": "true"
+										}
+									],
+									"variable": [
+										{
+											"key": "query_id",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "StoreQueryId2",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseurl}}/api/store-query/:query_id?include_metadata=true&include_image=false",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"api",
+										"store-query",
+										":query_id"
+									],
+									"query": [
+										{
+											"key": "include_metadata",
+											"value": "true"
+										},
+										{
+											"key": "include_image",
+											"value": "false"
+										}
+									],
+									"variable": [
+										{
+											"key": "query_id",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "StoreQueryId3",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseurl}}/api/store-query/:query_id?include_metadata=false&include_image=true",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"api",
+										"store-query",
+										":query_id"
+									],
+									"query": [
+										{
+											"key": "include_metadata",
+											"value": "false"
+										},
+										{
+											"key": "include_image",
+											"value": "true"
+										}
+									],
+									"variable": [
+										{
+											"key": "query_id",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "StoreQueryId4",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseurl}}/api/store-query/:query_id?include_metadata=false&include_image=false",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"api",
+										"store-query",
+										":query_id"
+									],
+									"query": [
+										{
+											"key": "include_metadata",
+											"value": "false"
+										},
+										{
+											"key": "include_image",
+											"value": "false"
+										}
+									],
+									"variable": [
+										{
+											"key": "query_id",
+											"value": "67e2b33aec1127930830ffc3"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "TemplateQuery",
+			"item": [
+				{
+					"name": "All",
+					"item": [
+						{
+							"name": "TemplateQueryAll1",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseurl}}/api/template-query/all?include_metadata=true&include_image=true&full_metadata=true",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"api",
+										"template-query",
+										"all"
+									],
+									"query": [
+										{
+											"key": "include_metadata",
+											"value": "true"
+										},
+										{
+											"key": "include_image",
+											"value": "true"
+										},
+										{
+											"key": "full_metadata",
+											"value": "true"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "TemplateQueryAll2",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseurl}}/api/template-query/all?include_metadata=true&include_image=true&full_metadata=false",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"api",
+										"template-query",
+										"all"
+									],
+									"query": [
+										{
+											"key": "include_metadata",
+											"value": "true"
+										},
+										{
+											"key": "include_image",
+											"value": "true"
+										},
+										{
+											"key": "full_metadata",
+											"value": "false"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "TemplateQueryAll3",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseurl}}/api/template-query/all?include_metadata=true&include_image=false&full_metadata=false",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"api",
+										"template-query",
+										"all"
+									],
+									"query": [
+										{
+											"key": "include_metadata",
+											"value": "true"
+										},
+										{
+											"key": "include_image",
+											"value": "false"
+										},
+										{
+											"key": "full_metadata",
+											"value": "false"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "TemplateQueryAll4",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseurl}}/api/template-query/all?include_metadata=true&include_image=false&full_metadata=true",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"api",
+										"template-query",
+										"all"
+									],
+									"query": [
+										{
+											"key": "include_metadata",
+											"value": "true"
+										},
+										{
+											"key": "include_image",
+											"value": "false"
+										},
+										{
+											"key": "full_metadata",
+											"value": "true"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "TemplateQueryAll5",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseurl}}/api/template-query/all?include_metadata=false&include_image=true&full_metadata=true",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"api",
+										"template-query",
+										"all"
+									],
+									"query": [
+										{
+											"key": "include_metadata",
+											"value": "false"
+										},
+										{
+											"key": "include_image",
+											"value": "true"
+										},
+										{
+											"key": "full_metadata",
+											"value": "true"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "TemplateQueryAll6",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseurl}}/api/template-query/all?include_metadata=false&include_image=false&full_metadata=true",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"api",
+										"template-query",
+										"all"
+									],
+									"query": [
+										{
+											"key": "include_metadata",
+											"value": "false"
+										},
+										{
+											"key": "include_image",
+											"value": "false"
+										},
+										{
+											"key": "full_metadata",
+											"value": "true"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "TemplateQueryAll7",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseurl}}/api/template-query/all?include_metadata=false&include_image=true&full_metadata=false",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"api",
+										"template-query",
+										"all"
+									],
+									"query": [
+										{
+											"key": "include_metadata",
+											"value": "false"
+										},
+										{
+											"key": "include_image",
+											"value": "true"
+										},
+										{
+											"key": "full_metadata",
+											"value": "false"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "TemplateQueryAll8",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseurl}}/api/template-query/all?include_metadata=false&include_image=false&full_metadata=false",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"api",
+										"template-query",
+										"all"
+									],
+									"query": [
+										{
+											"key": "include_metadata",
+											"value": "false"
+										},
+										{
+											"key": "include_image",
+											"value": "false"
+										},
+										{
+											"key": "full_metadata",
+											"value": "false"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Id",
+					"item": [
+						{
+							"name": "TemplateQueryId1",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseurl}}/api/template-query/:template_query_id?include_metadata=true&include_image=true",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"api",
+										"template-query",
+										":template_query_id"
+									],
+									"query": [
+										{
+											"key": "include_metadata",
+											"value": "true"
+										},
+										{
+											"key": "include_image",
+											"value": "true"
+										}
+									],
+									"variable": [
+										{
+											"key": "template_query_id",
+											"value": "67e2d5dd1f7b0f71602e6f9a"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "TemplateQueryId2",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseurl}}/api/template-query/:template_query_id?include_metadata=true&include_image=false",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"api",
+										"template-query",
+										":template_query_id"
+									],
+									"query": [
+										{
+											"key": "include_metadata",
+											"value": "true"
+										},
+										{
+											"key": "include_image",
+											"value": "false"
+										}
+									],
+									"variable": [
+										{
+											"key": "template_query_id",
+											"value": "67e2d5dd1f7b0f71602e6f9a"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "TemplateQueryId3",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseurl}}/api/template-query/:template_query_id?include_metadata=false&include_image=true",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"api",
+										"template-query",
+										":template_query_id"
+									],
+									"query": [
+										{
+											"key": "include_metadata",
+											"value": "false"
+										},
+										{
+											"key": "include_image",
+											"value": "true"
+										}
+									],
+									"variable": [
+										{
+											"key": "template_query_id",
+											"value": "67e2d5dd1f7b0f71602e6f9a"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "TemplateQueryId4",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseurl}}/api/template-query/:template_query_id?include_metadata=false&include_image=false",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"api",
+										"template-query",
+										":template_query_id"
+									],
+									"query": [
+										{
+											"key": "include_metadata",
+											"value": "false"
+										},
+										{
+											"key": "include_image",
+											"value": "false"
+										}
+									],
+									"variable": [
+										{
+											"key": "template_query_id",
+											"value": "67e2d5dd1f7b0f71602e6f9a"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Popular",
+			"item": [
+				{
+					"name": "GetPopularImages",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/api/popular/images?page=1&page_size=2&include_image=true&include_metadata=true&full_metadata=true",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"popular",
+								"images"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "page_size",
+									"value": "2"
+								},
+								{
+									"key": "include_image",
+									"value": "true"
+								},
+								{
+									"key": "include_metadata",
+									"value": "true"
+								},
+								{
+									"key": "full_metadata",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetPopularImage",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/api/popular/image/:query_id?include_image=true&include_metadata=true&full_metadata=true",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"popular",
+								"image",
+								":query_id"
+							],
+							"query": [
+								{
+									"key": "include_image",
+									"value": "true"
+								},
+								{
+									"key": "include_metadata",
+									"value": "true"
+								},
+								{
+									"key": "full_metadata",
+									"value": "true"
+								}
+							],
+							"variable": [
+								{
+									"key": "query_id",
+									"value": "6800e8205de7bbb9aaa7f2ef"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetPopularTotal",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/api/popular/total",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"popular",
+								"total"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetPopularImagesByIds",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"query_ids\": [\"68010bc5cd3aa2baeadaf17a\", \"6801114fd88af11e828f4658\"]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/popular/images-by-ids?include_metadata=true&include_image=true&full_metadata=true",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"popular",
+								"images-by-ids"
+							],
+							"query": [
+								{
+									"key": "include_metadata",
+									"value": "true"
+								},
+								{
+									"key": "include_image",
+									"value": "true"
+								},
+								{
+									"key": "full_metadata",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "LikeQueryFull",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"width\": 640,\r\n  \"height\": 480,\r\n  \"seed\": null,\r\n  \"layer_query\": {\r\n    \"name\": \"alpha_blending\",\r\n    \"generator_type\": \"blending\",\r\n    \"values\": {\r\n      \"seed\": 777421958\r\n    },\r\n    \"layers\": [\r\n      {\r\n        \"name\": \"lorenz_attractor\",\r\n        \"generator_type\": \"algorithm\",\r\n        \"values\": {\r\n          \"colors\": [\r\n            \"#ff0000\",\r\n            \"#00ff00\"\r\n          ],\r\n          \"scale\": [\r\n            1.0,\r\n            4.32\r\n          ],\r\n          \"size\": [\r\n            1,\r\n            2\r\n          ],\r\n          \"blur_radius\": [\r\n            0,\r\n            4\r\n          ],\r\n          \"num_points\": [\r\n            10000,\r\n            10000\r\n          ],\r\n          \"draw_lines\": true,\r\n          \"offset_x\": [\r\n            0,\r\n            0\r\n          ],\r\n          \"offset_y\": [\r\n            0,\r\n            0\r\n          ],\r\n          \"rotation_x\": [\r\n            28.53,\r\n            58.77\r\n          ],\r\n          \"rotation_y\": [\r\n            0.0,\r\n            6.29\r\n          ],\r\n          \"rotation_z\": [\r\n            0.0,\r\n            6.29\r\n          ],\r\n          \"seed\": 846687559\r\n        },\r\n        \"blending_values\": {\r\n          \"opacity\": 1.0\r\n        }\r\n      },\r\n      {\r\n        \"name\": \"plain_algorithm\",\r\n        \"generator_type\": \"algorithm\",\r\n        \"values\": {\r\n          \"colors\": [\r\n            \"#FEFDFB\"\r\n          ],\r\n          \"seed\": 2047910745\r\n        },\r\n        \"blending_values\": {\r\n          \"opacity\": 1.0\r\n        }\r\n      }\r\n    ]\r\n  }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/like/query-full?include_metadata=true&full_metadata=true",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"like",
+								"query-full"
+							],
+							"query": [
+								{
+									"key": "include_metadata",
+									"value": "true"
+								},
+								{
+									"key": "full_metadata",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "LikeQueryId",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/api/like/query-id/:query_id?include_metadata=true&full_metadata=true",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"like",
+								"query-id",
+								":query_id"
+							],
+							"query": [
+								{
+									"key": "include_metadata",
+									"value": "true"
+								},
+								{
+									"key": "full_metadata",
+									"value": "true"
+								}
+							],
+							"variable": [
+								{
+									"key": "query_id",
+									"value": "6800e8205de7bbb9aaa7f2ec"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DislikeQueryId",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/api/dislike/query-id/:query_id?include_metadata=true&full_metadata=true",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"dislike",
+								"query-id",
+								":query_id"
+							],
+							"query": [
+								{
+									"key": "include_metadata",
+									"value": "true"
+								},
+								{
+									"key": "full_metadata",
+									"value": "true"
+								}
+							],
+							"variable": [
+								{
+									"key": "query_id",
+									"value": "6800e8205de7bbb9aaa7f2ec"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DislikeQueryFull",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"width\": 640,\r\n  \"height\": 480,\r\n  \"seed\": null,\r\n  \"layer_query\": {\r\n    \"name\": \"alpha_blending\",\r\n    \"generator_type\": \"blending\",\r\n    \"values\": {\r\n      \"seed\": 777421958\r\n    },\r\n    \"layers\": [\r\n      {\r\n        \"name\": \"lorenz_attractor\",\r\n        \"generator_type\": \"algorithm\",\r\n        \"values\": {\r\n          \"colors\": [\r\n            \"#ff0000\",\r\n            \"#00ff00\"\r\n          ],\r\n          \"scale\": [\r\n            1.0,\r\n            4.32\r\n          ],\r\n          \"size\": [\r\n            1,\r\n            2\r\n          ],\r\n          \"blur_radius\": [\r\n            0,\r\n            4\r\n          ],\r\n          \"num_points\": [\r\n            10000,\r\n            10000\r\n          ],\r\n          \"draw_lines\": true,\r\n          \"offset_x\": [\r\n            0,\r\n            0\r\n          ],\r\n          \"offset_y\": [\r\n            0,\r\n            0\r\n          ],\r\n          \"rotation_x\": [\r\n            28.53,\r\n            58.77\r\n          ],\r\n          \"rotation_y\": [\r\n            0.0,\r\n            6.29\r\n          ],\r\n          \"rotation_z\": [\r\n            0.0,\r\n            6.29\r\n          ],\r\n          \"seed\": 846687559\r\n        },\r\n        \"blending_values\": {\r\n          \"opacity\": 1.0\r\n        }\r\n      },\r\n      {\r\n        \"name\": \"plain_algorithm\",\r\n        \"generator_type\": \"algorithm\",\r\n        \"values\": {\r\n          \"colors\": [\r\n            \"#FEFDFB\"\r\n          ],\r\n          \"seed\": 2047910745\r\n        },\r\n        \"blending_values\": {\r\n          \"opacity\": 1.0\r\n        }\r\n      }\r\n    ]\r\n  }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/dislike/query-full?include_metadata=true&full_metadata=true",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"dislike",
+								"query-full"
+							],
+							"query": [
+								{
+									"key": "include_metadata",
+									"value": "true"
+								},
+								{
+									"key": "full_metadata",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseurl",
+			"value": "http://localhost:8000",
+			"type": "string"
+		}
+	]
+}

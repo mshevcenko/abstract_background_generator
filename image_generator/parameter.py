@@ -57,7 +57,11 @@ class Parameter:
                  max_value: Union[int, float, None] = None,
                  possible_values: Optional[List[EnumValueDict]] = None,
                  min_count: Optional[int] = None,
-                 max_count: Optional[int] = None):
+                 max_count: Optional[int] = None,
+                 random_min_value: Union[int, float, None] = None,
+                 random_max_value: Union[int, float, None] = None,
+                 random_min_count: Optional[int] = None,
+                 random_max_count: Optional[int] = None):
         self.name = name
         self.visible_name = visible_name
         self.description = description
@@ -69,6 +73,10 @@ class Parameter:
         self.possible_values = possible_values
         self.min_count = min_count
         self.max_count = max_count
+        self.random_min_value = random_min_value
+        self.random_max_value = random_max_value
+        self.random_min_count = random_min_count
+        self.random_max_count = random_max_count
         self.__check()
         self.model = ParameterModel(
             name=self.name,
@@ -100,6 +108,46 @@ class Parameter:
         self.__check_min_count_max_count()
         self.__check_possible_values()
         self.__check_default()
+        self.__check_random()
+
+    def __check_random(self):
+        if self.random_min_value is not None and not isinstance(self.random_min_value, type(self.min_value)):
+            raise ValueError(f"Not None parameter random_min_value(\"{self.random_min_value}\") must be the same type as min_value(\"{self.min_value}\")")
+        if self.random_max_value is not None and not isinstance(self.random_max_value, type(self.max_value)):
+            raise ValueError(f"Not None parameter random_max_value(\"{self.random_max_value}\") must be the same type as max_value(\"{self.max_value}\")")
+        if self.random_min_count is not None and not isinstance(self.random_min_count, type(self.min_count)):
+            raise ValueError(f"Not None parameter random_min_count(\"{self.random_min_count}\") must be the same type as min_count(\"{self.min_count}\")")
+        if self.random_max_count is not None and not isinstance(self.random_max_count, type(self.max_count)):
+            raise ValueError(f"Not None parameter random_max_count(\"{self.random_max_count}\") must be the same type as max_count(\"{self.max_count}\")")
+        if self.random_min_value is not None:
+            if self.random_min_value < self.min_value:
+                raise ValueError(f"Not None parameter random_min_value(\"{ self.random_min_value}\") cannot be less than min_value(\"{self.min_value}\")")
+            if self.random_max_value is not None and self.random_max_value < self.random_min_value:
+                raise ValueError(f"Not None parameter random_min_value(\"{ self.random_min_value}\") cannot be bigger than random_max_value(\"{self.random_max_value}\")")
+            if self.random_max_value is None and self.max_value < self.random_min_value:
+                raise ValueError(f"Not None parameter random_min_value(\"{ self.random_min_value}\") cannot be bigger than max_value(\"{self.max_value}\")")
+        if self.random_max_value is not None:
+            if self.random_max_value > self.max_value:
+                raise ValueError(f"Not None parameter random_max_value(\"{ self.random_max_value}\") cannot be bigger than max_value(\"{self.max_value}\")")
+            if self.random_min_value is not None and self.random_max_value < self.random_min_value:
+                raise ValueError(f"Not None parameter random_max_value(\"{ self.random_max_value}\") cannot be less than random_min_value(\"{self.random_min_value}\")")
+            if self.random_min_value is None and self.random_max_value < self.min_value:
+                raise ValueError(f"Not None parameter random_max_value(\"{ self.random_max_value}\") cannot be less than min_value(\"{self.min_value}\")")
+        if self.random_min_count is not None:
+            if self.random_min_count < self.min_count:
+                raise ValueError(f"Not None parameter random_min_count(\"{ self.random_min_count}\") cannot be less than min_count(\"{self.min_count}\")")
+            if self.random_max_count is not None and self.random_max_count < self.random_min_count:
+                raise ValueError(f"Not None parameter random_min_count(\"{ self.random_min_count}\") cannot be bigger than random_max_count(\"{self.random_max_count}\")")
+            if self.random_max_count is None and self.max_count < self.random_min_count:
+                raise ValueError(f"Not None parameter random_min_count(\"{ self.random_min_count}\") cannot be bigger than max_count(\"{self.max_count}\")")
+        if self.random_max_count is not None:
+            if self.random_max_count > self.max_count:
+                raise ValueError(f"Not None parameter random_max_count(\"{ self.random_max_count}\") cannot be bigger than max_count(\"{self.max_count}\")")
+            if self.random_min_count is not None and self.random_max_count < self.random_min_count:
+                raise ValueError(f"Not None parameter random_max_count(\"{ self.random_max_count}\") cannot be less than random_min_count(\"{self.random_min_count}\")")
+            if self.random_min_count is None and self.random_max_count < self.min_count:
+                raise ValueError(f"Not None parameter random_max_count(\"{ self.random_max_count}\") cannot be less than min_count(\"{self.min_count}\")")
+
 
     def __check_default(self) -> None:
         if self.data_type == DataType.INTEGER or self.data_type == DataType.FLOAT:
@@ -252,15 +300,47 @@ class Parameter:
 
     def random_value(self) -> Union[int, float, str, List[str], Tuple[int, int], Tuple[float, float], bool]:
         if self.data_type == DataType.INTEGER:
-            return random.randint(self.min_value, self.max_value)
+            if self.random_min_value is not None:
+                lower_bound = self.random_min_value
+            else:
+                lower_bound = self.min_value
+            if self.random_max_value is not None:
+                upper_bound = self.random_max_value
+            else:
+                upper_bound = self.max_value
+            return random.randint(lower_bound, upper_bound)
         elif self.data_type == DataType.FLOAT:
-            return random.uniform(self.min_value, self.max_value)
+            if self.random_min_value is not None:
+                lower_bound = self.random_min_value
+            else:
+                lower_bound = self.min_value
+            if self.random_max_value is not None:
+                upper_bound = self.random_max_value
+            else:
+                upper_bound = self.max_value
+            return random.uniform(lower_bound, upper_bound)
         elif self.data_type == DataType.INTEGER_TUPLE:
-            value = [random.randint(self.min_value, self.max_value), random.randint(self.min_value, self.max_value)]
+            if self.random_min_value is not None:
+                lower_bound = self.random_min_value
+            else:
+                lower_bound = self.min_value
+            if self.random_max_value is not None:
+                upper_bound = self.random_max_value
+            else:
+                upper_bound = self.max_value
+            value = [random.randint(lower_bound, upper_bound), random.randint(lower_bound, upper_bound)]
             value.sort()
             return value[0], value[1]
         elif self.data_type == DataType.FLOAT_TUPLE:
-            value = [random.uniform(self.min_value, self.max_value), random.uniform(self.min_value, self.max_value)]
+            if self.random_min_value is not None:
+                lower_bound = self.random_min_value
+            else:
+                lower_bound = self.min_value
+            if self.random_max_value is not None:
+                upper_bound = self.random_max_value
+            else:
+                upper_bound = self.max_value
+            value = [random.uniform(lower_bound, upper_bound), random.uniform(lower_bound, upper_bound)]
             value.sort()
             return value[0], value[1]
         elif self.data_type == DataType.BOOL:
@@ -269,7 +349,15 @@ class Parameter:
             values = [possible_value["value"] for possible_value in self.possible_values]
             return random.choice(values)
         elif self.data_type == DataType.COLORS:
-            count = random.randint(self.min_count, self.max_count)
+            if self.random_min_count is not None:
+                lower_bound = self.random_min_count
+            else:
+                lower_bound = self.min_count
+            if self.random_max_count is not None:
+                upper_bound = self.random_max_count
+            else:
+                upper_bound = self.max_count
+            count = random.randint(lower_bound, upper_bound)
             colors = self.__get_random_colors(count)
             return colors
         raise ValueError(f"Unsupported data_type: \"{self.data_type}\"")

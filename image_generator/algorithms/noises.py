@@ -79,7 +79,7 @@ class ProceduralBackgroundGenerator(Algorithm):
                       visible_type=VisibleType.CHECKBOX,
                       default=False),
         ]
-        super().__init__(name, visible_name, "", parameters)
+        super().__init__(name, visible_name, "Create image using different noises algorithms", parameters)
         
 
     def algorithm(self,
