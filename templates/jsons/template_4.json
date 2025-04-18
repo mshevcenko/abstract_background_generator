@@ -23,7 +23,7 @@
           "seed": 1510781005
         },
         "blending_values": {
-          "zone_weight": 1.0
+          "zone_weight": [1.0, 1.0]
         }
       },
       {
@@ -76,7 +76,7 @@
           "seed": 2019849217
         },
         "blending_values": {
-          "zone_weight": 1.0
+          "zone_weight": [1.0, 1.0]
         }
       }
     ]

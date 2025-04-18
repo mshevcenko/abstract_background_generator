@@ -37,7 +37,7 @@ ZONE_WEIGHT_KEY = "zone_weight"
 
 
 def collect_layers_weights(layers_stuid_l: List[LayerUid]) -> Dict[int, float]:
-    return {ll.uid: random.randint(*ll.layer.blending_values.get(ZONE_WEIGHT_KEY, 0)) for ll in layers_stuid_l}
+    return {ll.uid: random.uniform(*ll.layer.blending_values.get(ZONE_WEIGHT_KEY, (0.0, 0.0))) for ll in layers_stuid_l}
 
 
 def distribute_zones(zone_matrix: np.ndarray, layers_stuid_l: List[LayerUid]) -> Dict[int, List[int]]:
