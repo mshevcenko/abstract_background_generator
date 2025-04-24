@@ -10,6 +10,7 @@ from image_generator.algorithms.julia_algorithm import JuliaMandelbrotAlgorithm
 from image_generator.algorithms.mandelbrot_algorithm import MandelbrotAlgorithm
 from image_generator.algorithms.plain_algorithm import PlainAlgorithm
 from image_generator.algorithms.smooth_wave_background_algorithm import SmoothWaveBackgroundAlgorithm
+from image_generator.algorithms.spirograph_algorithm import SpirographAlgorithm
 from image_generator.algorithms.voronoi_algorithm import VoronoiAlgorithm
 from image_generator.algorithms.wfc_algorithm import WFCAlgorithm
 from image_generator.algorithms.flow_field_algorithm import FlowFieldGenerator
@@ -20,7 +21,7 @@ lorenz_algorithm = AttractorAlgorithm("lorenz_attractor", "Cosmic flow", LorenzA
 plain_algorithm = PlainAlgorithm("plain_algorithm", "Color", "#EAD196")
 smooth_wave_algorithm = SmoothWaveBackgroundAlgorithm("smooth_wave_background", "Waves")
 gradient_algorithm = GradientAlgorithm("gradient_algorithm", "Gradient")
-voronoi_algorithm = VoronoiAlgorithm("voronoi_algorithm", "Cellular pattern") #to rename
+voronoi_algorithm = VoronoiAlgorithm("voronoi_algorithm", "Cellular pattern")  # to rename
 hex_pattern_algorithm = HexPatternAlgorithm("hex_pattern_algorithm", "Hex grid")
 wave_function_collapse_algorithm = WFCAlgorithm(visible_name="Pattern replicator")
 flow_field_generator = FlowFieldGenerator("flow_field_generator", "Fluid")
@@ -30,6 +31,8 @@ dragon_algorithm = DragonCurveGenerator("dragon_curve_algorithm", "Dragon shapes
 mandelbrot_algorithm = MandelbrotAlgorithm()
 diamond_square = DiamondGenerator("diamond_square", "Diamond terrain")
 julia_mandelbrot_algorithm = JuliaMandelbrotAlgorithm()
+spirograph_algorithm = SpirographAlgorithm()
+
 
 class AlgorithmInstancesEnum(Enum):
     lorenz = 0
@@ -44,8 +47,9 @@ class AlgorithmInstancesEnum(Enum):
     geometric_shape = 9
     dragon_algorithm = 10
     mandelbrot = 11
-    diamond=12
+    diamond = 12
     julia_mandelbrot = 13
+    spirograph_algorithm = 14
 
 
 algorithm_instances_list = [
@@ -63,4 +67,5 @@ algorithm_instances_list = [
     mandelbrot_algorithm,
     diamond_square,
     julia_mandelbrot_algorithm,
+    spirograph_algorithm,
 ]

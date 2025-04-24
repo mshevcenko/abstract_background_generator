@@ -7,6 +7,7 @@ zone_blending_wfc = ZoneBlendingNamed(zone_gen_fun=AlgorithmInstancesEnum.wfc.va
 zone_blending_wave = ZoneBlendingNamed(zone_gen_fun=AlgorithmInstancesEnum.smooth_wave.value, visible_name="Zone blending")
 zone_blending_hex = ZoneBlendingNamed(zone_gen_fun=AlgorithmInstancesEnum.hex_pattern.value, visible_name="Zone blending")
 zone_blending_voronoi = ZoneBlendingNamed(zone_gen_fun=AlgorithmInstancesEnum.voronoi.value, visible_name="Zone blending")
+zone_blending_diamond = ZoneBlendingNamed(zone_gen_fun=AlgorithmInstancesEnum.diamond.value, visible_name="Zone blending")
 
 blending_instances_list = [
     alpha_blending,
@@ -14,4 +15,5 @@ blending_instances_list = [
     zone_blending_wave,
     zone_blending_hex,
     zone_blending_voronoi,
+    zone_blending_diamond,
 ]

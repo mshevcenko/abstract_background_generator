@@ -157,13 +157,21 @@ def combine_images_using_zones(images: List[Image], zones: List[ZoneInfo],
 
 
 basic_colors: List[str] = ["#ff0000", "#00ff00"]
+basic_colors_ten: List[str] = ["#ff0000", "#00ff00", "#0000ff",
+                               "#aa0000", "#00aa00", "#0000aa",
+                               "#bb0000", "#00bb00", "#0000bb",
+                               "#cccccc"]
 
 
 def generate_zones_matrix(zgf: int,
                           width: int,
                           height: int,
                           **kwargs) -> np.ndarray:
-    img = algorithm_instances_list[zgf].algorithm(width=width, height=height, **kwargs)
+    if zgf == AlgorithmInstancesEnum.diamond.value:
+        colors = basic_colors_ten
+        img = algorithm_instances_list[zgf].algorithm(width=width, height=height, colors=colors, **kwargs)
+    else:
+        img = algorithm_instances_list[zgf].algorithm(width=width, height=height, monochrome=True, **kwargs)
     return extract_color_to_int(img)
 
 
@@ -182,6 +190,7 @@ allowed_zone_gen_fun = generate_allowed_zone_gen_fun([
     AlgorithmInstancesEnum.wfc,
     AlgorithmInstancesEnum.smooth_wave,
     AlgorithmInstancesEnum.hex_pattern,
+    AlgorithmInstancesEnum.diamond,
 ])
 
 
@@ -209,17 +218,16 @@ desired_parameters = ["n_layers"]
 params_tmp = copy.deepcopy(algorithm_instances_list[AlgorithmInstancesEnum.smooth_wave.value].parameters)
 parameters_for_waves = [param for param in params_tmp if param.name in desired_parameters]
 
-# todo add more blending algorithms (need to check colors use for new algorithms)
-desired_parameters = ["shape_type", "size", "border_thickness", "num_shapes", "arrangement", "angle"]
-params_tmp = copy.deepcopy(algorithm_instances_list[AlgorithmInstancesEnum.geometric_shape.value].parameters)
-parameters_for_geometric_shapes = [param for param in params_tmp if param.name in desired_parameters]
-
+desired_parameters = ["scale", "roughness", "min_height", "max_height"]
+params_tmp = copy.deepcopy(algorithm_instances_list[AlgorithmInstancesEnum.diamond.value].parameters)
+parameters_for_diamond = [param for param in params_tmp if param.name in desired_parameters]
 
 enum_to_params_dict = {
     AlgorithmInstancesEnum.wfc.value: parameters_for_wfc,
     AlgorithmInstancesEnum.smooth_wave.value: parameters_for_waves,
     AlgorithmInstancesEnum.hex_pattern.value: parameters_for_hexes,
     AlgorithmInstancesEnum.voronoi.value: parameters_for_voronoi,
+    AlgorithmInstancesEnum.diamond.value: parameters_for_diamond,
 }
 
 
@@ -261,7 +269,6 @@ class ZoneBlendingNamed(Blending):
                  area: Optional[List[List[bool]]] = None,
                  **kwargs) -> Image:
         zones_matrix = generate_zones_matrix(self.zone_gen_fun,
-                                             monochrome=True,
                                              width=width,
                                              height=height,
                                              seed=seed,
