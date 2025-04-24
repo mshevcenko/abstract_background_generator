@@ -37,12 +37,22 @@ class GeometricShapesAlgorithm(Algorithm):
         Parameter(
             name="colors",
             visible_name="Fill Color",
-            description="Main and optional secondary fill color. Third color (if present) is used as border color.",
+            description="Main and optional secondary fill color.",
             data_type=DataType.COLORS,
             visible_type=VisibleType.COLORS,
             default=["#FF0000"],
             min_count=1,
-            max_count=3
+            max_count=2
+        ),
+        Parameter(
+            name="border_color",
+            visible_name="Border Color",
+            description="Color of the border of the shape.",
+            data_type=DataType.COLORS,
+            visible_type=VisibleType.COLORS,
+            default=["#FF0000"],
+            min_count=1,
+            max_count=1
         ),
         Parameter(
             name="angle",
@@ -95,14 +105,13 @@ class GeometricShapesAlgorithm(Algorithm):
         Parameter(
             name="arrangement",
             visible_name="Arrangement",
-            description="Placement style of shapes on the canvas: random, grid, or spiral layout.",
+            description="Placement style of shapes on the canvas: random or grid layout.",
             data_type=DataType.ENUM_LIST,
             visible_type=VisibleType.SELECTOR,
             default="random",
             possible_values=[
                 {"value": "random", "visible_value": "Random"},
-                {"value": "grid", "visible_value": "Grid"},
-                {"value": "spiral", "visible_value": "Spiral"}
+                {"value": "grid", "visible_value": "Grid"}
             ]
         )
     ]
@@ -228,54 +237,13 @@ class GeometricShapesAlgorithm(Algorithm):
                 background.paste(shape_img, pos, shape_img)
                 shape_count += 1
 
-    def crop_to_content(self, img: Image, padding: int = 20) -> Image:
-        bbox = img.getbbox()
-        if not bbox:
-            return img
-
-        left, upper, right, lower = bbox
-        left = max(0, left + padding)
-        upper = max(0, upper + padding)
-        right = min(img.width, right - padding)
-        lower = min(img.height, lower - padding)
-
-        if right <= left or lower <= upper:
-            return img.crop(bbox)
-
-        return img.crop((left, upper, right, lower))
-
-    def arrange_shapes_in_spiral(self,
-                                 background: Image,
-                                 num_shapes: int,
-                                 shape_type: str,
-                                 size: int,
-                                 color: Tuple or List,
-                                 angle: float,
-                                 blur_radius: float,
-                                 border_thickness: int,
-                                 border_color: Tuple[int, int, int, int],
-                                 random_angle: bool
-                                 ) -> None:
-        bg_width, bg_height = background.size
-        center = (bg_width // 2, bg_height // 2)
-        b = min(bg_width, bg_height) / (4 * num_shapes)
-        for i in range(num_shapes):
-            theta = i * 0.5
-            r = b * theta
-            pos_x = int(center[0] + r * math.cos(theta))
-            pos_y = int(center[1] + r * math.sin(theta))
-            shape_angle = randrange(0, 360) if random_angle else math.degrees(math.atan2(pos_y - center[1], pos_x - center[0])) + 90
-            shape_img = self.generate_shape(shape_type, size, color, shape_angle,
-                                            blur_radius, border_thickness, border_color)
-            pos = (pos_x - shape_img.width // 2, pos_y - shape_img.height // 2)
-            background.paste(shape_img, pos, shape_img)
-
     def algorithm(self,
                   width: int,
                   height: int,
                   seed: Optional[int] = None,
                   area: Optional[List[List[bool]]] = None,
                   colors: Optional[List[str]] = None,
+                  border_color: Optional[List[str]] = None,
                   shape_type: str = "triangle",
                   size: int = 40,
                   angle: float = 0.0,
@@ -283,7 +251,7 @@ class GeometricShapesAlgorithm(Algorithm):
                   border_thickness: int = 2,
                   num_shapes: int = 12,
                   random_angle: bool = False,
-                  arrangement: str = "spiral",
+                  arrangement: str = "grid",
                   **kwargs) -> Image:
 
         if seed is not None:
@@ -299,27 +267,24 @@ class GeometricShapesAlgorithm(Algorithm):
                 fill_color = (hex_to_rgb(colors[0]), hex_to_rgb(colors[1]))
         else:
             fill_color = (255, 0, 0, 200)
-        if colors is not None and len(colors) > 2:
-            b_color = hex_to_rgb(colors[2])
-        else:
-            b_color = (0, 0, 0, 0)
 
         background = Image.new('RGBA', (width, height), (255, 255, 255, 0))
+        if border_color is not None and len(border_color) > 0:
+            border_fill_color = hex_to_rgb(border_color[0])
+        else:
+            border_fill_color = (0, 0, 0, 255)
 
         if arrangement == "random":
             self.arrange_shapes_randomly(background, num_shapes, shape_type, size,
-                                         fill_color, angle, blur_radius, border_thickness, b_color, random_angle)
-            background = self.crop_to_content(background)
+                                         fill_color, angle, blur_radius, border_thickness, border_fill_color, random_angle)
         elif arrangement == "grid":
             self.arrange_shapes_in_grid(background, num_shapes, shape_type, size,
-                                        fill_color, angle, blur_radius, border_thickness, b_color, random_angle)
-            background = self.crop_to_content(background)
-        elif arrangement == "spiral":
-            self.arrange_shapes_in_spiral(background, num_shapes, shape_type, size,
-                                          fill_color, angle, blur_radius, border_thickness, b_color,random_angle)
-            background = self.crop_to_content(background)
+                                        fill_color, angle, blur_radius, border_thickness, border_fill_color, random_angle)
         else:
             self.arrange_shapes_randomly(background, num_shapes, shape_type, size,
-                                         fill_color, angle, blur_radius, border_thickness, b_color,random_angle)
-            background = self.crop_to_content(background)
+                                         fill_color, angle, blur_radius, border_thickness, border_fill_color,random_angle)
+        bbox = background.getbbox()
+        if bbox:
+            background = background.crop(bbox)
+        background = background.resize((width, height), Image.LANCZOS)
         return background
