@@ -35,7 +35,7 @@ class DiamondGenerator(Algorithm):
                       visible_type=VisibleType.SLIDER,
                       default=0.5,
                       min_value=0.5,
-                      max_value=100.0),
+                      max_value=10.0),
             Parameter(name="min_height",
                       visible_name="Min height",
                       description="Controls the height that affect colors",
@@ -43,7 +43,7 @@ class DiamondGenerator(Algorithm):
                       visible_type=VisibleType.SLIDER,
                       default=0.0,
                       min_value=0.0,
-                      max_value=10.0),
+                      max_value=2.0),
             Parameter(name="max_height",
                       visible_name="Max height",
                       description="Controls the height that affect colors",
@@ -51,7 +51,7 @@ class DiamondGenerator(Algorithm):
                       visible_type=VisibleType.SLIDER,
                       default=1.0,
                       min_value=1.0,
-                      max_value=10.0),
+                      max_value=3.0),
         ]
         super().__init__(name, visible_name, "Create image using diamond-square algorithm", parameters)
     
@@ -72,7 +72,7 @@ class DiamondGenerator(Algorithm):
         
         size = max(width, height)
         n = 1
-        while 2**n + 1 <= size:
+        while 2**n + 1 <= size/scale:
             n += 1
         size = 2**n + 1
         
