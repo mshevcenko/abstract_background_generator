@@ -35,7 +35,7 @@ class VoronoiAlgorithm(Algorithm):
     ]
 
     def __init__(self, name: str, visible_name: str):
-        super().__init__(name, visible_name, "", self.PARAMETERS)
+        super().__init__(name, visible_name, "Create image using Voronoi diagram.", self.PARAMETERS)
 
     def algorithm(self,
                   width: int,

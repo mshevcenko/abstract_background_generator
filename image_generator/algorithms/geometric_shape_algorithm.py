@@ -117,7 +117,7 @@ class GeometricShapesAlgorithm(Algorithm):
     ]
 
     def __init__(self, name: str, visible_name: str):
-        super().__init__(name, visible_name, "", self.PARAMETERS)
+        super().__init__(name, visible_name, "Create image with geometric shapes arranged in different layouts.", self.PARAMETERS)
 
     def generate_shape(self,
                        shape_type: str = 'triangle',

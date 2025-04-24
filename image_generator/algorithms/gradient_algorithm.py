@@ -35,7 +35,7 @@ class GradientAlgorithm(Algorithm):
     ]
 
     def __init__(self, name: str, visible_name: str):
-        super().__init__(name, visible_name, "", self.PARAMETERS)
+        super().__init__(name, visible_name, "Create image with a linear gradient.", self.PARAMETERS)
 
     def algorithm(self,
                   width: int,

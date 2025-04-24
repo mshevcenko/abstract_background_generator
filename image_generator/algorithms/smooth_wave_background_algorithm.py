@@ -53,7 +53,7 @@ class SmoothWaveBackgroundAlgorithm(Algorithm):
     ]
 
     def __init__(self, name: str, visible_name: str):
-        super().__init__(name, visible_name, "", self.PARAMETERS)
+        super().__init__(name, visible_name, "Create image with smooth wave layers.", self.PARAMETERS)
 
     def generate_wave_points(self, width: int, base_y: float, amplitude: float, n_points: int = 250) -> List[Tuple[float, float]]:
         xs = np.linspace(0, width, n_points)
