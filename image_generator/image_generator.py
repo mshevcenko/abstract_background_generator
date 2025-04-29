@@ -18,7 +18,6 @@ class QueryFull(BaseModel):
     layer_query: LayerQuery
     width: int
     height: int
-    seed: Optional[int] = None
 
 
 class QueryRandom(BaseModel):
@@ -32,7 +31,7 @@ class QueryRandom(BaseModel):
 class ImageMetadataFull(BaseModel):
     width: int
     height: int
-    seed: int
+    seed: Optional[int]
     layer_query: LayerQuery
 
 
@@ -56,7 +55,8 @@ class ImageGenerator:
         width = query.width
         height = query.height
         layer_query = query.layer_query
-        seed = query.seed
+        # seed = query.seed
+        seed = None
         layer = Layer(layer_query, self.generators_dict)
         if not seed:
             seed = SeedGenerator().generate_seed()
@@ -72,7 +72,7 @@ class ImageGenerator:
         return image, metadata
 
     def __random_algorithm_query(self) -> LayerQuery:
-        algorithms = [algorithm for algorithm in self.algorithms if algorithm.name != "geometric_shape_algorithm"]
+        algorithms = self.algorithms
         algorithm: Algorithm = random.choice(algorithms)
         values = {parameter.name: parameter.random_value() for parameter in algorithm.parameters}
         return LayerQuery(name=algorithm.name,
@@ -122,8 +122,7 @@ class ImageGenerator:
         layer.generate_seed(layers_seed_generator)
         return QueryFull(width=width,
                          height=height,
-                         layer_query=layer_query,
-                         seed=seed)
+                         layer_query=layer_query)
 
     def generate_random_images(self,
                                query_random: QueryRandom) -> List[Tuple[Image, ImageMetadataFull]]:

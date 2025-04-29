@@ -1,0 +1,111 @@
+{
+  "width": 640,
+  "height": 480,
+  "layer_query": {
+    "name": "alpha_blending",
+    "generator_type": "blending",
+    "values": {
+      "seed": 912709432
+    },
+    "layers": [
+      {
+        "name": "dragon_curve_algorithm",
+        "generator_type": "algorithm",
+        "values": {
+          "colors": [
+            "#d1f279",
+            "#f079f2",
+            "#79f2cc",
+            "#f2a979",
+            "#8679f2",
+            "#8ff279",
+            "#f279b2",
+            "#79d6f2",
+            "#f2ea79",
+            "#c779f2"
+          ],
+          "scale": 90.65862703278553,
+          "iterations": 12,
+          "matrix": 2,
+          "offset_x": 470,
+          "offset_y": 466,
+          "line_width": 2,
+          "matrix_offset_x": 1375,
+          "matrix_offset_y": 466,
+          "seed": 1224106878
+        },
+        "blending_values": {
+          "opacity": 1.0
+        }
+      },
+      {
+        "name": "wfc",
+        "generator_type": "algorithm",
+        "values": {
+          "colors": [],
+          "max_gen_dim": [104, 104],
+          "pattern": "Nested",
+          "scale": [
+            4.070753421742367,
+            9.357500384716943
+          ],
+          "seed": 2142737932
+        },
+        "blending_values": {
+          "opacity": 1.0
+        }
+      },
+      {
+        "name": "hex_pattern_algorithm",
+        "generator_type": "algorithm",
+        "values": {
+          "colors": [
+            "#f279c5",
+            "#79e8f2"
+          ],
+          "hex_size": 133,
+          "spacing": 81,
+          "seed": 775011508
+        },
+        "blending_values": {
+          "opacity": 0.66
+        }
+      },
+      {
+        "name": "dragon_curve_algorithm",
+        "generator_type": "algorithm",
+        "values": {
+          "colors": [
+            "#7a79f2",
+            "#9af279"
+          ],
+          "scale": 44.50059482221241,
+          "iterations": 1,
+          "matrix": 5,
+          "offset_x": 1422,
+          "offset_y": 861,
+          "line_width": 33,
+          "matrix_offset_x": 629,
+          "matrix_offset_y": 566,
+          "seed": 345699869
+        },
+        "blending_values": {
+          "opacity": 1.0
+        }
+      },
+      {
+        "name": "plain_algorithm",
+        "generator_type": "algorithm",
+        "values": {
+          "colors": [
+            "#FFFFFF"
+          ],
+          "seed": 1971037135
+        },
+        "blending_values": {
+          "opacity": 1.0
+        }
+      }
+    ]
+  }
+}

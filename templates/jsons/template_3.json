@@ -1,7 +1,6 @@
 {
   "width": 640,
   "height": 480,
-  "seed": null,
   "layer_query": {
     "name": "alpha_blending",
     "generator_type": "blending",

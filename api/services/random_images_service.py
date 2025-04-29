@@ -4,12 +4,9 @@ from pydantic import BaseModel
 from api.services import image_service
 from typing import Optional, Tuple, List
 from api.configs.database_config import db
-from concurrent.futures import ProcessPoolExecutor
 from api.configs.image_generator_config import image_generator
 from image_generator.image_generator import QueryFull, ImageMetadataFull
 from api.configs.process_executor_config import process_executor as random_process_executor
-
-#random_process_executor = ProcessPoolExecutor()
 
 
 POOL_SIZE = 50
@@ -40,18 +37,16 @@ async def store_random_image(query_id_to_remove: Optional[str] = None):
                                                   DEFAULT_MIN_LAYERS_COUNT,
                                                   DEFAULT_MAX_LAYERS_COUNT)
         try:
-            image, _ = await asyncio.wait_for(
-                loop.run_in_executor(
-                    random_process_executor,
-                    image_generator.generate_image_query_full,
-                    query_full
-                ),
-                timeout=TIMEOUT
+            image, _ = await loop.run_in_executor(
+                random_process_executor,
+                image_generator.generate_image_query_full,
+                query_full
             )
             image_id = await image_service.store_image(image)
             random_query = RandomQueryModel(query_full=query_full, image_id=image_id)
             await random_queries_collection.insert_one(random_query.model_dump())
             success = True
+            del image
         except Exception:
             pass
     if query_id_to_remove:
@@ -110,9 +105,10 @@ async def retrieve_random_images_bytes(count: int) -> List[Tuple[ImageMetadataFu
     )
     metadatas_images_bytes = []
     for document in documents:
-        metadata = ImageMetadataFull(**document["query_full"])
+        metadata = ImageMetadataFull(seed=None, **document["query_full"])
         image_bytes = await image_service.retrieve_image_bytes(document["image_id"])
         metadatas_images_bytes.append((metadata, image_bytes))
     for i in range(len(documents)):
-        queue.put_nowait((1, [documents_ids_strs[i]]))
+        if not queue.full():
+            queue.put_nowait((1, [documents_ids_strs[i]]))
     return metadatas_images_bytes

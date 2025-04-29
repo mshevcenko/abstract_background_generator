@@ -87,8 +87,11 @@ async def get_popular_images(page: Optional[int] = None,
     for doc in documents:
         metadata = StoredQueryFullInfo(**doc)
         metadata.query_id = str(doc["_id"])
-        image_bytes = await image_service.retrieve_image_bytes(metadata.image_id)
-        images_metadatas.append((image_bytes, metadata))
+        try:
+            image_bytes = await image_service.retrieve_image_bytes(metadata.image_id)
+            images_metadatas.append((image_bytes, metadata))
+        except Exception:
+            pass
     return images_metadatas
 
 
