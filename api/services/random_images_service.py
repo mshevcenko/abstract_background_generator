@@ -67,7 +67,6 @@ async def create_random_queries_worker():
         if item is not None:
             count, ids = item
             await store_random_images(count, ids)
-            await asyncio.sleep(TIMEOUT_BETWEEN)
         queue.task_done()
 
 
